@@ -530,9 +530,15 @@ a.button small {
   display: block;
   font-size: 11px;
 }
-header a.button {
+header a#button1 {
   position: absolute;
   top: 0;
+  right: 0;
+  background: transparent url(../images/github-button.png) 0 0 no-repeat;
+}
+header a#button2  {
+  position: absolute;
+  top: 84px;
   right: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
 }
@@ -600,6 +606,11 @@ td {
   font-weight: 300;
   text-align: center;
   border: 1px solid #ebebeb;
+}
+
+th {
+  background-color: lightgrey;
+  color: black;
 }
 
 form {

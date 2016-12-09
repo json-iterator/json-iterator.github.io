@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Json-iterator.GitHub.io by json-iterator</title>
+</head>
+
+<body>
+<header>
+    <div class="inner">
+        <h1>json iterator</h1>
+        <h2>faster than DOM, more usable than SAX/StAX</h2>
+        <a href="https://github.com/json-iterator/java" class="button" id="button1">
+            <small>jsoniter</small>Java 1.0.0</a>
+        <a href="https://github.com/json-iterator/go" class="button" id="button2">
+            <small>jsoniter</small>Go 1.0.0</a>
+    </div>
+</header>
+
+<div id="content-wrapper">
+    <div class="inner clearfix">
+        <section id="main-content">
+            <h3>
+                <a id="bind-api" class="anchor" href="#bind-api" aria-hidden="true">
+
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>
+                bind api
+            </h3>
+            <ul>
+                <li>
+                    Java (jackson, gson, dsljson, fastjson)
+                    <ul>
+                        <li><a href="#java-bind-10-kb">10kb</a></li>
+                        <li><a href="#java-bind-100-kb">100kb</a></li>
+                    </ul>
+                </li>
+                <li>
+                    Go (encoding/json, jsonparser, easyjson)
+                    <ul>
+                        <li>Small Payload</li>
+                        <li>Medium Payload</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>
+                <a id="iterator-api" class="anchor" href="#iterator-api" aria-hidden="true">
+
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>
+                iterator api
+            </h3>
+            <h3>
+                <a name="java-bind-10-kb" class="anchor" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>
+                Java bind-api 10 kb
+            </h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>jsoniter</th>
+                    <th>dsljson</th>
+                    <th>fastjson</th>
+                    <th>gson</th>
+                    <th>jackson</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>5791477.392</td>
+                    <td>1825251.497</td>
+                    <td>528568.402</td>
+                    <td>509073.118</td>
+                    <td>1002068.202</td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>
+                <a name="java-bind-100-kb" class="anchor" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>
+                Java bind-api 100 kb
+            </h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>jsoniter</th>
+                    <th>dsljson</th>
+                    <th>fastjson</th>
+                    <th>gson</th>
+                    <th>jackson</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>64452.613</td>
+                    <td>19128.133</td>
+                    <td>8612.036</td>
+                    <td>6303.252</td>
+                    <td>12011.405</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <aside id="sidebar">
+            <a href="/">go back <<<</a>
+        </aside>
+    </div>
+</div>
+
+
+</body>
+</html>
