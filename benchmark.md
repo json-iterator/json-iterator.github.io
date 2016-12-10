@@ -20,16 +20,19 @@ title: Json Iterator
 
 ## 1 kb
 
+bind json to object
+
 | parser | score |
 | ---    | ---   |
 | jackson  | 850892.349 ± 39530.833  ops/s |
 | gson     | 392361.207 ± 17619.850  ops/s |
 | fastjson | 544556.920 ± 61141.858  ops/s |
 | dsljson  | 1335352.551 ± 24010.110  ops/s |
-| jsoniter | 4933967.110 ± 138318.632  ops/s |
+| jsoniter (bind-api) | 4933967.110 ± 138318.632  ops/s |
 
 ## 10 kb
 
+bind json to object
 
 | parser | score |
 | ---    | ---   |
@@ -37,9 +40,11 @@ title: Json Iterator
 | gson     | 49527.521 ± 2497.945  ops/s |
 | fastjson | 72793.357 ± 3354.573  ops/s |
 | dslsjon  | 164668.349 ±  7329.267  ops/s |
-| jsoniter | 531711.831 ± 40921.227  ops/s |
+| jsoniter (bind-api) | 531711.831 ± 40921.227  ops/s |
 
 ## 100 kb
+
+bind json to object
 
 | parser | score |
 | ---    | ---   |
@@ -47,7 +52,29 @@ title: Json Iterator
 | gson     | 4959.971 ±  367.413  ops/s |
 | fastjson | 6944.306 ±  456.864  ops/s |
 | dslsjon  | 16793.305 ±  627.311  ops/s |
-| jsoniter | 54352.743 ± 2239.098  ops/s |
+| jsoniter (bind-api) | 54352.743 ± 2239.098  ops/s |
+
+# Java Iterator API
+
+## 1000 kb
+
+count number of elements from InputStream without binding
+
+| parser    | score |
+| ---       | ---   |
+| javaxjson | 1192.041 ± 71.521  ops/s  |
+| jackson   | 1919.180 ± 122.895  ops/s |
+| jsoniter (iterator-api) | 3165.283 ± 106.326  ops/s |
+
+## 10000 kb
+
+count number of elements from InputStream without binding
+
+| parser    | score |
+| ---       | ---   |
+| javaxjson | 113.544 ±  6.153  ops/s |
+| jackson   | 199.957 ±  7.669  ops/s |
+| jsoniter (iterator-api) | 274.039 ± 17.785  ops/s |
 
 # Go Bind API
 
