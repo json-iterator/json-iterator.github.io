@@ -447,6 +447,14 @@ a:hover {
   color: #2268b2;
 }
 
+header a {
+  color: #fff;
+}
+
+header a:hover {
+  color: #fff;
+}
+
 header {
   padding-top: 40px;
   padding-bottom: 40px;
