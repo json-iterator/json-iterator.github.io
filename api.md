@@ -115,6 +115,7 @@ public int jsoniter(Jsoniter iter) throws IOException {
     return totalTagsCount;
 }
 ```
+## Active V.S Passive
 
 The jackson/jsonp api style is:
 
@@ -133,7 +134,21 @@ while (iter.readArray()) {
 }
 ```
 
-The api is imperative. I know I must be reading array, if the json is not array, it is the file wrong, not mine fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Essentially, by reading the parsing flow, you can know the schema of data.
+The api is active instead of passive. I know I must be reading array, if the json is not array, it is the file wrong, not mine fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Essentially, by reading the parsing flow, you can know the schema of data.
+
+## readObject
+
+The loop to pass object looks like
+
+```
+for (String field = iter.readObject(); field != null; field = iter.readObject()) {
+  switch (field) {
+    // deal with fields
+  }
+}
+```
+
+It is as if you are iterating over a hashmap. There is no concept of Token. You do not need to know START_OBJECT, KEY, END_OBJECT. The api is one level higher than tokenizer. Not only easier to use, but much more efficient internally. The parser know the KEY always follow START_OBJECT, and will extract the key out for you in one shot. 
 
 # Bind API
 
