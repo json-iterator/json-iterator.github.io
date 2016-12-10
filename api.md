@@ -150,6 +150,21 @@ for (String field = iter.readObject(); field != null; field = iter.readObject())
 
 It is as if you are iterating over a hashmap. There is no concept of TOKEN. You do not need to know START_OBJECT, KEY, END_OBJECT. The api is one level higher than tokenizer. Not only easier to use, but much more efficient internally. The parser know the KEY always follow START_OBJECT, and will extract the key out for you in one shot. 
 
+## whatIsNext
+
+Iterator api can also work in schema free way. So that in case the input is uncertain, for example some field might be string or int, we can still deal with it.
+
+```
+ValueType valueType = iter.whatIsNext();
+if (valueType == ValueType.STRING) {
+  return iter.readString();
+} else {
+  return Integer.toString(iter.readInt());
+}
+```
+
+It is not strictly schema free here. If the input is not string, but a array, `iter.readInt` will throw exception and tell we are expecting a integer, but found a array.
+
 # Bind API
 
 # Integration
