@@ -192,6 +192,8 @@ Static method to create iterator instance
 | parse | Parse | create iterator from stream |
 | parse | ParseBytes | create iterator from byte array |
 | parse | ParseString | create iterator from string |
+| registerTypeDecoder | RegisterTypeDecoder | add callback to object binding process |
+| registerFieldDecoder | RegisterFieldDecoder | add callback to object binding process |
 
 Iterator methods
 
@@ -199,6 +201,7 @@ Iterator methods
 | --- | --- | --- |
 | reset | Reset | reuse iterator instance for new stream |
 | reset | ResetBytes | reuse iterator instance for new byte array |
+| read | Read | bind next value into object |
 | whatIsNext | WhatIsNext | the value type of next value |
 | readNull  | ReadNull  | if next value is null return true |
 | skip | Skip | skip the whole next value, even if it is nested object or array |
