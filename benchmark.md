@@ -39,6 +39,21 @@ title: Json Iterator
 | dslsjon  | 16793.305 ±  627.311  ops/s |
 | jsoniter | 54352.743 ± 2239.098  ops/s |
 
-
 # Go Bind API
+
+* encoding/json: reflection
+* easyjson: go generate
+* jsonparser: hand-written data bind
+* jsoniter (iterator-api): hand-written data bind
+* jsoniter (bind-api): reflection
+
+## Small Payload
+
+| parser                  | ns/op      | bytes/op | allocs/op   |
+| ---                     | ---        | ---      | ---         |
+| encoding/json           | 3151 ns/op | 480 B/op |	6 allocs/op |
+| easyjson                | 786 ns/op	 | 64 B/op	| 2 allocs/op |
+| jsonparser              | 718 ns/op	 | 64 B/op  | 2 allocs/op |
+| jsoniter (iterator-api) | 619 ns/op  | 64 B/op  | 2 allocs/op |
+| jsoniter (bind-api)     | 844 ns/op  | 256 B/op | 4 allocs/op |
 
