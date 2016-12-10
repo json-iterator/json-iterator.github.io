@@ -117,6 +117,9 @@ public int jsoniter(Jsoniter iter) throws IOException {
     return totalTagsCount;
 }
 ```
+
+When using jsoniter iterator api, you just need to imagine the document has already been parsed as map or array, and as if we are iterating over the collection.
+
 ## Active V.S Passive
 
 The jackson/jsonp api style is:
