@@ -8,6 +8,16 @@ title: Json Iterator
 
 # Java Bind API
 
+* JMH 1.17.1 (released 11 days ago)
+* VM version: JDK 1.8.0_112, VM 25.112-b15
+* VM invoker: /opt/jdk1.8.0_112/jre/bin/java
+* VM options: -XX:+AggressiveOpts -Xms2G -Xmx2G
+* Warmup: 3 iterations, 1 s each
+* Measurement: 5 iterations, 2 s each
+* Timeout: 10 min per iteration
+* Threads: 16 threads, will synchronize iterations
+* Benchmark mode: Throughput, ops/time
+
 ## 1 kb
 
 | parser | score |
