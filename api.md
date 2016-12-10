@@ -117,7 +117,7 @@ public int jsoniter(Jsoniter iter) throws IOException {
     return totalTagsCount;
 }
 ```
-# Active V.S Passive
+## Active V.S Passive
 
 The jackson/jsonp api style is:
 
