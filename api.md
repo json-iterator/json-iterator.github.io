@@ -169,9 +169,16 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 
 # Bind API
 
-No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. We can see how jsoniter archieve maximum flexibility in the next section: [integration].  
+No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. 
 
 # Integration
+
+The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. The answer is callback. Add callback hook in the binding process, then we can use iterator api to take back the control.
+
+The downside of iterator is, it is tedious. If we want to read a lot of fields, writting switch case for all of them is not fun at all. It would be nice to mix bind api when we are driving the iterator. And jsoniter allows us to do that.
+
+In jsoniter, iterator is not some underlying implementation hidden away from bind api. Iterator api and bind api are at the same level, and they complement each other. There is no other json parser design in this way, as far as I know. Hope you enjoy the freedom as I do. Here is a quick example.
+
 
 # API List
 
