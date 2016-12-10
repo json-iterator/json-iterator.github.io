@@ -58,7 +58,7 @@ bind json to object
 
 ## 1000 kb
 
-count number of elements from InputStream without binding
+[count number of elements from InputStream without binding](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/stream/UsersStreamDeserializer.java#L352)
 
 | parser    | score |
 | ---       | ---   |
@@ -68,7 +68,7 @@ count number of elements from InputStream without binding
 
 ## 10000 kb
 
-count number of elements from InputStream without binding
+[count number of elements from InputStream without binding](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/stream/UsersStreamDeserializer.java#L352)
 
 | parser    | score |
 | ---       | ---   |
