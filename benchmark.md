@@ -36,10 +36,10 @@ title: Json Iterator
 
 | parser | score |
 | ---    | ---   |
-| jackson  | 100824.573 ± 3038.689  ops/s |
-| gson     | 49527.521 ± 2497.945  ops/s |
-| fastjson | 72793.357 ± 3354.573  ops/s |
-| dslsjon  | 164668.349 ±  7329.267  ops/s |
+| [jackson]  | 100824.573 ± 3038.689  ops/s |
+| [gson]     | 49527.521 ± 2497.945  ops/s |
+| [fastjson] | 72793.357 ± 3354.573  ops/s |
+| [dslsjon]  | 164668.349 ±  7329.267  ops/s |
 | jsoniter (bind-api) | 531711.831 ± 40921.227  ops/s |
 
 ## 100 kb
@@ -48,10 +48,10 @@ title: Json Iterator
 
 | parser | score |
 | ---    | ---   |
-| jackson  | 9683.500 ±  797.632  ops/s |
-| gson     | 4959.971 ±  367.413  ops/s |
-| fastjson | 6944.306 ±  456.864  ops/s |
-| dslsjon  | 16793.305 ±  627.311  ops/s |
+| [jackson]  | 9683.500 ±  797.632  ops/s |
+| [gson]     | 4959.971 ±  367.413  ops/s |
+| [fastjson] | 6944.306 ±  456.864  ops/s |
+| [dslsjon]  | 16793.305 ±  627.311  ops/s |
 | jsoniter (bind-api) | 54352.743 ± 2239.098  ops/s |
 
 # Java Iterator API
@@ -62,8 +62,8 @@ title: Json Iterator
 
 | parser    | score |
 | ---       | ---   |
-| javaxjson | 1192.041 ± 71.521  ops/s  |
-| jackson   | 1919.180 ± 122.895  ops/s |
+| [javaxjson] | 1192.041 ± 71.521  ops/s  |
+| [jackson]   | 1919.180 ± 122.895  ops/s |
 | jsoniter (iterator-api) | 3165.283 ± 106.326  ops/s |
 
 ## 10000 kb
@@ -72,11 +72,13 @@ title: Json Iterator
 
 | parser    | score |
 | ---       | ---   |
-| javaxjson | 113.544 ±  6.153  ops/s |
-| jackson   | 199.957 ±  7.669  ops/s |
+| [javaxjson] | 113.544 ±  6.153  ops/s |
+| [jackson]   | 199.957 ±  7.669  ops/s |
 | jsoniter (iterator-api) | 274.039 ± 17.785  ops/s |
 
 # Go Bind API
+
+Different libraries bind data to struct in different ways:
 
 * encoding/json: reflection
 * easyjson: go generate
@@ -90,9 +92,9 @@ bind small payload of json to struct
 
 | parser                  | ns/op      | bytes/op | allocs/op   |
 | ---                     | ---        | ---      | ---         |
-| encoding/json           | 3151 ns/op | 480 B/op |	6 allocs/op |
-| easyjson                | 786 ns/op	 | 64 B/op	| 2 allocs/op |
-| jsonparser              | 718 ns/op	 | 64 B/op  | 2 allocs/op |
+| [encoding/json]           | 3151 ns/op | 480 B/op |	6 allocs/op |
+| [easyjson]                | 786 ns/op	 | 64 B/op	| 2 allocs/op |
+| [jsonparser]              | 718 ns/op	 | 64 B/op  | 2 allocs/op |
 | jsoniter (iterator-api) | 619 ns/op  | 64 B/op  | 2 allocs/op |
 | jsoniter (bind-api)     | 844 ns/op  | 256 B/op | 4 allocs/op |
 
@@ -102,9 +104,9 @@ bind medium payload of json to nested struct
 
 | parser                  | ns/op       | bytes/op | allocs/op    |
 | ---                     | ---         | ---      | ---          |
-| encoding/json           | 30531 ns/op	| 808 B/op | 18 allocs/op |
-| easyjson                | 7731 ns/op  | 248 B/op | 8 allocs/op  |
-| jsonparser              | 6326 ns/op  | 104 B/op | 4 allocs/op  |
+| [encoding/json]           | 30531 ns/op	| 808 B/op | 18 allocs/op |
+| [easyjson]                | 7731 ns/op  | 248 B/op | 8 allocs/op  |
+| [jsonparser]              | 6326 ns/op  | 104 B/op | 4 allocs/op  |
 | jsoniter (iterator-api) | 4966 ns/op	| 104 B/op | 4 allocs/op  |
 | jsoniter (bind-api)     | 5640 ns/op  | 368 B/op | 14 allocs/op |
 
@@ -116,8 +118,8 @@ count number of elements from []byte without binding
 
 | parser                  | ns/op          | bytes/op   | allocs/op      |
 | ---                     | ---            | ---        | ---            |
-| encoding/json           | 567880 ns/op	 | 79177 B/op | 4918 allocs/op |
-| jsonparser              | 44660 ns/op	   | 0 B/op	    | 0 allocs/op    |
+| [encoding/json]           | 567880 ns/op	 | 79177 B/op | 4918 allocs/op |
+| [jsonparser]              | 44660 ns/op	   | 0 B/op	    | 0 allocs/op    |
 | jsoniter (iterator-api) | 48737 ns/op    | 0 B/op     | 0 allocs/op    |
 
 ## Large File
@@ -126,11 +128,15 @@ count number of elements from io.Reader without binding
 
 | parser                  | ns/op           | bytes/op      | allocs/op        |
 | ---                     | ---             | ---           | ---              |
-| encoding/json           | 277265824 ns/op	| 71467156 B/op	| 272476 allocs/op |
-| jsonparser              | 53586488 ns/op	| 67107204 B/op | 20 allocs/op     |
+| [encoding/json]           | 277265824 ns/op	| 71467156 B/op	| 272476 allocs/op |
+| [jsonparser]              | 53586488 ns/op	| 67107204 B/op | 20 allocs/op     |
 | jsoniter (iterator-api) | 44817092 ns/op  | 4248 B/op     | 5 allocs/op      |
 
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
 [fastjson]: https://github.com/alibaba/fastjson
 [dsljson]: https://github.com/ngs-doo/dsl-json
+[javaxjson]: https://jsonp.java.net/
+[encoding/json]: https://golang.org/pkg/encoding/json/
+[easyjson]: https://github.com/mailru/easyjson
+[jsonparser]: https://github.com/buger/jsonparser
