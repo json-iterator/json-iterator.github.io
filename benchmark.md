@@ -51,7 +51,7 @@ title: Json Iterator
 | [jackson]  | 9683.500 ±  797.632  ops/s |
 | [gson]     | 4959.971 ±  367.413  ops/s |
 | [fastjson] | 6944.306 ±  456.864  ops/s |
-| [dslsjon]  | 16793.305 ±  627.311  ops/s |
+| [dsljon]  | 16793.305 ±  627.311  ops/s |
 | jsoniter (bind-api) | 54352.743 ± 2239.098  ops/s |
 
 # Java Iterator API
