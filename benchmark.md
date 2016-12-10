@@ -88,7 +88,7 @@ Different libraries bind data to struct in different ways:
 
 ## Small Payload
 
-bind small payload of json to struct
+[bind small payload of json to struct](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/benchmark_small_payload_test.go)
 
 | parser                  | ns/op      | bytes/op | allocs/op   |
 | ---                     | ---        | ---      | ---         |
@@ -100,7 +100,7 @@ bind small payload of json to struct
 
 ## Medium Payload
 
-bind medium payload of json to nested struct
+[bind medium payload of json to nested struct](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/benchmark_medium_payload_test.go)
 
 | parser                  | ns/op       | bytes/op | allocs/op    |
 | ---                     | ---         | ---      | ---          |
@@ -114,7 +114,7 @@ bind medium payload of json to nested struct
 
 ## Large Payload
 
-count number of elements from []byte without binding
+[count number of elements from []byte without binding](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/benchmark_large_payload_test.go)
 
 | parser                  | ns/op          | bytes/op   | allocs/op      |
 | ---                     | ---            | ---        | ---            |
