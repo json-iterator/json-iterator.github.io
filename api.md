@@ -148,7 +148,7 @@ for (String field = iter.readObject(); field != null; field = iter.readObject())
 }
 ```
 
-It is as if you are iterating over a hashmap. There is no concept of Token. You do not need to know START_OBJECT, KEY, END_OBJECT. The api is one level higher than tokenizer. Not only easier to use, but much more efficient internally. The parser know the KEY always follow START_OBJECT, and will extract the key out for you in one shot. 
+It is as if you are iterating over a hashmap. There is no concept of TOKEN. You do not need to know START_OBJECT, KEY, END_OBJECT. The api is one level higher than tokenizer. Not only easier to use, but much more efficient internally. The parser know the KEY always follow START_OBJECT, and will extract the key out for you in one shot. 
 
 # Bind API
 
