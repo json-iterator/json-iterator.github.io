@@ -222,3 +222,5 @@ Iterator methods
 | reportError | ReportError | report error condition |
 | -   | iter.Error | golang version use Error field to represent last error |
 | currentBuffer | CurrentBuffer | return the parsing buffer as string, for debug purpose |
+
+The api is almost identical. But each version underlying is implemented differently using the most efficient technique for each language. It is not a simple direct translation from one language to another.
