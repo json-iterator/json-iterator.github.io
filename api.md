@@ -181,7 +181,22 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 | reset | Reset | reuse iterator instance for new stream |
 | reset | ResetBytes | reuse iterator instance for new byte array |
 | whatIsNext | WhatIsNext | the value type of next value |
+| readNull  | ReadNull  | if next value is null return true |
+| skip | Skip | skip the whole next value, even if it is object or array |
 | readArray | ReadArray | expect more array element, return false if reached end |
 | readObject | ReadObject | expect more object field, return null if reached end |
 | readString | ReadString | expect "string" |
-| -          | ReadBase64 | read base64 encoded string and return byte array |
+| readBase64 | ReadBase64 | read base64 encoded string and return byte array |
+| readBoolean | ReadBool | expect true of false |
+| -  | ReadUint8 | expect number like 123 |
+| -  | ReadInt8 | expect number like -123 |
+| -  | ReadUint16 | expect number like 123 |
+| readShort  | ReadInt16 | expect number like -123 |
+| -  | ReadUint32 | expect number like 123 |
+| readInt  | ReadInt32 | expect number like -123 |
+| -  | ReadUint64 | expect number like 123 |
+| readLong  | ReadInt64 | expect number like -123 |
+| -  | ReadUint | expect number like 123 |
+| -  | ReadInt | expect number like -123 |
+| readFloat | ReadFloat32 | expect number like 1.23 |
+| readDouble | ReadFloat64 | expect number like 1.23 |
