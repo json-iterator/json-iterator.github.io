@@ -177,7 +177,7 @@ The downside of binding is there is always exception. We want the field to be st
 
 The downside of iterator is, it is tedious. If we want to read a lot of fields, writting switch case for all of them is not fun at all. It would be nice to mix bind api when we are driving the iterator. And jsoniter allows us to do that.
 
-In jsoniter, iterator is not some underlying implementation hidden away from bind api. Iterator api and bind api are at the same level, and they complement each other. There is no other json parser design in this way, as far as I know. Hope you enjoy the freedom as I do. Here is a quick example.
+In jsoniter, iterator is not some underlying implementation hidden away from bind api. Iterator api and bind api are at the same level, and they complement each other. There is no other json parser designed in the same way, as far as I know. Hope you enjoy the freedom as I do. Here is a quick example.
 
 
 # API List
