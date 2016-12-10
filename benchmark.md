@@ -31,5 +31,14 @@ title: Json Iterator
 
 ## 100 kb
 
+| parser | score |
+| ---    | ---   |
+| jackson  | 9683.500 ±  797.632  ops/s |
+| gson     | 4959.971 ±  367.413  ops/s |
+| fastjson | 6944.306 ±  456.864  ops/s |
+| dslsjon  | 16793.305 ±  627.311  ops/s |
+| jsoniter | 54352.743 ± 2239.098  ops/s |
+
+
 # Go Bind API
 
