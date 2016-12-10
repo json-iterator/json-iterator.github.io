@@ -138,7 +138,7 @@ The api is active instead of passive. I know I must be reading array, if the jso
 
 ## readObject
 
-The loop to pass object looks like
+The loop to parse object looks like
 
 ```
 for (String field = iter.readObject(); field != null; field = iter.readObject()) {
