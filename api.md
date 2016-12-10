@@ -14,7 +14,7 @@ Iterator api can extract string/number from stream of bytes without binding them
 
 Given a JSON text like this
 
-```
+```json
 {
     "users": [
         {
@@ -49,9 +49,9 @@ Given a JSON text like this
 }
 ```
 
-To count the total number of tags, using jackson, the code looks like:
+The example here is written java, because there is not good golang streaming counterpart to demonstrate the difference. But the jsoniter api for go and java version is identical. To count the total number of tags, using jackson, the code looks like:
 
-```
+```java
 public int jackson(JsonParser jParser) throws IOException {
     int totalTagsCount = 0;
     while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
@@ -87,7 +87,7 @@ private int jacksonUser(JsonParser jParser) throws IOException {
 
 Using jsoniter, the iterator api is much more straight forward, there is no concept as Token.
 
-```
+```java
 public int jsoniter(Jsoniter iter) throws IOException {
     int totalTagsCount = 0;
     for (String field = iter.readObject(); field != null; field = iter.readObject()) {
@@ -115,6 +115,25 @@ public int jsoniter(Jsoniter iter) throws IOException {
     return totalTagsCount;
 }
 ```
+
+The jackson/jsonp api style is:
+
+```
+Token token = parser.next();
+if (token == xxx) {
+  // do yyy
+}
+```
+
+The control is passive. You do not know what you will get back from `parser.next()`. The api force you to guard against all different cases. Compare to jsoniter:
+
+```
+while (iter.readArray()) {
+  // read element
+}
+```
+
+The api is imperative. I know I must be reading array, if the json is not array, it is the file wrong, not mine fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Essentially, by reading the parsing flow, you can know the schema of data.
 
 # Bind API
 
