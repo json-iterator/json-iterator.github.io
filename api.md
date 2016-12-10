@@ -49,7 +49,7 @@ Given a JSON text like this
 }
 ```
 
-The example here is written java, because there is not good golang streaming counterpart to demonstrate the difference. But the jsoniter api for go and java version is identical. To count the total number of tags, using jackson, the code looks like:
+The example here is written java, because there is no well-known streaming counterpart written in Golang to demonstrate the difference. But the jsoniter api for go and java version is identical. To count the total number of tags, using jackson, the code looks like:
 
 ```java
 public int jackson(JsonParser jParser) throws IOException {
