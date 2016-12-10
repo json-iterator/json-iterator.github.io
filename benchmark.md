@@ -57,3 +57,13 @@ title: Json Iterator
 | jsoniter (iterator-api) | 619 ns/op  | 64 B/op  | 2 allocs/op |
 | jsoniter (bind-api)     | 844 ns/op  | 256 B/op | 4 allocs/op |
 
+## Medium Payload
+
+| parser                  | ns/op       | bytes/op | allocs/op    |
+| ---                     | ---         | ---      | ---          |
+| encoding/json           | 30531 ns/op	| 808 B/op | 18 allocs/op |
+| easyjson                | 7731 ns/op  | 248 B/op | 8 allocs/op  |
+| jsonparser              | 6326 ns/op  | 104 B/op | 4 allocs/op  |
+| jsoniter (iterator-api) | 4966 ns/op	| 104 B/op | 4 allocs/op  |
+| jsoniter (bind-api)     | 5640 ns/op  | 368 B/op | 14 allocs/op |
+
