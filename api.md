@@ -10,7 +10,7 @@ title: Json Iterator API
 
 ## Motivation
 
-Iterator api can extract string/number from stream of bytes without binding them into object. It is highly efficient for data format transformation and number crunching. Jsoniter is not the first json parser with streaming style api, there is standard api like jsonp for java. But I find existing api is too hard to use. Here is a comparison:
+Iterator api can extract string/number from stream of bytes without binding them into object. It is highly efficient for data format transformation and number crunching. Jsoniter is not the first json parser with streaming style api, there is standard api like jsonp for java. But I find existing api too hard to use. Here is a comparison:
 
 Given a JSON text like this
 
