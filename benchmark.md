@@ -124,7 +124,7 @@ Different libraries bind data to struct in different ways:
 
 ## Large File
 
-count number of elements from io.Reader without binding
+[count number of elements from io.Reader without binding](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/large_file_test.go)
 
 | parser                  | ns/op           | bytes/op      | allocs/op        |
 | ---                     | ---             | ---           | ---              |
