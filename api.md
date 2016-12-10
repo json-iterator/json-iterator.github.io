@@ -6,10 +6,76 @@ title: Json Iterator API
 * TOC
 {:toc}
 
-# Create Iterator
+# Iterator API
 
-## Create Iterator From Stream
+## Motivation
 
-| lang | syntax |
-| ---  | ---    |
-| java | `Jsoniter iter = Jsoniter.parse(stream, 4096);` |
+Iterator api can extract string/number from stream of bytes without binding them into object. It is highly efficient for data format transformation and number crunching. Jsoniter is not the first json parser with streaming style api, there is standard api like jsonp for java. But I find existing api is too hard to use. Here is a comparison:
+
+Given a JSON text like this
+
+```
+{
+    "users": [
+        {
+            "_id": "58451574858913704731",
+            "about": "a4KzKZRVvqfBLdnpUWaD",
+            "address": "U2YC2AEVn8ab4InRwDmu",
+            "age": 27,
+            "balance": "I5cZ5vRPmVXW0lhhRzF4",
+            "company": "jwLot8sFN1hMdE4EVW7e",
+            "email": "30KqJ0oeYXLqhKMLDUg6",
+            "eyeColor": "RWXrMsO6xi9cpxPqzJA1",
+            "favoriteFruit": "iyOuAekbybTUeDJqkHNI",
+            "friends": [
+                {
+                    "id": "3420",
+                    "name": "XHVHBjhzViTuxhHDgDIyeElBDpVQAW"
+                },
+                {
+                    "id": "8835",
+                    "name": "acfICaiYZdwgLRFJnqKFEHbPMjYUyH"
+                },
+                {
+                    "id": "5493",
+                    "name": "PVGFEDhOkXeXCeNnjekGDlxtEyCHBd"
+                },
+                {
+                    "id": "6889",
+                    "name": "YSiPIPYzVrydbYszUwOuEhITqBZNTJ"
+                },
+                {
+                    "id": "843",
+                    "name": "QHBUrYlZVUYGXriUqdYPwtgWlQIgfm"
+                },
+                {
+                    "id": "2553",
+                    "name": "yufmtZOoKbgMaMXhmLwzOlRjXdRDTJ"
+                }
+            ],
+            "gender": "ytgB3Kzoejv1FGU6biXu",
+            "greeting": "7GXmN2vMLcS2uimxGQgC",
+            "guid": "bIqNIywgrzva4d5LfNlm",
+            "index": 169390966,
+            "isActive": true,
+            "latitude": 70.7333712683406,
+            "longitude": 16.25873969455544,
+            "name": "bvtukpT6dXtqfbObGyBU",
+            "phone": "UsxtI7sWGIEGvM2N1Mh0",
+            "picture": "8fiyZ2oKapWtH5kXyNDZJjvRS5PGzJGGxDCAk1he1wuhUjxfjtGIh6agQMbjovF10YlqOyzhQPCagBZpW41r6CdrghVfgtpDy7YH",
+            "registered": "gJDieuwVu9H7eYmYnZkz",
+            "tags": [
+                "M2b9n0QrqC",
+                "zl6iJcT68v",
+                "VRuP4BRWjs",
+                "ZY9jXIjTMR"
+            ]
+        }
+    ]
+}
+```
+
+# Bind API
+
+# Integration
+
