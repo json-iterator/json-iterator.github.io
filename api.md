@@ -209,6 +209,6 @@ In jsoniter, iterator is not some underlying implementation hidden away from bin
 | -  | ReadInt | expect number like -123 |
 | readFloat | ReadFloat32 | expect number like 1.23 |
 | readDouble | ReadFloat64 | expect number like 1.23 |
-| reportError | reportError | report error condition |
+| reportError | ReportError | report error condition |
 | -   | iter.Error | golang version use Error field to represent last error |
-| currentBuffer | currentBuffer | return the parsing buffer as string, for debug purpose |
+| currentBuffer | CurrentBuffer | return the parsing buffer as string, for debug purpose |
