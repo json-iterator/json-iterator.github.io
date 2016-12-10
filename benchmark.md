@@ -49,6 +49,8 @@ title: Json Iterator
 
 ## Small Payload
 
+bind small payload of json to struct
+
 | parser                  | ns/op      | bytes/op | allocs/op   |
 | ---                     | ---        | ---      | ---         |
 | encoding/json           | 3151 ns/op | 480 B/op |	6 allocs/op |
@@ -59,6 +61,8 @@ title: Json Iterator
 
 ## Medium Payload
 
+bind medium payload of json to nested struct
+
 | parser                  | ns/op       | bytes/op | allocs/op    |
 | ---                     | ---         | ---      | ---          |
 | encoding/json           | 30531 ns/op	| 808 B/op | 18 allocs/op |
@@ -66,4 +70,26 @@ title: Json Iterator
 | jsonparser              | 6326 ns/op  | 104 B/op | 4 allocs/op  |
 | jsoniter (iterator-api) | 4966 ns/op	| 104 B/op | 4 allocs/op  |
 | jsoniter (bind-api)     | 5640 ns/op  | 368 B/op | 14 allocs/op |
+
+# Go Iterator API
+
+## Large Payload
+
+count number of elements from []byte without binding
+
+| parser                  | ns/op          | bytes/op   | allocs/op      |
+| ---                     | ---            | ---        | ---            |
+| encoding/json           | 567880 ns/op	 | 79177 B/op | 4918 allocs/op |
+| jsonparser              | 44660 ns/op	   | 0 B/op	    | 0 allocs/op    |
+| jsoniter (iterator-api) | 48737 ns/op    | 0 B/op     | 0 allocs/op    |
+
+## Large File
+
+count number of elements from io.Reader without binding
+
+| parser                  | ns/op           | bytes/op      | allocs/op        |
+| ---                     | ---             | ---           | ---              |
+| encoding/json           | 277265824 ns/op	| 71467156 B/op	| 272476 allocs/op |
+| jsonparser              | 53586488 ns/op	| 67107204 B/op | 20 allocs/op     |
+| jsoniter (iterator-api) | 44817092 ns/op  | 4248 B/op     | 5 allocs/op      |
 
