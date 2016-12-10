@@ -35,7 +35,7 @@ Machine Used:
 | [dsljson]  | 1335352.551 ± 24010.110  ops/s |
 | jsoniter (bind-api) | 4933967.110 ± 138318.632  ops/s |
 
-![java1](/benchmarks/java1.png)
+![java1](http://jsoniter.com/benchmarks/java1.png)
 
 ## 10 kb
 
@@ -49,7 +49,7 @@ Machine Used:
 | [dsljson]  | 164668.349 ±  7329.267  ops/s |
 | jsoniter (bind-api) | 531711.831 ± 40921.227  ops/s |
 
-![java10](/benchmarks/java10.png)
+![java10](http://jsoniter.com/benchmarks/java10.png)
 
 ## 100 kb
 
@@ -63,6 +63,8 @@ Machine Used:
 | [dsljson]  | 16793.305 ±  627.311  ops/s |
 | jsoniter (bind-api) | 54352.743 ± 2239.098  ops/s |
 
+![java100](http://jsoniter.com/benchmarks/java100.png)
+
 # Java Iterator API
 
 ## 1000 kb
@@ -75,6 +77,8 @@ Machine Used:
 | [jackson]   | 1919.180 ± 122.895  ops/s |
 | jsoniter (iterator-api) | 3165.283 ± 106.326  ops/s |
 
+![java1000](http://jsoniter.com/benchmarks/java1000.png)
+
 ## 10000 kb
 
 [count number of elements from InputStream without binding](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/stream/UsersStreamDeserializer.java#L352)
@@ -84,6 +88,8 @@ Machine Used:
 | [javaxjson] | 113.544 ±  6.153  ops/s |
 | [jackson]   | 199.957 ±  7.669  ops/s |
 | jsoniter (iterator-api) | 274.039 ± 17.785  ops/s |
+
+![java10000](http://jsoniter.com/benchmarks/java10000.png)
 
 # Go Bind API
 
@@ -107,6 +113,8 @@ Different libraries bind data to struct in different ways:
 | jsoniter (iterator-api) | 619 ns/op  | 64 B/op  | 2 allocs/op |
 | jsoniter (bind-api)     | 844 ns/op  | 256 B/op | 4 allocs/op |
 
+![go-small](http://jsoniter.com/benchmarks/go-small.png)
+
 ## Medium Payload
 
 [bind medium payload of json to nested struct](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/benchmark_medium_payload_test.go)
@@ -118,6 +126,8 @@ Different libraries bind data to struct in different ways:
 | [jsonparser]              | 6326 ns/op  | 104 B/op | 4 allocs/op  |
 | jsoniter (iterator-api) | 4966 ns/op	| 104 B/op | 4 allocs/op  |
 | jsoniter (bind-api)     | 5640 ns/op  | 368 B/op | 14 allocs/op |
+
+![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
 # Go Iterator API
 
@@ -131,6 +141,8 @@ Different libraries bind data to struct in different ways:
 | [jsonparser]              | 44660 ns/op	   | 0 B/op	    | 0 allocs/op    |
 | jsoniter (iterator-api) | 48737 ns/op    | 0 B/op     | 0 allocs/op    |
 
+![go-large](http://jsoniter.com/benchmarks/go-large.png)
+
 ## Large File
 
 [count number of elements from io.Reader without binding](https://github.com/json-iterator/go-benchmark/blob/master/src/github.com/json-iterator/go-benchmark/large_file_test.go)
@@ -140,6 +152,8 @@ Different libraries bind data to struct in different ways:
 | [encoding/json]           | 277265824 ns/op	| 71467156 B/op	| 272476 allocs/op |
 | [jsonparser]              | 53586488 ns/op	| 67107204 B/op | 20 allocs/op     |
 | jsoniter (iterator-api) | 44817092 ns/op  | 4248 B/op     | 5 allocs/op      |
+
+![go-reader](http://jsoniter.com/benchmarks/go-reader.png)
 
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
