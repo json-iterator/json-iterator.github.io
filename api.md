@@ -27,32 +27,6 @@ Given a JSON text like this
             "email": "30KqJ0oeYXLqhKMLDUg6",
             "eyeColor": "RWXrMsO6xi9cpxPqzJA1",
             "favoriteFruit": "iyOuAekbybTUeDJqkHNI",
-            "friends": [
-                {
-                    "id": "3420",
-                    "name": "XHVHBjhzViTuxhHDgDIyeElBDpVQAW"
-                },
-                {
-                    "id": "8835",
-                    "name": "acfICaiYZdwgLRFJnqKFEHbPMjYUyH"
-                },
-                {
-                    "id": "5493",
-                    "name": "PVGFEDhOkXeXCeNnjekGDlxtEyCHBd"
-                },
-                {
-                    "id": "6889",
-                    "name": "YSiPIPYzVrydbYszUwOuEhITqBZNTJ"
-                },
-                {
-                    "id": "843",
-                    "name": "QHBUrYlZVUYGXriUqdYPwtgWlQIgfm"
-                },
-                {
-                    "id": "2553",
-                    "name": "yufmtZOoKbgMaMXhmLwzOlRjXdRDTJ"
-                }
-            ],
             "gender": "ytgB3Kzoejv1FGU6biXu",
             "greeting": "7GXmN2vMLcS2uimxGQgC",
             "guid": "bIqNIywgrzva4d5LfNlm",
