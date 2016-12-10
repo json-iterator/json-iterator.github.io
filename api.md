@@ -201,7 +201,8 @@ Iterator methods
 | --- | --- | --- |
 | reset | Reset | reuse iterator instance for new stream |
 | reset | ResetBytes | reuse iterator instance for new byte array |
-| read | Read | bind next value into object |
+| read | Read | bind next value into object with schema |
+| readAny | ReadAny | bind next value into object without schema (will be slow) |
 | whatIsNext | WhatIsNext | the value type of next value |
 | readNull  | ReadNull  | if next value is null return true |
 | skip | Skip | skip the whole next value, even if it is nested object or array |
