@@ -139,7 +139,7 @@ while (iter.readArray()) {
 }
 ```
 
-The api is active instead of passive. I know I must be reading array, if the json is not array, it is the file wrong, not my fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Let the api caller express its intention before reading next token, not only makes the code easier to read, also makes the code CPU friendly because less branching.
+The api is active instead of passive. I know I must be reading array, if the json is not array, the input must be wrong. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Let the api caller express its intention before reading next token, makes the code easier to read. It also makes the code more CPU friendly thanks to less branching.
 
 ## Do not need to worry about TOKEN
 
