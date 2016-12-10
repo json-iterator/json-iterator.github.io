@@ -169,6 +169,8 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 
 # Bind API
 
+No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. We can see how jsoniter archieve maximum flexibility in the next [Integration] section.  
+
 # Integration
 
 # API List
@@ -182,7 +184,7 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 | reset | ResetBytes | reuse iterator instance for new byte array |
 | whatIsNext | WhatIsNext | the value type of next value |
 | readNull  | ReadNull  | if next value is null return true |
-| skip | Skip | skip the whole next value, even if it is object or array |
+| skip | Skip | skip the whole next value, even if it is nested object or array |
 | readArray | ReadArray | expect more array element, return false if reached end |
 | readObject | ReadObject | expect more object field, return null if reached end |
 | readString | ReadString | expect "string" |
