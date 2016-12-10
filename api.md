@@ -49,6 +49,73 @@ Given a JSON text like this
 }
 ```
 
+To count the total number of tags, using jackson, the code looks like:
+
+```
+public int jackson(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        if ("users".equals(fieldname)) {
+            while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                totalTagsCount += jacksonUser(jParser);
+            }
+        }
+    }
+    return totalTagsCount;
+}
+
+private int jacksonUser(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        switch (fieldname) {
+            case "tags":
+                jParser.nextToken();
+                while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                    totalTagsCount++;
+                }
+                break;
+            default:
+                jParser.nextToken();
+                jParser.skipChildren();
+        }
+    }
+    return totalTagsCount;
+}
+```
+
+Using jsoniter, the iterator api is much more straight forward, there is no concept as Token.
+
+```
+public int jsoniter(Jsoniter iter) throws IOException {
+    int totalTagsCount = 0;
+    for (String field = iter.readObject(); field != null; field = iter.readObject()) {
+        switch (field) {
+            case "users":
+                while (iter.readArray()) {
+                    for (String field2 = iter.readObject(); field2 != null; field2 = iter.readObject()) {
+                        switch (field2) {
+                            case "tags":
+                                while (iter.readArray()) {
+                                    iter.skip();
+                                    totalTagsCount++;
+                                }
+                                break;
+                            default:
+                                iter.skip();
+                        }
+                    }
+                }
+                break;
+            default:
+                iter.skip();
+        }
+    }
+    return totalTagsCount;
+}
+```
+
 # Bind API
 
 # Integration
