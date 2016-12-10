@@ -126,7 +126,7 @@ if (token == xxx) {
 }
 ```
 
-The control is passive. You do not know what you will get back from `parser.next()`. The api force you to guard against all different cases. Compare to jsoniter:
+The control is passive. You do not know what you will get back from `parser.next()`. The api force you to guard against all kind of cases. Compared to jsoniter:
 
 ```
 while (iter.readArray()) {
@@ -134,7 +134,7 @@ while (iter.readArray()) {
 }
 ```
 
-The api is active instead of passive. I know I must be reading array, if the json is not array, it is the file wrong, not mine fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Essentially, by reading the parsing flow, you can know the schema of data.
+The api is active instead of passive. I know I must be reading array, if the json is not array, it is the file wrong, not my fault. The parser should raise proper error message, instead of put the burden of detecting and reporting error on the shoulder of api caller. Let the api caller express its intention before reading next token, not only makes the code easier to read, also makes the code CPU friendly because less branching.
 
 ## readObject
 
