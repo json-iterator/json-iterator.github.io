@@ -6,6 +6,11 @@ title: Json Iterator
 * TOC
 {:toc}
 
+Machine Used:
+
+* CPU: i7-4790 @ 3.6G
+* Memory: 16G
+
 # Java Bind API
 
 * JMH 1.17.1 (released 11 days ago)
