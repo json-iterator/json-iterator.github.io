@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Json Iterator
+title: Json Iterator Benchmark
 ---
 
 * TOC
