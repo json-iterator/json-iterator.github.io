@@ -119,7 +119,7 @@ public int jsoniter(Jsoniter iter) throws IOException {
 
 The jackson/jsonp api style is:
 
-```
+```java
 Token token = parser.next();
 if (token == xxx) {
   // do yyy
@@ -128,7 +128,7 @@ if (token == xxx) {
 
 The control is passive. You do not know what you will get back from `parser.next()`. The api force you to guard against all kind of cases. Compared to jsoniter:
 
-```
+```java
 while (iter.readArray()) {
   // read element
 }
@@ -140,7 +140,7 @@ The api is active instead of passive. I know I must be reading array, if the jso
 
 The loop to parse object looks like
 
-```
+```java
 for (String field = iter.readObject(); field != null; field = iter.readObject()) {
   switch (field) {
     // deal with fields
@@ -154,7 +154,7 @@ It is as if you are iterating over a hashmap. There is no concept of TOKEN. You 
 
 Iterator api can also work in schema free way. So that in case the input is uncertain, for example some field might be string or int, we can still deal with it.
 
-```
+```java
 ValueType valueType = iter.whatIsNext();
 if (valueType == ValueType.STRING) {
   return iter.readString();
