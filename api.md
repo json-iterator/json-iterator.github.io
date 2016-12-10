@@ -117,7 +117,7 @@ public int jsoniter(Jsoniter iter) throws IOException {
     return totalTagsCount;
 }
 ```
-## Active V.S Passive
+# Active V.S Passive
 
 The jackson/jsonp api style is:
 
@@ -169,7 +169,7 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 
 # Bind API
 
-No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. We can see how jsoniter archieve maximum flexibility in the next [Integration] section.  
+No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. We can see how jsoniter archieve maximum flexibility in the next section: [integration].  
 
 # Integration
 
