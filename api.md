@@ -183,3 +183,5 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 | whatIsNext | WhatIsNext | the value type of next value |
 | readArray | ReadArray | expect more array element, return false if reached end |
 | readObject | ReadObject | expect more object field, return null if reached end |
+| readString | ReadString | expect "string" |
+| -          | ReadBase64 | read base64 encoded string and return byte array |
