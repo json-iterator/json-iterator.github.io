@@ -182,11 +182,18 @@ In jsoniter, iterator is not some underlying implementation hidden away from bin
 
 # API List
 
+Static method to create iterator instance
+
 | java | go | comment |
 | --- | --- | --- |
 | parse | Parse | create iterator from stream |
 | parse | ParseBytes | create iterator from byte array |
 | parse | ParseString | create iterator from string |
+
+Iterator methods
+
+| java | go | comment |
+| --- | --- | --- |
 | reset | Reset | reuse iterator instance for new stream |
 | reset | ResetBytes | reuse iterator instance for new byte array |
 | whatIsNext | WhatIsNext | the value type of next value |
