@@ -165,9 +165,21 @@ if (valueType == ValueType.STRING) {
 }
 ```
 
-It is not strictly schema free here. If the input is not string, but a array, `iter.readInt` will throw exception and tell we are expecting a integer, but found a array.
+It is not strictly schema free here. If the input is not string or int, but a array, `iter.readInt` will throw exception and tell we are expecting a integer, but found a array.
 
 # Bind API
 
 # Integration
 
+# API List
+
+| java | go | comment |
+| --- | --- | --- |
+| parse | Parse | create iterator from stream |
+| parse | ParseBytes | create iterator from byte array |
+| parse | ParseString | create iterator from string |
+| reset | Reset | reuse iterator instance for new stream |
+| reset | ResetBytes | reuse iterator instance for new byte array |
+| whatIsNext | WhatIsNext | the value type of next value |
+| readArray | ReadArray | expect more array element, return false if reached end |
+| readObject | ReadObject | expect more object field, return null if reached end |
