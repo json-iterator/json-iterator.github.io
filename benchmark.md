@@ -35,6 +35,8 @@ Machine Used:
 | [dsljson]  | 1335352.551 ± 24010.110  ops/s |
 | jsoniter (bind-api) | 4933967.110 ± 138318.632  ops/s |
 
+![java1](/benchmarks/java1.png)
+
 ## 10 kb
 
 [bind json to object](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/databind/Deserialization.java)
