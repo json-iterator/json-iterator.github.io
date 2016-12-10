@@ -200,3 +200,6 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 | -  | ReadInt | expect number like -123 |
 | readFloat | ReadFloat32 | expect number like 1.23 |
 | readDouble | ReadFloat64 | expect number like 1.23 |
+| reportError | reportError | report error condition |
+| -   | iter.Error | golang version use Error field to represent last error |
+| currentBuffer | currentBuffer | peak into the parsing buffer as string to debug unexpected error |
