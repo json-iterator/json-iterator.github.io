@@ -130,3 +130,4 @@ count number of elements from io.Reader without binding
 | jsonparser              | 53586488 ns/op	| 67107204 B/op | 20 allocs/op     |
 | jsoniter (iterator-api) | 44817092 ns/op  | 4248 B/op     | 5 allocs/op      |
 
+[jackson]: https://github.com/FasterXML/jackson-databind
