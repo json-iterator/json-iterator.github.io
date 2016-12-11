@@ -196,9 +196,9 @@ Some calculation such as what is int value for char '5' can be done ahead of tim
 
 ## Java only optimization
 
-Java parser is dynamically generated using javassit. Because we are actually generate real java source code, the generator can be easily implemented as static annotation processor.
+Java parser is dynamically generated using javassist. Because we are actually generating real java source code, the generator can be easily implemented as static annotation processor.
 
-Becase the source code is generated, we can do very tedious tweak:
+Since the source code is generated, we are not afraid of making it tedious but specific:
 
 ```java
 public Object decode(java.lang.reflect.Type type, com.jsoniter.Jsoniter iter) {
