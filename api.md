@@ -8,7 +8,7 @@ title: Json Iterator API
 
 # API Choices
 
-One thing does not fit all. Jsoniter always put developr friendlyness as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
+One thing does not fit all. Jsoniter always put developr friendliness as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
 
 Jsoniter gives you three api style choices:
 
@@ -264,13 +264,61 @@ It is not strictly schema free here. If the input is not string or int, but a ar
 
 No matter how convenient the iterator api is, iterator is still just iterator. 99% of time, we want to bind the JSON input into object, then process it. Binding JSON to structured object gives the schema info to the parser. With structure, not only easier to underderstand, but also makes the parsing much much faster. 
 
-# Integration
+The api is simple. In Java, you provide the class
+
+```java
+Jsoniter iter = Jsoniter.parse("[1,2,3]");
+int[] val = iter.read(int[].class);
+```
+
+In Go, you provide pointer to your object
+
+```go
+iter := ParseString(`[1,2,3]`)
+slice := []int{}
+iter.Read(&slice)
+```
+
+If you want to use generics in Java, use this syntax:
+
+```java
+Jsoniter iter = Jsoniter.parse("[1,2,3]");
+List<Integer> val = iter.read(new TypeLiteral<ArrayList<Integer>>(){});
+```
+
+## Bind callback
 
 The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. The answer is callback. Add callback hook in the binding process, then we can use iterator api to take back the control.
 
-The downside of iterator is, it is tedious. If we want to read a lot of fields, writting switch case for all of them is not fun at all. It would be nice to mix bind api when we are driving the iterator. And jsoniter allows us to do that.
+Register type decoder to parse element of specific type to use your callback
 
-In jsoniter, iterator is not some underlying implementation hidden away from bind api. Iterator api and bind api are at the same level, and they complement each other. There is no other json parser designed in the same way, as far as I know. Hope you enjoy the freedom as I do. Here is a quick example.
+```
+Jsoniter.registerTypeDecoder(Date.class, new Decoder() {
+    @Override
+    public Object decode(Type type, Jsoniter iter) throws IOException {
+	return new Date(iter.readLong());
+    }
+});
+Jsoniter iter = Jsoniter.parse("1481365190000");
+Date date = iter.read(Date.class);
+assertEquals(1481365190000L, date.getTime());
+Jsoniter.clearDecoders();
+```
+
+Register field decoder to special handle the fields chosen
+
+```
+Jsoniter.registerFieldDecoder(SimpleObject.class, "field1", new Decoder(){
+    @Override
+    public Object decode(Type type, Jsoniter iter) throws IOException {
+	return Integer.toString(iter.readInt());
+    }
+});
+Jsoniter iter = Jsoniter.parse("{'field1': 100}".replace('\'', '"'));
+SimpleObject myObject = iter.read(SimpleObject.class);
+assertEquals("100", myObject.field1);
+Jsoniter.clearDecoders();
+```
 
 
 # API List
