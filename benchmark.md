@@ -166,7 +166,9 @@ All parsing is done within one pass directly from byte array stream. Single pass
 
 ## Minimum allocation
 
-Making copy is avoided at all necessary means. For example, the parser has a internal byte array buffer holding recent byte. When parsing the field name of object, we do not allocate new bytes to hold field name. Instead, if possible, the buffer is reused as slice. 
+Making copy is avoided at all necessary means. For example, the parser has a internal byte array buffer holding recent byte. When parsing the field name of object, we do not allocate new bytes to hold field name. Instead, if possible, the buffer is reused as slice.
+
+Iterator instance itself keep copy of all kinds of buffer it used, and they can be reused by reset iterator with new input instead of create brand new iterator.
 
 ## Pull from stream
 
@@ -180,6 +182,105 @@ For golang, the string is utf-8 bytes based. The fastest way to construct a stri
 
 For java, the string is utf-16 char based. Parsing utf8 byte stream to utf16 char array is done by the parser directly, instead of using UTF8 charset. The cost of construct string, is simplely a char array copy.
 
+## Schema based
+
+Iterator api is active instead of passive compared to tokenizer api. It does not parse the token out, then if branching. Instead, given the schema, we know exactly what is ahead of us, so we just parse them as what we think it should be. If input disagree, then we raise proper error.
+
+## Skip takes different path
+
+Skip an object or array should take different path learned from [jsonparser]. We do not care about nested field name or so when we are skipping a whole object.
+
+## Table lookup
+
+Some calculation such as what is int value for char '5' can be done ahead of time. 
+
+## Java only optimization
+
+Java parser is dynamically generated using javassit. Because we are actually generate real java source code, the generator can be easily implemented as static annotation processor.
+
+Becase the source code is generated, we can do very tedious tweak:
+
+```java
+public Object decode(java.lang.reflect.Type type, com.jsoniter.Jsoniter iter) {
+com.jsoniter.SimpleObject obj = new com.jsoniter.SimpleObject();
+for (com.jsoniter.Slice field = iter.readObjectAsSlice(); field != null; field = iter.readObjectAsSlice()) {
+switch (field.len) {
+case 6: 
+if (field.at(0)==102) {
+if (field.at(1)==105) {
+if (field.at(2)==101) {
+if (field.at(3)==108) {
+if (field.at(4)==100) {
+if (field.at(5)==49) {
+obj.field1 = iter.readString();
+continue;
+}
+if (field.at(5)==50) {
+obj.field2 = iter.readString();
+continue;
+}
+}
+}
+}
+}
+}
+break;
+}
+iter.skip();
+}
+return obj;
+}
+```
+
+Also this:
+
+```java
+public Object decode(java.lang.reflect.Type type, com.jsoniter.Jsoniter iter) {
+if (!iter.readArray()) {
+return new int[0];
+}
+int a1 = iter.readInt();
+if (!iter.readArray()) {
+return new int[]{ a1 };
+}
+int a2 = iter.readInt();
+if (!iter.readArray()) {
+return new int[]{ a1, a2 };
+}
+int a3 = iter.readInt();
+if (!iter.readArray()) {
+return new int[]{ a1, a2, a3 };
+}
+int a4 = (int) iter.readInt();
+int[] arr = new int[8];
+arr[0] = a1;
+arr[1] = a2;
+arr[2] = a3;
+arr[3] = a4;
+int i = 4;
+while (iter.readArray()) {
+if (i == arr.length) {
+int[] newArr = new int[arr.length * 2];
+System.arraycopy(arr, 0, newArr, 0, arr.length);
+arr = newArr;
+}
+arr[i++] = iter.readInt();
+}
+int[] result = new int[i];
+System.arraycopy(arr, 0, result, 0, i);
+return result;
+}
+```
+
+## Golang only optimization
+
+binding to object is not using reflect api. Instead the raw pointer is taken out of `interface{}`, then cast to proper pointer type to set value. For example:
+
+```go
+*((*int)(ptr)) = iter.ReadInt()
+```
+
+Another optimization is we know how many fields are parsing out for a struct, so we can write the field dispatch differently. For no field, we simplely skip. For one field, if/else is enough. 2~4 fields switch case. 5 or more fields, we fallback to use map based field dispatching.
 
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
