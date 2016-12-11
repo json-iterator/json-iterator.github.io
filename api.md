@@ -20,6 +20,17 @@ And best of all, you can mix them up when parsing one document. Let's see some c
 
 Given this document `{"a": {"b": {"c": "d"}}}`
 
+Parse with Java bind-api + any-api
+```
+public class ABC {
+    public Any a;
+}
+
+Jsoniter iter = Jsoniter.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
+ABC abc = iter.read(ABC.class);
+System.out.println(abc.a.get("b", "c"));
+```
+
 Parse with Go bind-api + any-api
 
 ```
@@ -33,13 +44,39 @@ iter.Read(&abc)
 fmt.Println(abc.a.Get("b", "c"))
 ```
 
+
 Tranditionally, parse json return `Object` or `interface{}`. Then the parer's job is done, and developer's nightmare begins. Being able to mix bind-api and any-api, we can leave parts of the value uncertain, and deal with them later. `Any` has api to extract data out of deeply nested data structure very easily.
 
 Here is another example, `[123, {"name": "taowen", "tags": ["crazy", "hacker"]}]`
 
+Parse with Java iterator-api + bind-api
+
+```
+public class User {
+    public int userId;
+    public String name;
+    public String[] tags;
+}
+
+Jsoniter iter = Jsoniter.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
+iter.readArray();
+int userId = iter.readInt();
+iter.readArray();
+User user = iter.read(User.class);
+user.userId = userId;
+iter.readArray(); // end of array
+System.out.println(user);
+```
+
 Parse with Go iterator-api + bind-api
 
 ```
+type User struct {
+	userId int
+	name string
+	tags []string
+}
+
 iter := ParseString(`[123, {"name": "taowen", "tags": ["crazy", "hacker"]}]`)
 user := User{}
 iter.ReadArray()
