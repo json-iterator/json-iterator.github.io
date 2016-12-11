@@ -155,6 +155,32 @@ Different libraries bind data to struct in different ways:
 
 ![go-reader](http://jsoniter.com/benchmarks/go-reader.png)
 
+# Optimization used
+
+## Single pass scan
+
+All parsing is done within one pass directly from byte array stream. Single pass has two level of meaning:
+
+* on the large scale: the iterator api is forward only, you get what you need from current spot. There is no going back.
+* on the micro scale: readInt or readString is done in one pass. For example, pass integer is not done, by cut string out then parse string. Instead we use the byte stream to calculate int value directly. readFloat is an exception.
+
+## Minimum allocation
+
+Making copy is avoided at all necessary means. For example, the parser has a internal byte array buffer holding recent byte. When parsing the field name of object, we do not allocate new bytes to hold field name. Instead, if possible, the buffer is reused as slice. 
+
+## Pull from stream
+
+The input can be a InputStream or io.Reader, we do not read all bytes out into a big array. Instead the parsing is done in chunks. When we need more, we pull from the stream.
+
+## Take string seriously
+
+String parsing is performance killer if not being handled properly. The trick I learned from [jsonparser] and [dsljson] is taking a fast path for string without escape character. 
+
+For golang, the string is utf-8 bytes based. The fastest way to construct a string is direct cast from []byte to string, if you can make ensure the []byte does not go away or being modified.
+
+For java, the string is utf-16 char based. Parsing utf8 byte stream to utf16 char array is done by the parser directly, instead of using UTF8 charset. The cost of construct string, is simplely a char array copy.
+
+
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
 [fastjson]: https://github.com/alibaba/fastjson
