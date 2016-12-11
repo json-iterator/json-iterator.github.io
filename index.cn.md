@@ -5,17 +5,17 @@ title: Fastest JSON parser ever
 
 # Why json iterator (jsoniter)?
 
-* Jsoniter is the fastest JSON parser, it could be up to 10x faster than normal parser, data binding included (shameless self [benchmark](/benchmark.html))
-* Having a developer friendly api is our #1 prioprity, you can choose from bind-api, any-api or iterator-api or all of them (checkout your [api choices](/api.html))
-* Unique iterator api can iterate through JSON directly, zero memory allocation! (see how [iterator](/api.html#iterator-api) works)
+* Jsoniter 是最快的 JSON 解析器。它能比普通的解析器最高快到10倍之多，即使在数据绑定的用法下也有同样的性能差距。（无耻地献上自己的 [跑分](/benchmark.html)）
+* 使用起来容易始终是我们的第一优先级，你可以从 bind-api, any-api 或者 iterator-api 中选择合适的，或者全都用上（来看看这些 [API们](/api.html) 是不是真的有那么好用吧）
+* 独特的 iterator api 可以直接遍历 JSON，可以做到 0 内存分配！（这里讲解了 [iterator](/api.html#iterator-api) 是如何工作的）
 
-Available today, as both Java and Go version.
+同时提供 Java 和 Go 两个版本
 
-# 1 Minute Tutorial
+# 1分钟教程
 
-Given this JSON document `[0,1,2,3]`
+对于这个 JSON 文档 `[0,1,2,3]`
 
-Parse with Java bind-api
+使用 Java bind-api
 
 ```java
 import com.jsoniter.Jsoniter;
@@ -24,7 +24,7 @@ int[] val = iter.read(int[].class);
 System.out.println(val[3]);
 ```
 
-Parse with Go bind-api
+使用 Go bind-api
 
 ```go
 import "github.com/json-iterator/go"
@@ -34,7 +34,7 @@ iter.Read(&val)
 fmt.Println(val[3])
 ```
 
-Parse with Java any-api
+使用 Java any-api
 
 ```java
 import com.jsoniter.Jsoniter;
@@ -43,7 +43,7 @@ Any val = iter.readAny();
 System.out.println(any.get(3));
 ```
 
-Parse with Go any-api
+使用 Go any-api
 
 ```go
 import "github.com/json-iterator/go"
@@ -52,7 +52,7 @@ val := iter.ReadAny()
 fmt.Println(val.Get(3))
 ```
 
-Parse with Java iterator-api
+使用 Java iterator-api
 
 ```java
 import com.jsoniter.Jsoniter;
@@ -64,7 +64,7 @@ while(iter.readArray()) {
 System.out.println(total);
 ```
 
-Parse with Go iterator-api
+使用 Go iterator-api
 
 ```go
 import "github.com/json-iterator/go"
@@ -76,9 +76,9 @@ for iter.ReadArray() {
 fmt.Println(total)
 ```
 
-# How to get
+# 怎样获取
 
-For java version
+Java 版本
 
 ```
 <dependency>
@@ -88,12 +88,12 @@ For java version
 </dependency>
 ```
 
-For Go version
+Go 版本
 
 ```
 go get github.com/json-iterator/go
 ```
 
-# Contribution Welcomed !
+# 欢迎你的贡献
 
-Report issue or pull request, or email taowen@gmail.com
+小项目bug难免，欢迎提 issue 和 pull request
