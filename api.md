@@ -33,8 +33,31 @@ iter.Read(&abc)
 fmt.Println(abc.a.Get("b", "c"))
 ```
 
-Tranditionally, parse json return `Object` or `interface{}`. Then the parer's job is done, and developer's nightmare begins. Being able to mix bind-api and any-api, we can leave certain value uncertain, and deal with them later. `Any` has api to extract data out of deeply nested data structure very easily.
+Tranditionally, parse json return `Object` or `interface{}`. Then the parer's job is done, and developer's nightmare begins. Being able to mix bind-api and any-api, we can leave parts of the value uncertain, and deal with them later. `Any` has api to extract data out of deeply nested data structure very easily.
 
+Here is another example, `[123, {"name": "taowen", "tags": ["crazy", "hacker"]}]`
+
+Parse with Go iterator-api + bind-api
+
+```
+iter := ParseString(`[123, {"name": "taowen", "tags": ["crazy", "hacker"]}]`)
+user := User{}
+iter.ReadArray()
+user.userId = iter.ReadInt()
+iter.ReadArray()
+iter.Read(&user)
+iter.ReadArray() // array end
+fmt.Println(user)
+```
+
+Use iterator api gives us flexibility to do whatever we want. But binding a big struct is not fun to do manually. By mixing bind-api with iterator-api we can save some effort without compromising performance. Binding is fast. Handwritten binding code is only 10% faster or less.
+
+Here is a list of possible hybrid combination:
+
+* iterator-api => bind-api: use `Read`
+* iterator-api => any-api: use `ReadAny`
+* bind-api => iterator-api: register type decoder or field decoder
+* bind-api => any-api: use `Any` as data type
 
 # Iterator API
 
