@@ -328,18 +328,45 @@ same api available in go version.
 
 Parse JSON into a object of type `Any`. It is slowest api among the three, but really easy to use. The `Any` object is like a weakly typed javascript object, you can use string as int, and use int as string. For example
 
-```
+```java
 Jsoniter iter = Jsoniter.parse("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
 iter.readAny().toInt("numbers", 2, 0) // the value is 3
 ```
 
 Same code in go
 
-```
+```go
 iter := ParseString(`{"numbers": ["1", "2", ["3", "4"]]}`)
 iter.ReadAny().ToInt("numbers", 2, 0) // the value is 3
 ```
 
+## Any is powerful
+
+`Any` api bridges the gap between messy data and rigid statically typed data structure. It is the replacement of `Object` or `interface{}` when dealing with JSON. The api itself is strightforward, here is a list of them:
+
+| java | go  | comment |
+| ---  | --- | ---     |
+| Any  | MakeAny | create instance of `Any` |
+| getValueType | GetValueType | get the json value type, such as number or object |
+| get | Get | get raw object from path |
+| exists | - | go version has Error field to tell if path not found |
+| toString | ToString | convert value of path to string |
+| -  | ToUint8 | convert value of path to uint8 |
+| -  | ToInt8 | convert value of path to int8 |
+| -  | ToUint16 | convert value of path to uint16 |
+| toShort  | ToInt16 | convert value of path to int16 |
+| -  | ToUint32 | convert value of path to uint32 |
+| toInt  | ToInt32 | convert value of path to int32 |
+| -  | ToUint64 | convert value of path to uint64 |
+| -  | ToInt64 | convert value of path to int64 |
+| -  | ToUint | convert value of path to uint |
+| -  | ToInt | convert value of path to int |
+| toFloat  | ToFloat32 | convert value of path to float32 |
+| toDouble  | ToFloat64 | convert value of path to float64 |
+| toBoolean  | ToBool | convert value of path to bool |
+| -  | IsNull | tell if value of path is null |
+
+Given `Any` is so easy to use. It opens the option to read data as `Any` and process it directly, without binding it again to your class or struct.
 
 # API List
 
