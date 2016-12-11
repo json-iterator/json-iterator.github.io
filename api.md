@@ -8,7 +8,7 @@ title: Json Iterator API
 
 # API Choices
 
-One thing does not fit all. Jsoniter always put developr friendliness as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
+One thing does not fit all. Jsoniter always put developer friendliness as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
 
 Jsoniter gives you three api style choices:
 
