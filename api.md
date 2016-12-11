@@ -8,9 +8,9 @@ title: Json Iterator API
 
 # API Choices
 
-One thing does not fit all. Jsoniter always put developr friendly as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
+One thing does not fit all. Jsoniter always put developr friendlyness as top priority. No matter how many times faster you claim you can be, what most developer need is a json parser just get the job done. JSON being a weak typed data exchange format, when being parsed in language like Java or Go, it is very often we need to deal with type mismatch or uncertain data structure. Existing solution is not only slow to parse, but put too much work on the shoulder of developer. The motivation to reinvent this wheel is not performance, but to make the parsing as easy as it can be. Benchmarking is just a way to get your attention, sadly.
 
-Jsoniter give you three api style choices:
+Jsoniter gives you three api style choices:
 
 * bind-api: which you should stick with most of time
 * any-api: when slow is an option
@@ -18,10 +18,23 @@ Jsoniter give you three api style choices:
 
 And best of all, you can mix them up when parsing one document. Let's see some code
 
-Given this document
+Given this document `{"a": {"b": {"c": "d"}}}`
+
+Parse with Go bind-api + any-api
 
 ```
+type ABC struct {
+	a Any
+}
+
+iter := ParseString(`{"a": {"b": {"c": "d"}}}`)
+abc := &ABC{}
+iter.Read(&abc)
+fmt.Println(abc.a.Get("b", "c"))
 ```
+
+Tranditionally, parse json return `Object` or `interface{}`. Then the parer's job is done, and developer's nightmare begins. Being able to mix bind-api and any-api, we can leave certain value uncertain, and deal with them later. `Any` has api to extract data out of deeply nested data structure very easily.
+
 
 # Iterator API
 
