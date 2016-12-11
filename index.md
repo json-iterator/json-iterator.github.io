@@ -15,6 +15,15 @@ Available today, as both Java and Go version.
 
 Given this JSON document `[0,1,2,3]`
 
+Parse with Java bind-api
+
+```java
+import com.jsoniter.Jsoniter
+Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
+int[] val = iter.read(int[].class);
+System.out.println(val[3]);
+```
+
 Parse with Golang bind-api
 
 ```go
