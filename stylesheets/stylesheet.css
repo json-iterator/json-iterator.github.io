@@ -601,7 +601,7 @@ th {
 
 td {
   font-weight: 300;
-  text-align: center;
+  padding: 4px;
   border: 1px solid #ebebeb;
 }
 
