@@ -6,8 +6,8 @@ title: Fastest JSON parser ever
 # jsoniter 有何独特之处？
 
 * Jsoniter 是最快的 JSON 解析器。它能比普通的解析器最高快到10倍之多，即使在数据绑定的用法下也有同样的性能差距。（无耻地献上自己的 [跑分](/benchmark.html)）
-* 使用起来容易始终是我们的第一优先级，你可以从 bind-api, any-api 或者 iterator-api 中选择合适的，或者全都用上（来看看这些 [API们](/api.html) 是不是真的有那么好用吧）
-* 独特的 iterator api 可以直接遍历 JSON，可以做到 0 内存分配！（这里讲解了 [iterator](/api.html#iterator-api) 是如何工作的）
+* 非常易于使用的 api，允许你使用任何风格或者混搭的方式来解析 JSON。给你前所未有的灵活性。（来看看这些 [API们](/api.html) 是不是真的有那么好用吧）
+* 独特的 iterator api 能够直接遍历 JSON，极致性能！0 内存分配！（这里讲解了 [iterator](/api.html#iterator-api) 是如何工作的）
 
 同时提供 Java 和 Go 两个版本
 
