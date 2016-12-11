@@ -52,6 +52,30 @@ val := iter.ReadAny()
 fmt.Println(val.Get(3))
 ```
 
+Parse with java iterator-api
+
+```java
+import com.jsoniter.Jsoniter;
+Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
+int total = 0;
+while(iter.readArray()) {
+    total += iter.readInt();
+}
+System.out.println(total);
+```
+
+Parse with Go iterator-api
+
+```go
+import "github.com/json-iterator/go"
+iter := ParseString(`[0,1,2,3]`)
+total := 0
+for iter.ReadArray() {
+    total += iter.ReadInt()
+}
+fmt.Println(total)
+```
+
 # How to get
 
 For java version
