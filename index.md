@@ -3,7 +3,7 @@ layout: default
 title: Fastest JSON parser ever
 ---
 
-Jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](https://github.com/json-iterator/java) and [Go](https://github.com/json-iterator/go)
+jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](https://github.com/json-iterator/java) and [Go](https://github.com/json-iterator/go)
 
 # Why jsoniter?
 
