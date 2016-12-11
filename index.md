@@ -18,7 +18,7 @@ Given this JSON document `[0,1,2,3]`
 Parse with Java bind-api
 
 ```java
-import com.jsoniter.Jsoniter
+import com.jsoniter.Jsoniter;
 Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
 int[] val = iter.read(int[].class);
 System.out.println(val[3]);
@@ -32,6 +32,24 @@ iter := jsoniter.ParseString(`[0,1,2,3]`)
 val := []int{}
 iter.Read(&val)
 fmt.Println(val[3])
+```
+
+# How to get
+
+For java version
+
+```
+<dependency>
+    <groupId>com.jsoniter</groupId>
+    <artifactId>jsoniter</artifactId>
+    <version>0.9.1</version>
+</dependency>
+```
+
+For Go version
+
+```
+go get github.com/json-iterator/go
 ```
 
 # Contribution Welcomed !
