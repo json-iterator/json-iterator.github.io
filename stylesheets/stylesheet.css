@@ -596,6 +596,8 @@ table {
 }
 
 th {
+  text-align: left;
+  padding: 4px;
   font-weight: 500;
 }
 
