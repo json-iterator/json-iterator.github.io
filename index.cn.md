@@ -11,7 +11,7 @@ title: Fastest JSON parser ever
 
 同时提供 Java 和 Go 两个版本
 
-# 1分钟教程
+# 1 分钟教程
 
 对于这个 JSON 文档 `[0,1,2,3]`
 
