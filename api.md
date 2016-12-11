@@ -21,7 +21,7 @@ And best of all, you can mix them up when parsing one document. Let's see some c
 Given this document `{"a": {"b": {"c": "d"}}}`
 
 Parse with Java bind-api + any-api
-```
+```java
 public class ABC {
     public Any a;
 }
@@ -33,7 +33,7 @@ System.out.println(abc.a.get("b", "c"));
 
 Parse with Go bind-api + any-api
 
-```
+```go
 type ABC struct {
 	a Any
 }
@@ -51,7 +51,7 @@ Here is another example, `[123, {"name": "taowen", "tags": ["crazy", "hacker"]}]
 
 Parse with Java iterator-api + bind-api
 
-```
+```java
 public class User {
     public int userId;
     public String name;
@@ -70,7 +70,7 @@ System.out.println(user);
 
 Parse with Go iterator-api + bind-api
 
-```
+```go
 type User struct {
 	userId int
 	name string
@@ -292,7 +292,7 @@ The downside of binding is there is always exception. We want the field to be st
 
 Register type decoder to parse element of specific type to use your callback
 
-```
+```java
 Jsoniter.registerTypeDecoder(Date.class, new Decoder() {
     @Override
     public Object decode(Type type, Jsoniter iter) throws IOException {
@@ -307,7 +307,7 @@ Jsoniter.clearDecoders();
 
 Register field decoder to special handle the fields chosen
 
-```
+```java
 Jsoniter.registerFieldDecoder(SimpleObject.class, "field1", new Decoder(){
     @Override
     public Object decode(Type type, Jsoniter iter) throws IOException {
