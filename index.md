@@ -52,7 +52,7 @@ val := iter.ReadAny()
 fmt.Println(val.Get(3))
 ```
 
-Parse with java iterator-api
+Parse with Java iterator-api
 
 ```java
 import com.jsoniter.Jsoniter;
