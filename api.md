@@ -286,6 +286,8 @@ Jsoniter iter = Jsoniter.parse("[1,2,3]");
 List<Integer> val = iter.read(new TypeLiteral<ArrayList<Integer>>(){});
 ```
 
+The type literal instance might be reused globally, which is thread-safe.
+
 ## Bind callback
 
 The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. The answer is callback. Add callback hook in the binding process, then we can use iterator api to take back the control.
@@ -316,14 +318,32 @@ Jsoniter.registerFieldDecoder(SimpleObject.class, "field1", new Decoder(){
 });
 Jsoniter iter = Jsoniter.parse("{'field1': 100}".replace('\'', '"'));
 SimpleObject myObject = iter.read(SimpleObject.class);
-assertEquals("100", myObject.field1);
+assertEquals("100", myObject.field1)
 Jsoniter.clearDecoders();
+```
+
+same api available in go version.
+
+# Any API
+
+Parse JSON into a object of type `Any`. It is slowest api among the three, but really easy to use. The `Any` object is like a weakly typed javascript object, you can use string as int, and use int as string. For example
+
+```
+Jsoniter iter = Jsoniter.parse("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
+iter.readAny().toInt("numbers", 2, 0) // the value is 3
+```
+
+Same code in go
+
+```
+iter := ParseString(`{"numbers": ["1", "2", ["3", "4"]]}`)
+iter.ReadAny().ToInt("numbers", 2, 0) // the value is 3
 ```
 
 
 # API List
 
-Static method to create iterator instance
+## Static methods
 
 | java | go | comment |
 | --- | --- | --- |
@@ -333,7 +353,7 @@ Static method to create iterator instance
 | registerTypeDecoder | RegisterTypeDecoder | add callback to object binding process |
 | registerFieldDecoder | RegisterFieldDecoder | add callback to object binding process |
 
-Iterator methods
+## Iterator methods
 
 | java | go | comment |
 | --- | --- | --- |
