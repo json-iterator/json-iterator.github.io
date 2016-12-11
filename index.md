@@ -24,7 +24,7 @@ int[] val = iter.read(int[].class);
 System.out.println(val[3]);
 ```
 
-Parse with Golang bind-api
+Parse with Go bind-api
 
 ```go
 import "github.com/json-iterator/go"
@@ -32,6 +32,24 @@ iter := jsoniter.ParseString(`[0,1,2,3]`)
 val := []int{}
 iter.Read(&val)
 fmt.Println(val[3])
+```
+
+Parse with Java any-api
+
+```java
+import com.jsoniter.Jsoniter;
+Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
+Any val = iter.readAny();
+System.out.println(any.get(3));
+```
+
+Parse with Go any-api
+
+```go
+import "github.com/json-iterator/go"
+iter := jsoniter.ParseString(`[0,1,2,3]`)
+val := iter.ReadAny()
+fmt.Println(val.Get(3))
 ```
 
 # How to get
