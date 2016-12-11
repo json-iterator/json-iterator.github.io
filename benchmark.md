@@ -282,6 +282,8 @@ binding to object is not using reflect api. Instead the raw pointer is taken out
 
 Another optimization is we know how many fields are parsing out for a struct, so we can write the field dispatch differently. For no field, we simply skip. For one field, if/else is enough. 2~4 fields switch case. 5 or more fields, we fallback to use map based field dispatching.
 
+Golang version is not using `go generate` as I find it unfriendly to new developer. I might add `go generate` as an option and put same optimization I did for java version. It can be faster. Being able to access the raw pointer, the golang data binding performance is already good enough. As we can see from the benchmark, hand rolled binding code is only a little faster. This case might change, if golang decided to close it's memory layout for direct manipulation, or there is JIT can optimize more if we can get rid of pointer chasing introduced by virtual method.
+
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
 [fastjson]: https://github.com/alibaba/fastjson
