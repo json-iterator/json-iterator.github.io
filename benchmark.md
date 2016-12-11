@@ -280,7 +280,7 @@ binding to object is not using reflect api. Instead the raw pointer is taken out
 *((*int)(ptr)) = iter.ReadInt()
 ```
 
-Another optimization is we know how many fields are parsing out for a struct, so we can write the field dispatch differently. For no field, we simplely skip. For one field, if/else is enough. 2~4 fields switch case. 5 or more fields, we fallback to use map based field dispatching.
+Another optimization is we know how many fields are parsing out for a struct, so we can write the field dispatch differently. For no field, we simply skip. For one field, if/else is enough. 2~4 fields switch case. 5 or more fields, we fallback to use map based field dispatching.
 
 [jackson]: https://github.com/FasterXML/jackson-databind
 [gson]: https://github.com/google/gson
