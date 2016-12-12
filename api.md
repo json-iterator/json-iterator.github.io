@@ -348,6 +348,20 @@ iter.ReadAny().ToInt("numbers", 2, 0) // the value is 3
 
 As you can see, you can get data from deeply nested structure without peel them out one level by one level. The path is `Object...`, with string represent map key, int represent array/list index.
 
+You can even collect a list elements from nested structure, using `*` to represent apply to each element.
+
+```
+Any any = new Any(new Object[]{
+	new HashMap<String, Object>() {{
+	    put("hello", "world1");
+	}},
+	new HashMap<String, Object>() {{
+	    put("hello", "world2");
+	}}
+});
+List<String> objects = any.get("*", "hello"); // ["world1", "world2"]
+```
+
 ## Any is powerful
 
 `Any` api bridges the gap between messy data and rigid statically typed data structure. It is the replacement of `Object` or `interface{}` when dealing with JSON. The api itself is strightforward, here is a list of them:
