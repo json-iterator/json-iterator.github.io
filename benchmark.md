@@ -202,33 +202,34 @@ Since the source code is generated, we are not afraid of making it tedious but s
 
 ```java
 public Object decode(java.lang.reflect.Type type, com.jsoniter.Jsoniter iter) {
-com.jsoniter.SimpleObject obj = new com.jsoniter.SimpleObject();
-for (com.jsoniter.Slice field = iter.readObjectAsSlice(); field != null; field = iter.readObjectAsSlice()) {
-switch (field.len) {
-case 6: 
-if (field.at(0)==102) {
-if (field.at(1)==105) {
-if (field.at(2)==101) {
-if (field.at(3)==108) {
-if (field.at(4)==100) {
-if (field.at(5)==49) {
-obj.field1 = iter.readString();
-continue;
-}
-if (field.at(5)==50) {
-obj.field2 = iter.readString();
-continue;
-}
-}
-}
-}
-}
-}
-break;
-}
-iter.skip();
-}
-return obj;
+        com.jsoniter.SimpleObject obj = new com.jsoniter.SimpleObject();
+        for (com.jsoniter.Slice field = iter.readObjectAsSlice(); field != null; field = iter.readObjectAsSlice()) {
+            switch (field.len) {
+                case 6:
+                    if (field.at(0)==102) {
+                        if (field.at(1)==105) {
+                            if (field.at(2)==101) {
+                                if (field.at(3)==108) {
+                                    if (field.at(4)==100) {
+                                        if (field.at(5)==49) {
+                                            obj.field1 = iter.readString();
+                                            continue;
+                                        }
+                                        if (field.at(5)==50) {
+                                            obj.field2 = iter.readString();
+                                            continue;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            iter.skip();
+        }
+        return obj;
+    }
 }
 ```
 
@@ -236,39 +237,40 @@ Also this:
 
 ```java
 public Object decode(java.lang.reflect.Type type, com.jsoniter.Jsoniter iter) {
-if (!iter.readArray()) {
-return new int[0];
-}
-int a1 = iter.readInt();
-if (!iter.readArray()) {
-return new int[]{ a1 };
-}
-int a2 = iter.readInt();
-if (!iter.readArray()) {
-return new int[]{ a1, a2 };
-}
-int a3 = iter.readInt();
-if (!iter.readArray()) {
-return new int[]{ a1, a2, a3 };
-}
-int a4 = (int) iter.readInt();
-int[] arr = new int[8];
-arr[0] = a1;
-arr[1] = a2;
-arr[2] = a3;
-arr[3] = a4;
-int i = 4;
-while (iter.readArray()) {
-if (i == arr.length) {
-int[] newArr = new int[arr.length * 2];
-System.arraycopy(arr, 0, newArr, 0, arr.length);
-arr = newArr;
-}
-arr[i++] = iter.readInt();
-}
-int[] result = new int[i];
-System.arraycopy(arr, 0, result, 0, i);
-return result;
+        if (!iter.readArray()) {
+            return new int[0];
+        }
+        int a1 = iter.readInt();
+        if (!iter.readArray()) {
+            return new int[]{ a1 };
+        }
+        int a2 = iter.readInt();
+        if (!iter.readArray()) {
+            return new int[]{ a1, a2 };
+        }
+        int a3 = iter.readInt();
+        if (!iter.readArray()) {
+            return new int[]{ a1, a2, a3 };
+        }
+        int a4 = (int) iter.readInt();
+        int[] arr = new int[8];
+        arr[0] = a1;
+        arr[1] = a2;
+        arr[2] = a3;
+        arr[3] = a4;
+        int i = 4;
+        while (iter.readArray()) {
+            if (i == arr.length) {
+                int[] newArr = new int[arr.length * 2];
+                System.arraycopy(arr, 0, newArr, 0, arr.length);
+                arr = newArr;
+            }
+            arr[i++] = iter.readInt();
+        }
+        int[] result = new int[i];
+        System.arraycopy(arr, 0, result, 0, i);
+        return result;
+    }
 }
 ```
 
