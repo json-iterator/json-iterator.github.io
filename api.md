@@ -311,16 +311,21 @@ Jsoniter.clearDecoders();
 Register field decoder to special handle the fields chosen
 
 ```java
-Jsoniter.registerFieldDecoder(SimpleObject.class, "field1", new Decoder(){
+public class CustomizedObject {
+    public String field2;
+    public String field1;
+}
+
+Jsoniter.registerFieldDecoder(CustomizedObject.class, "field1", new Decoder(){
+
     @Override
     public Object decode(Type type, Jsoniter iter) throws IOException {
 	return Integer.toString(iter.readInt());
     }
 });
 Jsoniter iter = Jsoniter.parse("{'field1': 100}".replace('\'', '"'));
-SimpleObject myObject = iter.read(SimpleObject.class);
-assertEquals("100", myObject.field1)
-Jsoniter.clearDecoders();
+CustomizedObject myObject = iter.read(CustomizedObject.class);
+assertEquals("100", myObject.field1);
 ```
 
 same api available in go version.
