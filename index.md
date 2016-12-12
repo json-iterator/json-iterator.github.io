@@ -13,7 +13,7 @@ jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](ht
 
 # Show off
 
-Here is a quick show off, you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
+Here is a quick show off, for more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
 
 This is java version, doing data binding
 
