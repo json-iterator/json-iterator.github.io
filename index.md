@@ -96,4 +96,4 @@ go get github.com/json-iterator/go
 
 # Contribution Welcomed !
 
-Report issue or pull request, or email taowen@gmail.com
+Report issue or pull request, or email taowen@gmail.com, or [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/json-iterator/Lobby)
