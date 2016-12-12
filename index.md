@@ -11,6 +11,18 @@ jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](ht
 * Extremely flexible api. You can mix and match three different styles: bind-api, any-api or iterator-api. Checkout your [api choices](/api.html)
 * Unique iterator api can iterate through JSON directly, zero memory allocation! See how [iterator](/api.html#iterator-api) works
 
+# Show off
+
+Here is a quick show off, you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
+
+This is java version, doing data binding
+
+![java1](http://jsoniter.com/benchmarks/java1.png)
+
+This is go version, doing data binding
+
+![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
+
 # 1 Minute Tutorial
 
 Given this JSON document `[0,1,2,3]`
