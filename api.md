@@ -346,6 +346,8 @@ iter := ParseString(`{"numbers": ["1", "2", ["3", "4"]]}`)
 iter.ReadAny().ToInt("numbers", 2, 0) // the value is 3
 ```
 
+As you can see, you can get data from deeply nested structure without peel them out one level by one level. The path is `Object...`, with string represent map key, int represent array/list index.
+
 ## Any is powerful
 
 `Any` api bridges the gap between messy data and rigid statically typed data structure. It is the replacement of `Object` or `interface{}` when dealing with JSON. The api itself is strightforward, here is a list of them:
