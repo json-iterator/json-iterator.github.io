@@ -350,7 +350,7 @@ As you can see, you can get data from deeply nested structure without peel them 
 
 You can even collect a list elements from nested structure, using `*` to represent apply to each element.
 
-```
+```java
 Any any = new Any(new Object[]{
 	new HashMap<String, Object>() {{
 	    put("hello", "world1");
