@@ -29,11 +29,11 @@ Machine Used:
 
 | parser | score |
 | ---    | ---   |
-| [jackson]  | 850892.349 ± 39530.833  ops/s |
-| [gson]     | 392361.207 ± 17619.850  ops/s |
-| [fastjson] | 544556.920 ± 61141.858  ops/s |
-| [dsljson]  | 1335352.551 ± 24010.110  ops/s |
-| jsoniter (bind-api) | 4933967.110 ± 138318.632  ops/s |
+| [jackson]  | 177084.689 ±  1799.302  ops/s |
+| [gson]     | 93788.846 ±  1818.627  ops/s |
+| [fastjson] | 104953.993 ±   538.658  ops/s |
+| [dsljson]  | 330153.573 ± 25947.852  ops/s |
+| jsoniter (bind-api) | 402531.206 ±  7187.885  ops/s |
 
 ![java1](http://jsoniter.com/benchmarks/java1.png)
 
