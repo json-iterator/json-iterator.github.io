@@ -23,7 +23,7 @@ This is go version, doing data binding
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# Good Old Bind-API
+# Bind-API is the best
 
 Bind-api should always be the first choice. Given this JSON document `[0,1,2,3]`
 
