@@ -23,9 +23,9 @@ This is go version, doing data binding
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# 1 Minute Tutorial
+# Good Old Bind-API
 
-Given this JSON document `[0,1,2,3]`
+Bind-api should always be the first choice. Given this JSON document `[0,1,2,3]`
 
 Parse with Java bind-api
 
@@ -46,46 +46,56 @@ iter.Read(&val)
 fmt.Println(val[3])
 ```
 
-Parse with Java any-api
+# Iterator-API for quick extraction
 
-```java
-import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
-Any val = iter.readAny();
-System.out.println(any.get(3));
-```
-
-Parse with Go any-api
-
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[0,1,2,3]`)
-val := iter.ReadAny()
-fmt.Println(val.Get(3))
-```
+When you do not need to get all the data back, just extract some.
 
 Parse with Java iterator-api
 
 ```java
 import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
-int total = 0;
+Jsoniter iter = Jsoniter.parse("[0, [1, 2], [3, 4], 5]");
+int count = 0;
 while(iter.readArray()) {
-    total += iter.readInt();
+    iter.skip();
+    total++;
 }
-System.out.println(total);
+System.out.println(total); // 4
 ```
 
 Parse with Go iterator-api
 
 ```go
 import "github.com/json-iterator/go"
-iter := ParseString(`[0,1,2,3]`)
-total := 0
+iter := ParseString(`[0, [1, 2], [3, 4], 5]`)
+count := 0
 for iter.ReadArray() {
-    total += iter.ReadInt()
+    iter.skip()
+    count++
 }
-fmt.Println(total)
+fmt.Println(count) // 4
+```
+
+# Any-API for maximum flexibility
+
+Parse with Java any-api
+
+```java
+import com.jsoniter.Jsoniter;
+Jsoniter iter = Jsoniter.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
+Any val = iter.readAny();
+System.out.println(any.toInt(1, "field2")); // 22
+```
+
+Notice you can extract from nested data structure, and convert any type to the type to you want. 
+
+Parse with Go any-api
+
+```go
+import "github.com/json-iterator/go"
+iter := jsoniter.ParseString(`[{"field1":"11","field2":"12"},{"field1":"21","field2":"22"}]`)
+val := iter.ReadAny()
+fmt.Println(val.ToInt(1, "field2")) // 22
 ```
 
 # How to get
