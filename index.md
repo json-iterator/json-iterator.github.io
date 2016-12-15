@@ -58,9 +58,9 @@ Jsoniter iter = Jsoniter.parse("[0, [1, 2], [3, 4], 5]");
 int count = 0;
 while(iter.readArray()) {
     iter.skip();
-    total++;
+    count++;
 }
-System.out.println(total); // 4
+System.out.println(count); // 4
 ```
 
 Parse with Go iterator-api
@@ -84,7 +84,7 @@ Parse with Java any-api
 import com.jsoniter.Jsoniter;
 Jsoniter iter = Jsoniter.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
 Any val = iter.readAny();
-System.out.println(any.toInt(1, "field2")); // 22
+System.out.println(val.toInt(1, "field2")); // 22
 ```
 
 Notice you can extract from nested data structure, and convert any type to the type to you want. 
