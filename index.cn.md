@@ -58,9 +58,9 @@ Jsoniter iter = Jsoniter.parse("[0, [1, 2], [3, 4], 5]");
 int count = 0;
 while(iter.readArray()) {
     iter.skip();
-    total++;
+    count++;
 }
-System.out.println(total); // 4
+System.out.println(count); // 4
 ```
 
 使用 Go iterator-api
@@ -83,7 +83,7 @@ fmt.Println(count) // 4
 import com.jsoniter.Jsoniter;
 Jsoniter iter = Jsoniter.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
 Any val = iter.readAny();
-System.out.println(any.toInt(1, "field2")); // 22
+System.out.println(val.toInt(1, "field2")); // 22
 ```
 
 注意你可以从嵌套的结构中直接取数据出来，并且转换成任意你想要的类型。
