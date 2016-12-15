@@ -23,9 +23,9 @@ Go 版本数据绑定用法下的性能
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# Bind-API 默认地最佳选择
+# Bind-API 最熟悉的老味道
 
-对于这个 JSON 文档 `[0,1,2,3]`
+没有特殊需求的时候，应该作为默认的最佳选择。对于这个 JSON 文档 `[0,1,2,3]`
 
 使用 Java bind-api
 
