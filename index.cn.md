@@ -75,6 +75,7 @@ for iter.ReadArray() {
 }
 fmt.Println(count) // 4
 ```
+
 # Any-API 具有最好的灵活性
 
 使用 Java any-api
