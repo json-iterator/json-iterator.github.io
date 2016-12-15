@@ -23,7 +23,7 @@ Go 版本数据绑定用法下的性能
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# 1 分钟教程
+# Bind-API 默认地最佳选择
 
 对于这个 JSON 文档 `[0,1,2,3]`
 
@@ -46,46 +46,55 @@ iter.Read(&val)
 fmt.Println(val[3])
 ```
 
-使用 Java any-api
+# Iterator-API 用于快速抽取数据
 
-```java
-import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
-Any val = iter.readAny();
-System.out.println(any.get(3));
-```
-
-使用 Go any-api
-
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[0,1,2,3]`)
-val := iter.ReadAny()
-fmt.Println(val.Get(3))
-```
+不用把数据全部读出来，只是选择性抽取
 
 使用 Java iterator-api
 
 ```java
 import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
-int total = 0;
+Jsoniter iter = Jsoniter.parse("[0, [1, 2], [3, 4], 5]");
+int count = 0;
 while(iter.readArray()) {
-    total += iter.readInt();
+    iter.skip();
+    total++;
 }
-System.out.println(total);
+System.out.println(total); // 4
 ```
 
 使用 Go iterator-api
 
 ```go
 import "github.com/json-iterator/go"
-iter := ParseString(`[0,1,2,3]`)
-total := 0
+iter := ParseString(`[0, [1, 2], [3, 4], 5]`)
+count := 0
 for iter.ReadArray() {
-    total += iter.ReadInt()
+    iter.skip()
+    count++
 }
-fmt.Println(total)
+fmt.Println(count) // 4
+```
+# Any-API 具有最好的灵活性
+
+使用 Java any-api
+
+```java
+import com.jsoniter.Jsoniter;
+Jsoniter iter = Jsoniter.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
+Any val = iter.readAny();
+System.out.println(any.toInt(1, "field2")); // 22
+```
+
+注意你可以从嵌套的结构中直接取数据出来，并且转换成任意你想要的类型。
+
+使用 Go any-api
+
+```go
+import "github.com/json-iterator/go"
+iter := jsoniter.ParseString(`[{"field1":"11","field2":"12"},{"field1":"21","field2":"22"}]`)
+val := iter.ReadAny()
+fmt.Println(val.ToInt(1, "field2")) // 22
 ```
 
 # 怎样获取
