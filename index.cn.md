@@ -30,8 +30,8 @@ Go 版本数据绑定用法下的性能
 使用 Java bind-api
 
 ```java
-import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0,1,2,3]");
+import com.jsoniter.JsonIterator;
+Jsoniter iter = JsonIterator.parse("[0,1,2,3]");
 int[] val = iter.read(int[].class);
 System.out.println(val[3]);
 ```
@@ -53,8 +53,8 @@ fmt.Println(val[3])
 使用 Java iterator-api
 
 ```java
-import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[0, [1, 2], [3, 4], 5]");
+import com.jsoniter.JsonIterator;
+Jsoniter iter = JsonIterator.parse("[0, [1, 2], [3, 4], 5]");
 int count = 0;
 while(iter.readArray()) {
     iter.skip();
@@ -81,8 +81,8 @@ fmt.Println(count) // 4
 使用 Java any-api
 
 ```java
-import com.jsoniter.Jsoniter;
-Jsoniter iter = Jsoniter.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
+import com.jsoniter.JsonIterator;
+Jsoniter iter = JsonIterator.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
 Any val = iter.readAny();
 System.out.println(val.toInt(1, "field2")); // 22
 ```
@@ -106,7 +106,7 @@ Java 版本
 <dependency>
     <groupId>com.jsoniter</groupId>
     <artifactId>jsoniter</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2</version>
 </dependency>
 ```
 
