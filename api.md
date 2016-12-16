@@ -27,7 +27,7 @@ public class ABC {
     public Any a;
 }
 
-Jsoniter iter = Jsoniter.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
+JsonIterator iter = JsonIterator.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
 ABC abc = iter.read(ABC.class);
 System.out.println(abc.a.get("b", "c"));
 ```
@@ -59,7 +59,7 @@ public class User {
     public String[] tags;
 }
 
-Jsoniter iter = Jsoniter.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
+JsonIterator iter = JsonIterator.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
 iter.readArray();
 int userId = iter.readInt();
 iter.readArray();
@@ -145,7 +145,7 @@ The example here is written java, because there is no well-known streaming count
 Using jackson library, to count the total number of tags:
 
 ```java
-public int jackson(JsonParser jParser) throws IOException {
+public int calc(JsonParser jParser) throws IOException {
     int totalTagsCount = 0;
     while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
         String fieldname = jParser.getCurrentName();
@@ -181,7 +181,7 @@ private int jacksonUser(JsonParser jParser) throws IOException {
 Using jsoniter, the iterator api is much more straight forward, there is no concept as Token.
 
 ```java
-public int jsoniter(Jsoniter iter) throws IOException {
+public int calc(JsonIterator iter) throws IOException {
     int totalTagsCount = 0;
     for (String field = iter.readObject(); field != null; field = iter.readObject()) {
         switch (field) {
@@ -268,7 +268,7 @@ No matter how convenient the iterator api is, iterator is still just iterator. 9
 The api is simple. In Java, you provide the class
 
 ```java
-Jsoniter iter = Jsoniter.parse("[1,2,3]");
+JsonIterator iter = JsonIterator.parse("[1,2,3]");
 int[] val = iter.read(int[].class);
 ```
 
@@ -283,7 +283,7 @@ iter.Read(&slice)
 If you want to use generics in Java, use this syntax:
 
 ```java
-Jsoniter iter = Jsoniter.parse("[1,2,3]");
+JsonIterator iter = JsonIterator.parse("[1,2,3]");
 List<Integer> val = iter.read(new TypeLiteral<ArrayList<Integer>>(){});
 ```
 
@@ -296,16 +296,16 @@ The downside of binding is there is always exception. We want the field to be st
 Register type decoder to parse element of specific type to use your callback
 
 ```java
-Jsoniter.registerTypeDecoder(Date.class, new Decoder() {
+JsonIterator.registerTypeDecoder(Date.class, new Decoder() {
     @Override
-    public Object decode(Type type, Jsoniter iter) throws IOException {
+    public Object decode(JsonIterator iter) throws IOException {
 	return new Date(iter.readLong());
     }
 });
-Jsoniter iter = Jsoniter.parse("1481365190000");
+JsonIterator iter = JsonIterator.parse("1481365190000");
 Date date = iter.read(Date.class);
 assertEquals(1481365190000L, date.getTime());
-Jsoniter.clearDecoders();
+JsonIterator.clearDecoders();
 ```
 
 Register field decoder to special handle the fields chosen
@@ -316,14 +316,14 @@ public class CustomizedObject {
     public String field1;
 }
 
-Jsoniter.registerFieldDecoder(CustomizedObject.class, "field1", new Decoder(){
+JsonIterator.registerFieldDecoder(CustomizedObject.class, "field1", new Decoder(){
 
     @Override
-    public Object decode(Type type, Jsoniter iter) throws IOException {
+    public Object decode(JsonIterator iter) throws IOException {
 	return Integer.toString(iter.readInt());
     }
 });
-Jsoniter iter = Jsoniter.parse("{'field1': 100}".replace('\'', '"'));
+JsonIterator iter = JsonIterator.parse("{'field1': 100}".replace('\'', '"'));
 CustomizedObject myObject = iter.read(CustomizedObject.class);
 assertEquals("100", myObject.field1);
 ```
@@ -335,7 +335,7 @@ same api available in go version.
 Parse JSON into a object of type `Any`. It is slowest api among the three, but really easy to use. The `Any` object is like a weakly typed javascript object, you can use string as int, and use int as string. For example
 
 ```java
-Jsoniter iter = Jsoniter.parse("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
+JsonIterator iter = JsonIterator.parse("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
 iter.readAny().toInt("numbers", 2, 0) // the value is 3
 ```
 
