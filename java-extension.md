@@ -104,3 +104,50 @@ JsonIterator iter = JsonIterator.parse("{'field1': '100'}".replace('\'', '"'));
 TestObject2 myObject = iter.read(TestObject2.class);
 assertEquals(100, myObject.field1);
 ```
+
+# Rename field
+
+Besides controlling how to decode a value, changing which JSON field bind to which object field is a very common requirement. Instead of only provide a `@JsonProperty` to change the mapping, jsoniter provide a much more powerful solution, a callback interface `Extension`. There are many things a extension can customize, here we focus on field renaming.
+
+```java
+public class TestObject4 {
+    public int field1;
+}
+
+JsonIterator.registerExtension(new EmptyExtension() {
+    @Override
+    public boolean updateBinding(Binding field) {
+        if (field.clazz == TestObject4.class && field.name.equals("field1")) {
+            field.fromNames = new String[]{"field_1", "Field1"};
+            return true;
+        }
+        return false;
+    }
+});
+JsonIterator iter = JsonIterator.parse("{'field_1': 100}".replace('\'', '"'));
+TestObject4 myObject1 = iter.read(TestObject4.class);
+assertEquals(100, myObject1.field1);
+```
+
+The callback `updateBinding` change the data source or decoder for a field. The `fromNames` is a `String[]`, with following options:
+
+* null: do not customize this field
+* empty array: disable this field binding. works like `@JsonIgnore`
+* one or many: you can map multiple possible json field to one object field
+
+The input is a concept called `Binding`, which not only represent field, but also constructor parameter and setter parameter. It contains the necessary information about what is binding, and you can customize how to bind it:
+
+```
+public class Binding {
+    // input
+    public Class clazz;
+    public String name;
+    public Type valueType;
+    public Annotation[] annotations;
+    // output
+    public String[] fromNames;
+    public Decoder decoder;
+}
+```
+
+So we can also customize the field decoder using `Extension` to update bindings. Actually type decoder and field decoder callback is just a shortcut. The `Extension` interface can do all the job.
