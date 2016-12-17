@@ -162,7 +162,7 @@ Different libraries bind data to struct in different ways:
 All parsing is done within one pass directly from byte array stream. Single pass has two level of meaning:
 
 * on the large scale: the iterator api is forward only, you get what you need from current spot. There is no going back.
-* on the micro scale: readInt or readString is done in one pass. For example, pass integer is not done, by cut string out then parse string. Instead we use the byte stream to calculate int value directly. readFloat is an exception.
+* on the micro scale: readInt or readString is done in one pass. For example, parse integer is not done by cutting string out, then parse string. Instead we use the byte stream to calculate int value directly. even readFloat or readDouble is implemented this way, with exceptions.
 
 ## Minimum allocation
 
