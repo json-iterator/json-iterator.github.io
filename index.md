@@ -10,6 +10,7 @@ jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](ht
 * Jsoniter is the fastest JSON parser. It could be up to 10x faster than normal parser, data binding included. Shameless self [benchmark](/benchmark.html)
 * Extremely flexible api. You can mix and match three different styles: bind-api, any-api or iterator-api. Checkout your [api choices](/api.html)
 * Unique iterator api can iterate through JSON directly, zero memory allocation! See how [iterator](/api.html#iterator-api) works
+* Every steps of the data binding process can be customized, checkout extension guide for [java](/java-extension.html) and [go](/go-extension.html) version
 
 # Show off
 
@@ -34,6 +35,23 @@ import com.jsoniter.JsonIterator;
 Jsoniter iter = JsonIterator.parse("[0,1,2,3]");
 int[] val = iter.read(int[].class);
 System.out.println(val[3]);
+```
+
+You can also read into a existing object
+
+```java
+public static class TestObj1 {
+    public String field1;
+    public String field2;
+}
+
+TestObj1 testObj = new TestObj1();
+testObj.field2 = "world";
+JsonIterator iter = JsonIterator.parse("{ 'field1' : 'hello' }".replace('\'', '"'));
+iter.read(testObj);
+
+System.out.println(testObj.field1); // "hello"
+System.out.println(testObj.field2); // "world"
 ```
 
 Parse with Go bind-api
