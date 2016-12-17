@@ -151,3 +151,53 @@ public class Binding {
 ```
 
 So we can also customize the field decoder using `Extension` to update bindings. Actually type decoder and field decoder callback is just a shortcut. The `Extension` interface can do all the job.
+
+# Your own annotation support
+
+It is very common to support `@JsonProperty` to rename field. By registering your own extension, you can implement them very easily.
+
+```java
+@Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JsonProperty {
+    String USE_DEFAULT_NAME = "";
+    String value() default USE_DEFAULT_NAME;
+}
+
+public class MyAnnotationSupport extends EmptyExtension {
+
+    public static void enable() {
+        JsonIterator.registerExtension(new JsoniterAnnotationSupport());
+    }
+
+    @Override
+    public boolean updateBinding(Binding field) {
+        JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
+        if (jsonProperty == null) {
+            String alternativeField = jsonProperty.value();
+            if (!alternativeField.isEmpty()) {
+                field.fromNames = new String[]{alternativeField};
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+Then you can annotate
+
+```
+public static class AnnotatedObject {
+    @JsonProperty("field-1")
+    public int field1;
+}
+
+JsonIterator iter = JsonIterator.parse("{'field-1': 100}".replace('\'', '"'));
+AnnotatedObject obj = iter.read(AnnotatedObject.class);
+assertEquals(100, obj.field1);
+```
+
+If you do not want to write annotation support yourself, you can use built-in `com.jsoniter.annotation.JsoniterAnnotationSupport`.
+
+
