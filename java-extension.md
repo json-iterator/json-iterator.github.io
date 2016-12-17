@@ -47,7 +47,7 @@ iter.read(Date.class); // Sat Dec 10 18:19:50 CST 2016
 
 Generic types can also be customized by `TypeLiteral`. Here is an example:
 
-```
+```java
 TypeLiteral<List<Integer>> listOfIntType = new TypeLiteral<List<Integer>>() {
 };
 JsonIterator.registerTypeDecoder(listOfIntType, new Decoder() {
@@ -137,7 +137,7 @@ The callback `updateBinding` change the data source or decoder for a field. The 
 
 The input is a concept called `Binding`, which not only represent field, but also constructor parameter and setter parameter. It contains the necessary information about what is binding, and you can customize how to bind it:
 
-```
+```java
 public class Binding {
     // input
     public Class clazz;
@@ -187,7 +187,7 @@ public class MyAnnotationSupport extends EmptyExtension {
 
 Then you can annotate
 
-```
+```java
 public static class AnnotatedObject {
     @JsonProperty("field-1")
     public int field1;
@@ -229,7 +229,7 @@ public class CustomizedConstructor {
 
 Using this extension point, `@JsonCreator` annotation support has been implemented. You can mark it on constructor:
 
-```
+```java
 public static class NoDefaultCtor {
     private int field1;
 
@@ -242,7 +242,7 @@ public static class NoDefaultCtor {
 
 Or, you can mark it on static method:
 
-```
+```java
 public static class StaticFactory {
 
     private int field1;
@@ -273,7 +273,7 @@ The binding is done in this sequence
 
 By default, methods like `setName(val)` will be caleld with field value from `name`. You can choose to use other kinds of methods as setters. For example
 
-```
+```java
 public static class WithSetter {
 
     private int field1;
@@ -289,7 +289,7 @@ public static class WithSetter {
 
 This annotation support is implemented by `Extension` as well. The callback is:
 
-```
+```java
 public interface Extension {
     // ...
     List<CustomizedSetter> getSetters(Class clazz);
@@ -313,7 +313,7 @@ The setter parameters, constructor parameters and fields are all just bindings. 
 
 # Extension & Iterator
 
-```
+```java
 public interface Extension {
     /**
      * Customize type decoding
@@ -361,7 +361,7 @@ Also the decoder interface is powered with iterator-api to iterate on the lowest
 
 There is a feature flag of jackson called `ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT`. The intention is to decode input like `[]` as null, as PHP might treat empty object as empty array. To support this feature, we can register a extension
 
-```
+```java
 JsonIterator.registerExtension(new EmptyExtension() {
     @Override
     public Decoder createDecoder(final String cacheKey, final Type type) {
