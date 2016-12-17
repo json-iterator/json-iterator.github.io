@@ -173,7 +173,7 @@ public class MyAnnotationSupport extends EmptyExtension {
     @Override
     public boolean updateBinding(Binding field) {
         JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
-        if (jsonProperty == null) {
+        if (jsonProperty != null) {
             String alternativeField = jsonProperty.value();
             if (!alternativeField.isEmpty()) {
                 field.fromNames = new String[]{alternativeField};
@@ -199,5 +199,66 @@ assertEquals(100, obj.field1);
 ```
 
 If you do not want to write annotation support yourself, you can use built-in `com.jsoniter.annotation.JsoniterAnnotationSupport`.
+
+# No default constructor? No problem!
+
+Jsoniter can work with class without default constructor. The extension can customize the constructor to be used for specific class. The constructor can also be a static method, instead of real constructor.
+
+```java
+public interface Extension {
+   // ...
+   CustomizedConstructor getConstructor(Class clazz);
+   /// ...
+}
+
+public class CustomizedConstructor {
+    /**
+     * set to null if use constructor
+     * otherwise use static method
+     */
+    public String staticMethodName;
+
+    /**
+     * the parameters to call constructor or static method
+     */
+    public List<Binding> parameters = new ArrayList<Binding>();
+
+    public static CustomizedConstructor DEFAULT_INSTANCE = new CustomizedConstructor();
+}
+```
+
+Using this extension point, `@JsonCreator` annotation support has been implemented. You can mark it on constructor:
+
+```
+public static class NoDefaultCtor {
+    private int field1;
+
+    @JsonCreator
+    public NoDefaultCtor(@JsonProperty("field1") int field1) {
+        this.field1 = field1;
+    }
+}
+```
+
+Or, you can mark it on static method:
+
+```
+public static class StaticFactory {
+
+    private int field1;
+
+    private StaticFactory() {
+    }
+
+    @JsonCreator
+    public static StaticFactory createObject(@JsonProperty("field1") int field1) {
+        StaticFactory obj = new StaticFactory();
+        obj.field1 = field1;
+        return obj;
+    }
+}
+```
+
+To enable jsoniter annotation support `JsoniterAnnotationSupport.enable()` must be called first
 
 
