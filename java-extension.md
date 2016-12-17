@@ -261,4 +261,100 @@ public static class StaticFactory {
 
 To enable jsoniter annotation support `JsoniterAnnotationSupport.enable()` must be called first
 
+# Setter support
 
+The binding is done in this sequence
+
+```
+1. create instance using constructor
+2. bind fields
+3. call setters
+```
+
+By default, methods like `setName(val)` will be caleld with field value from `name`. You can choose to use other kinds of methods as setters. For example
+
+```
+public static class WithSetter {
+
+    private int field1;
+    private int field2;
+
+    @JsonSetter
+    public void initialize(@JsonProperty("field1") int field1, @JsonProperty("field2") int field2) {
+        this.field1 = field1;
+        this.field2 = field2;
+    }
+}
+```
+
+This annotation support is implemented by `Extension` as well. The callback is:
+
+```
+public interface Extension {
+    // ...
+    List<CustomizedSetter> getSetters(Class clazz);
+    // ...
+}
+
+public class CustomizedSetter {
+    /**
+     * which method to call to set value
+     */
+    public String methodName;
+
+    /**
+     * the parameters to bind
+     */
+    public List<Binding> parameters = new ArrayList<Binding>();
+}
+```
+
+The setter parameters, constructor parameters and fields are all just bindings. Those bindings can be updated by extension, to change data source and decoder.
+
+# Full extension interface
+
+```
+public interface Extension {
+    /**
+     * Customize type decoding
+     *
+     * @param type change how to decode the type
+     * @param typeArgs for generic type, there might be arguments
+     * @return null, if no special customization needed
+     */
+    Decoder createDecoder(Type type, Type... typeArgs);
+
+    /**
+     * Customize the binding source or decoder
+     *
+     * @param field binding information
+     * @return true, if stops other extension from customizing same field
+     */
+    boolean updateBinding(Binding field);
+
+    /**
+     * Customize which constructor to call
+     *
+     * @param clazz the class of instance to create
+     * @return null, if fallback to default behavior
+     */
+    CustomizedConstructor getConstructor(Class clazz);
+
+    /**
+     * Customize setters to call after instance is created and fields set
+     *
+     * @param clazz the class that is binding
+     * @return null, if fallback to default behavior
+     */
+    List<CustomizedSetter> getSetters(Class clazz);
+}
+```
+
+To summary it up, you have these options:
+
+* control how to decode one type, include generic type with different type arguments
+* the constructor to use, and the parameter binding of constructor
+* the setters to use, and the parameter binding of setters
+* all bindings (fields, setter parameters, constructor parameters) can change data source (even map to multiple fields) and change decoder
+
+Also the decoder interface is powered with iterator-api to iterate on the lowest level. I believe all the flexibility you will ever need
