@@ -311,7 +311,7 @@ public class CustomizedSetter {
 
 The setter parameters, constructor parameters and fields are all just bindings. Those bindings can be updated by extension, to change data source and decoder.
 
-# Full extension interface
+# Extension & Iterator
 
 ```
 public interface Extension {
@@ -357,4 +357,44 @@ To summary it up, you have these options:
 * the setters to use, and the parameter binding of setters
 * all bindings (fields, setter parameters, constructor parameters) can change data source (even map to multiple fields) and change decoder
 
-Also the decoder interface is powered with iterator-api to iterate on the lowest level. I believe all the flexibility you will ever need
+Also the decoder interface is powered with iterator-api to iterate on the lowest level. I believe this should provide all the flexibility you will ever need. If you are still not on board, here is another shot. 
+
+There is a feature flag of jackson called `ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT`. The intention is to decode input like `[]` as null, as PHP might treat empty object as empty array. To support this feature, we can register a extension
+
+```
+JsonIterator.registerExtension(new EmptyExtension() {
+    @Override
+    public Decoder createDecoder(final String cacheKey, final Type type) {
+        if (cacheKey.endsWith(".original")) {
+            // avoid infinite loop
+            return null;
+        }
+        if (type != Date.class) {
+            return null;
+        }
+        return new Decoder() {
+            @Override
+            public Object decode(JsonIterator iter) throws IOException {
+                if (iter.whatIsNext() == ValueType.ARRAY) {
+                    if (iter.readArray()) {
+                        // none empty array
+                        throw iter.reportError("decode [] as null", "only empty array is expected");
+                    } else {
+                        return null;
+                    }
+                } else {
+                    // just use original decoder
+                    TypeLiteral typeLiteral = TypeLiteral.create(type, "original");
+                    return iter.read(typeLiteral);
+                }
+            }
+        };
+    }
+});
+JsonIterator iter = JsonIterator.parse("[]");
+assertNull(iter.read(Date.class));
+```
+
+Using iterator we can detect if input is `[]`, and act accordingly. If input is not array, we can even fallback to default behavior. It works like servlet filter, if one decoder can not handle it, it can fallback to the next one.
+
+
