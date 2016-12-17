@@ -289,46 +289,35 @@ List<Integer> val = iter.read(new TypeLiteral<ArrayList<Integer>>(){});
 
 The type literal instance might be reused globally, which is thread-safe.
 
+## Bind to existing object
+
+Java version also support bind to existing object
+
+```java
+public static class TestObj1 {
+    public String field1;
+    public String field2;
+}
+
+TestObj1 testObj = new TestObj1();
+testObj.field2 = "world";
+JsonIterator iter = JsonIterator.parse("{ 'field1' : 'hello' }".replace('\'', '"'));
+iter.read(testObj);
+
+System.out.println(testObj.field1); // "hello"
+System.out.println(testObj.field2); // "world"
+```
+
+Object and map will be reused as it is. Array will not be reused. Collection will be reused, but with elements cleared.
+
 ## Bind callback
 
 The downside of binding is there is always exception. We want the field to be string, but some input put the field as int. Being able to customize the binding is crucial. The answer is callback. Add callback hook in the binding process, then we can use iterator api to take back the control.
 
-Register type decoder to parse element of specific type to use your callback
+The callback itself is too complicated here, please checkout extension guides:
 
-```java
-JsonIterator.registerTypeDecoder(Date.class, new Decoder() {
-    @Override
-    public Object decode(JsonIterator iter) throws IOException {
-	return new Date(iter.readLong());
-    }
-});
-JsonIterator iter = JsonIterator.parse("1481365190000");
-Date date = iter.read(Date.class);
-assertEquals(1481365190000L, date.getTime());
-JsonIterator.clearDecoders();
-```
-
-Register field decoder to special handle the fields chosen
-
-```java
-public class CustomizedObject {
-    public String field2;
-    public String field1;
-}
-
-JsonIterator.registerFieldDecoder(CustomizedObject.class, "field1", new Decoder(){
-
-    @Override
-    public Object decode(JsonIterator iter) throws IOException {
-	return Integer.toString(iter.readInt());
-    }
-});
-JsonIterator iter = JsonIterator.parse("{'field1': 100}".replace('\'', '"'));
-CustomizedObject myObject = iter.read(CustomizedObject.class);
-assertEquals("100", myObject.field1);
-```
-
-same api available in go version.
+* Java bind-api extension guide: http://jsoniter.com/java-extension.html
+* Go bind-api extension guide: http://jsoniter.com/go-extension.html
 
 # Any API
 
