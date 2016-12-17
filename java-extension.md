@@ -26,3 +26,21 @@ public interface Decoder {
     Object decode(JsonIterator iter) throws IOException;
 }
 ```
+
+The unique extensiblity of jsoniter is coming from the iterator-api. The simplest form of bind-api callback is `Decoder`, which takes the current `iterator` instance pointing to the next value to read, and read the object for the binding. For example
+
+```java
+JsonIterator.registerTypeDecoder(Date.class, new Decoder() {
+    @Override
+    public Object decode(final JsonIterator iter) throws IOException {
+        return new Date(iter.readLong());
+    }
+});
+```
+
+when a `Date` class to read, the registered decoder will be called. 
+
+```java
+JsonIterator iter = JsonIterator.parse("1481365190000");
+iter.read(Date.class); // Sat Dec 10 18:19:50 CST 2016
+```
