@@ -10,6 +10,7 @@ jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提�
 * Jsoniter 是最快的 JSON 解析器。它最多能比普通的解析器快10倍之多，即使在数据绑定的用法下也有同样的性能优势。无耻地献上自己的 [跑分](/benchmark.html)
 * 非常易于使用的 api，允许你使用任何风格或者混搭的方式来解析 JSON。给你前所未有的灵活性。来看看这些 [API们](/api.html) 是不是真的有那么好用吧
 * 独特的 iterator api 能够直接遍历 JSON，极致性能！0 内存分配！这样的 [iterator](/api.html#iterator-api) 你绝对没有用过
+* 数据绑定的每一个步骤都可以被定制，参见 [java](/java-extension.html) 和 [go](/go-extension.html) 版本的扩展文档。
 
 # 自卖自夸
 
@@ -34,6 +35,23 @@ import com.jsoniter.JsonIterator;
 Jsoniter iter = JsonIterator.parse("[0,1,2,3]");
 int[] val = iter.read(int[].class);
 System.out.println(val[3]);
+```
+
+可以把数据直接绑定到已有的对象上
+
+```java
+public static class TestObj1 {
+    public String field1;
+    public String field2;
+}
+
+TestObj1 testObj = new TestObj1();
+testObj.field2 = "world";
+JsonIterator iter = JsonIterator.parse("{ 'field1' : 'hello' }".replace('\'', '"'));
+iter.read(testObj);
+
+System.out.println(testObj.field1); // "hello"
+System.out.println(testObj.field2); // "world"
 ```
 
 使用 Go bind-api
