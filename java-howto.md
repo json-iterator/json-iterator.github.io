@@ -203,7 +203,16 @@ This implementation can ensure the field is exactly match, but slower.
 | style | ops/s |
 | --- | --- | 
 | iterator + switch case | 10161124.096 ±  86811.453  ops/s |
-| iterator if/else |  10566399.972 ± 219004.245  ops/s |
-| iterator if/else + string.intern | 4091671.061 ±  59660.899  ops/s |
+| iterator + if/else |  10566399.972 ± 219004.245  ops/s |
+| iterator + if/else + string.intern | 4091671.061 ±  59660.899  ops/s |
+| binding + strict mode | 19654075.094 ± 734231.072  ops/s |
+| binding + none strict mode | 25177037.170 ± 379426.831  ops/s |
+| dsljson | 10536139.221 ± 204085.931  ops/s |
+| jackson | 5073461.246 ± 172152.640  ops/s |
+| fastjson | 2467929.303 ± 101384.609  ops/s |
 
-Do not use string.intern, it will not be faster. If/else might be slightly faster than switch/case, but swtich case is much more readable.
+Advice on iterator: do not use string.intern, it will not be faster. If/else might be slightly faster than switch/case, but swtich case is much more readable.
+
+None strict mode binding is the fastest, strict mode comes second, and iterator api is slower. The difference is iterator api need to constructor a string object for the field. Strict mode binding is using a slice object reusing the underlying byte array. None strict mode binding only need to compute a hash code.
+
+
