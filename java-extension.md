@@ -3,6 +3,9 @@ layout: default
 title: How to extend
 ---
 
+* TOC
+{:toc}
+
 # Bind-api extension
 
 Bind-api is the most complex api. Iterating the json input, while binding to a object graph has infinite ways to customize. 
