@@ -114,14 +114,17 @@ public class TestObject4 {
     public int field1;
 }
 
-JsonIterator.registerExtension(new EmptyExtension() {
+ExtensionManager.registerExtension(new EmptyExtension() {
     @Override
-    public boolean updateBinding(Binding field) {
-        if (field.clazz == TestObject4.class && field.name.equals("field1")) {
-            field.fromNames = new String[]{"field_1", "Field1"};
-            return true;
+    public void updateClassDescriptor(ClassDescriptor desc) {
+        if (desc.clazz != TestObject4.class) {
+            return;
         }
-        return false;
+        for (Binding field : desc.allDecoderBindings()) {
+            if (field.name.equals("field1")) {
+                field.fromNames = new String[]{"field_1", "Field1"};
+            }
+        }
     }
 });
 JsonIterator iter = JsonIterator.parse("{'field_1': 100}".replace('\'', '"'));
@@ -129,7 +132,7 @@ TestObject4 myObject1 = iter.read(TestObject4.class);
 assertEquals(100, myObject1.field1);
 ```
 
-The callback `updateBinding` change the data source or decoder for a field. The `fromNames` is a `String[]`, with following options:
+The callback `updateClassDescriptor` change the data source or decoder for a field. The `fromNames` is a `String[]`, with following options:
 
 * null: do not customize this field
 * empty array: disable this field binding. works like `@JsonIgnore`
@@ -143,10 +146,18 @@ public class Binding {
     public Class clazz;
     public String name;
     public Type valueType;
+    public TypeLiteral valueTypeLiteral;
     public Annotation[] annotations;
     // output
-    public String[] fromNames;
+    public String[] fromNames; // for decoder
+    public String[] toNames; // for encoder
     public Decoder decoder;
+    public Encoder encoder;
+    public boolean failOnMissing;
+    public boolean failOnPresent;
+    // optional
+    public Field field;
+    public int idx;
 }
 ```
 
@@ -154,7 +165,7 @@ So we can also customize the field decoder using `Extension` to update bindings.
 
 # Your own annotation support
 
-It is very common to support `@JsonProperty` to rename field. By registering your own extension, you can implement them very easily.
+It is very common to support `@JsonProperty` to rename field. Jsoniter also comes with built-in support for annotation. But by registering your own extension, you can implement them very easily.
 
 ```java
 @Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
@@ -166,21 +177,21 @@ public @interface JsonProperty {
 
 public class MyAnnotationSupport extends EmptyExtension {
 
-    public static void enable() {
-        JsonIterator.registerExtension(new JsoniterAnnotationSupport());
-    }
-
     @Override
-    public boolean updateBinding(Binding field) {
-        JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
-        if (jsonProperty != null) {
-            String alternativeField = jsonProperty.value();
-            if (!alternativeField.isEmpty()) {
-                field.fromNames = new String[]{alternativeField};
-                return true;
+    public void updateClassDescriptor(ClassDescriptor desc) {
+        for (Binding field : desc.allDecoderBindings()) {
+            JsonIgnore jsonIgnore = field.getAnnotation(JsonIgnore.class);
+            if (jsonIgnore != null) {
+                field.fromNames = new String[0];
+            }
+            JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
+            if (jsonProperty != null) {
+                String alternativeField = jsonProperty.value();
+                if (!alternativeField.isEmpty()) {
+                    field.fromNames = new String[]{alternativeField};
+                }
             }
         }
-        return false;
     }
 }
 ```
@@ -205,25 +216,21 @@ If you do not want to write annotation support yourself, you can use built-in `c
 Jsoniter can work with class without default constructor. The extension can customize the constructor to be used for specific class. The constructor can also be a static method, instead of real constructor.
 
 ```java
-public interface Extension {
-   // ...
-   CustomizedConstructor getConstructor(Class clazz);
-   /// ...
-}
-
-public class CustomizedConstructor {
+public class ConstructorDescriptor {
     /**
      * set to null if use constructor
      * otherwise use static method
      */
     public String staticMethodName;
+    // optional
+    public Constructor ctor;
+    // optional
+    public Method staticFactory;
 
     /**
      * the parameters to call constructor or static method
      */
     public List<Binding> parameters = new ArrayList<Binding>();
-
-    public static CustomizedConstructor DEFAULT_INSTANCE = new CustomizedConstructor();
 }
 ```
 
@@ -290,13 +297,7 @@ public static class WithSetter {
 This annotation support is implemented by `Extension` as well. The callback is:
 
 ```java
-public interface Extension {
-    // ...
-    List<CustomizedSetter> getSetters(Class clazz);
-    // ...
-}
-
-public class CustomizedSetter {
+public class SetterDescriptor {
     /**
      * which method to call to set value
      */
@@ -306,6 +307,9 @@ public class CustomizedSetter {
      * the parameters to bind
      */
     public List<Binding> parameters = new ArrayList<Binding>();
+
+    // optional
+    public Method method;
 }
 ```
 
@@ -318,35 +322,18 @@ public interface Extension {
     /**
      * Customize type decoding
      *
+     * @param cacheKey
      * @param type change how to decode the type
-     * @param typeArgs for generic type, there might be arguments
      * @return null, if no special customization needed
      */
-    Decoder createDecoder(Type type, Type... typeArgs);
+    Decoder createDecoder(String cacheKey, Type type);
 
     /**
-     * Customize the binding source or decoder
+     * Update binding is done for the class
      *
-     * @param field binding information
-     * @return true, if stops other extension from customizing same field
+     * @param desc binding information
      */
-    boolean updateBinding(Binding field);
-
-    /**
-     * Customize which constructor to call
-     *
-     * @param clazz the class of instance to create
-     * @return null, if fallback to default behavior
-     */
-    CustomizedConstructor getConstructor(Class clazz);
-
-    /**
-     * Customize setters to call after instance is created and fields set
-     *
-     * @param clazz the class that is binding
-     * @return null, if fallback to default behavior
-     */
-    List<CustomizedSetter> getSetters(Class clazz);
+    void updateClassDescriptor(ClassDescriptor desc);
 }
 ```
 
@@ -362,7 +349,7 @@ Also the decoder interface is powered with iterator-api to iterate on the lowest
 There is a feature flag of jackson called `ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT`. The intention is to decode input like `[]` as null, as PHP might treat empty object as empty array. To support this feature, we can register a extension
 
 ```java
-JsonIterator.registerExtension(new EmptyExtension() {
+ExtensionManager.registerExtension(new EmptyExtension() {
     @Override
     public Decoder createDecoder(final String cacheKey, final Type type) {
         if (cacheKey.endsWith(".original")) {
@@ -374,18 +361,19 @@ JsonIterator.registerExtension(new EmptyExtension() {
         }
         return new Decoder() {
             @Override
-            public Object decode(JsonIterator iter) throws IOException {
-                if (iter.whatIsNext() == ValueType.ARRAY) {
-                    if (iter.readArray()) {
+            public Object decode(JsonIterator iter1) throws IOException {
+                if (iter1.whatIsNext() == ValueType.ARRAY) {
+                    if (iter1.readArray()) {
                         // none empty array
-                        throw iter.reportError("decode [] as null", "only empty array is expected");
+                        throw iter1.reportError("decode [] as null", "only empty array is expected");
                     } else {
                         return null;
                     }
                 } else {
                     // just use original decoder
-                    TypeLiteral typeLiteral = TypeLiteral.create(type, "original");
-                    return iter.read(typeLiteral);
+                    TypeLiteral typeLiteral = new TypeLiteral(type, cacheKey + ".original",
+                            TypeLiteral.generateEncoderCacheKey(type));
+                    return iter1.read(typeLiteral);
                 }
             }
         };
