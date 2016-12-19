@@ -198,7 +198,7 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
 
 This implementation can ensure the field is exactly match, but slower.
 
-## Reflection
+## reflection
 
 Jsoniter also support using reflection to bind object. It will be necessary to bind to private/protected members. To force the reflection decoder being used to need to:
 
@@ -206,6 +206,23 @@ Jsoniter also support using reflection to bind object. It will be necessary to b
 ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
 return iter.read(TestObject.class);
 ```
+
+## read into existing object
+
+```java
+TestObject testObject = new TestObject();
+return iter.read(testObject);
+```
+
+to avoid runtime calculation of decoder cache key, we can use the saved type literal
+
+```java
+TypeLiteral<TestObject> typeLiteral = new TypeLiteral<TestObject>() {}; // can be reused
+TestObject testObject = new TestObject(); // can be reused
+return iter.read(typeLiteral, testObject);
+```
+
+Allowing to reuse existing object is convenient for stream processing. Same object can be reused again an again for a long array of objects.
 
 ## performance
 
@@ -218,11 +235,11 @@ return iter.read(TestObject.class);
 | binding + none strict mode | 25177037.170 ± 379426.831  ops/s |
 | reflection | 7017747.269 ± 653401.038  ops/s |
 | dsljson | 10536139.221 ± 204085.931  ops/s |
-| jackson | 5073461.246 ± 172152.640  ops/s |
+| jackson + afterburner | 4912109.137 ±  81390.018  ops/s | 
+| jackson | 4346835.527 ± 163832.141  ops/s | 
 | fastjson | 2467929.303 ± 101384.609  ops/s |
 
 Advice on iterator: do not use string.intern, it will not be faster. If/else might be slightly faster than switch/case, but swtich case is much more readable.
 
 None strict mode binding is the fastest, strict mode comes second, and iterator api is slower. The difference is iterator api need to constructor a string object for the field. Strict mode binding is using a slice object reusing the underlying byte array. None strict mode binding only need to compute a hash code.
-
 
