@@ -198,6 +198,15 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
 
 This implementation can ensure the field is exactly match, but slower.
 
+## Reflection
+
+Jsoniter also support using reflection to bind object. It will be necessary to bind to private/protected members. To force the reflection decoder being used to need to:
+
+```java
+ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
+return iter.read(TestObject.class);
+```
+
 ## performance
 
 | style | ops/s |
@@ -207,6 +216,7 @@ This implementation can ensure the field is exactly match, but slower.
 | iterator + if/else + string.intern | 4091671.061 ±  59660.899  ops/s |
 | binding + strict mode | 19654075.094 ± 734231.072  ops/s |
 | binding + none strict mode | 25177037.170 ± 379426.831  ops/s |
+| reflection | 7017747.269 ± 653401.038  ops/s |
 | dsljson | 10536139.221 ± 204085.931  ops/s |
 | jackson | 5073461.246 ± 172152.640  ops/s |
 | fastjson | 2467929.303 ± 101384.609  ops/s |
