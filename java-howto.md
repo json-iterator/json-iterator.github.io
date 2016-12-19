@@ -17,7 +17,7 @@ bind the json document
 to the class
 
 ```java
-public static class TestObject {
+public class TestObject {
     public int field1;
     public int field2;
 }
@@ -78,6 +78,125 @@ for (String field = iter.readObject(); field != null; field = iter.readObject())
 }
 return obj;
 ```
+
+## none strict mode binding
+
+```
+return iter.read(TestObject.class);
+```
+
+or to be faster, we can save the type literal instance to avoid runtime calculation.
+
+```
+TypeLiteral<TestObject> typeLiteral = new TypeLiteral<TestObject>() {}; // reuse this
+return iter.read(typeLiteral);
+```
+
+the generated code can be printed out using environment variable `$JSONITER_DEBUG=true`
+
+```java
+public static Object decode_(com.jsoniter.JsonIterator iter) {
+    if (iter.readNull()) { com.jsoniter.CodegenAccess.resetExistingObject(iter); return null; }
+    com.jsoniter.demo.SimpleObjectBinding.TestObject obj = (com.jsoniter.CodegenAccess.existingObject(iter) == null ? new com.jsoniter.demo.SimpleObjectBinding.TestObject() : (com.jsoniter.demo.SimpleObjectBinding.TestObject)com.jsoniter.CodegenAccess.resetExistingObject(iter));
+    if (!com.jsoniter.CodegenAccess.readObjectStart(iter)) { return obj; }
+    switch (com.jsoniter.CodegenAccess.readObjectFieldAsHash(iter)) {
+        case 1212206434:
+            obj.field1 = (int)iter.readInt();
+            break;
+        case 1195428815:
+            obj.field2 = (int)iter.readInt();
+            break;
+        default:
+            iter.skip();
+    }
+    while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
+        switch (com.jsoniter.CodegenAccess.readObjectFieldAsHash(iter)) {
+            case 1212206434:
+                obj.field1 = (int)iter.readInt();
+                continue;
+            case 1195428815:
+                obj.field2 = (int)iter.readInt();
+                continue;
+        }
+        iter.skip();
+    }
+    return obj;
+}
+```
+
+The field binding is done using hash. This implementation is copied from dsljson, but it is not exactly safe when hash collision exists.
+
+## strict mode binding
+
+```java
+JsonIterator.enableStrictMode();
+return iter.read(TestObject.class);
+```
+
+the generated code
+
+```java
+public static Object decode_(com.jsoniter.JsonIterator iter) {
+    if (iter.readNull()) { com.jsoniter.CodegenAccess.resetExistingObject(iter); return null; }
+    com.jsoniter.demo.SimpleObjectBinding.TestObject obj = (com.jsoniter.CodegenAccess.existingObject(iter) == null ? new com.jsoniter.demo.SimpleObjectBinding.TestObject() : (com.jsoniter.demo.SimpleObjectBinding.TestObject)com.jsoniter.CodegenAccess.resetExistingObject(iter));
+    if (!com.jsoniter.CodegenAccess.readObjectStart(iter)) {
+        return obj;
+    }
+    com.jsoniter.Slice field = com.jsoniter.CodegenAccess.readObjectFieldAsSlice(iter);
+    boolean once = true;
+    while (once) {
+        once = false;
+        switch (field.len) {
+            case 6:
+                if (field.at(0)==102 &&
+                    field.at(1)==105 &&
+                    field.at(2)==101 &&
+                    field.at(3)==108 &&
+                    field.at(4)==100) {
+                    if (field.at(5)==49) {
+                        obj.field1 = (int)iter.readInt();
+                        continue;
+                    }
+                    if (field.at(5)==50) {
+                        obj.field2 = (int)iter.readInt();
+                        continue;
+                    }
+                    continue;
+                }
+                break;
+
+        }
+        iter.skip();
+    }
+    while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
+        field = com.jsoniter.CodegenAccess.readObjectFieldAsSlice(iter);
+        switch (field.len) {
+            case 6:
+                if (field.at(0)==102 &&
+                    field.at(1)==105 &&
+                    field.at(2)==101 &&
+                    field.at(3)==108 &&
+                    field.at(4)==100) {
+                    if (field.at(5)==49) {
+                        obj.field1 = (int)iter.readInt();
+                        continue;
+                    }
+                    if (field.at(5)==50) {
+                        obj.field2 = (int)iter.readInt();
+                        continue;
+                    }
+                    continue;
+                }
+                break;
+
+        }
+        iter.skip();
+    }
+    return obj;
+}
+```
+
+This implementation can ensure the field is exactly match, but slower.
 
 ## performance
 
