@@ -3,6 +3,8 @@ layout: default
 title: How to extend
 ---
 
+* TOC
+{:toc}
 
 # Bind-api extension
 
