@@ -3,6 +3,9 @@ layout: default
 title: How-to
 ---
 
+* TOC
+{:toc}
+
 # Simple Object binding
 
 bind the json document 
