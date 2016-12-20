@@ -391,3 +391,9 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
     return obj;
 }
 ```
+
+## reflection
+
+same annotation is also supported by reflection decoder.
+
+
