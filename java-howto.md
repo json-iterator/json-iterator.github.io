@@ -318,3 +318,76 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
     return obj;
 }
 ```
+
+## strict mode binding
+
+same annotation support as hash mode, just enable the strict mode.
+
+```java
+JacksonAnnotationSupport.enable();
+JsonIterator.enableStrictMode();
+return iter.read(TestObject.class);
+```
+
+the generated code is:
+
+```java
+public static Object decode_(com.jsoniter.JsonIterator iter) {
+    if (iter.readNull()) { com.jsoniter.CodegenAccess.resetExistingObject(iter); return null; }
+    int _field1_ = 0;
+    int _field2_ = 0;
+    if (!com.jsoniter.CodegenAccess.readObjectStart(iter)) {
+        return new com.jsoniter.demo.ConstructorBinding.TestObject(_field1_,_field2_);
+    }
+    com.jsoniter.Slice field = com.jsoniter.CodegenAccess.readObjectFieldAsSlice(iter);
+    boolean once = true;
+    while (once) {
+        once = false;
+        switch (field.len) {
+            case 6:
+                if (field.at(0)==102 &&
+                    field.at(1)==105 &&
+                    field.at(2)==101 &&
+                    field.at(3)==108 &&
+                    field.at(4)==100) {
+                    if (field.at(5)==49) {
+                        _field1_ = (int)iter.readInt();
+                        continue;
+                    }
+                    if (field.at(5)==50) {
+                        _field2_ = (int)iter.readInt();
+                        continue;
+                    }
+                }
+                break;
+
+        }
+        iter.skip();
+    }
+    while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
+        field = com.jsoniter.CodegenAccess.readObjectFieldAsSlice(iter);
+        switch (field.len) {
+            case 6:
+                if (field.at(0)==102 &&
+                    field.at(1)==105 &&
+                    field.at(2)==101 &&
+                    field.at(3)==108 &&
+                    field.at(4)==100) {
+                    if (field.at(5)==49) {
+                        _field1_ = (int)iter.readInt();
+                        continue;
+                    }
+                    if (field.at(5)==50) {
+                        _field2_ = (int)iter.readInt();
+                        continue;
+                    }
+                }
+                break;
+
+        }
+        iter.skip();
+    }
+    com.jsoniter.demo.ConstructorBinding.TestObject obj = new com.jsoniter.demo.ConstructorBinding.TestObject(_field1_,_field2_);
+    return obj;
+}
+```
