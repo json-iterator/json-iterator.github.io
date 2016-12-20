@@ -79,7 +79,7 @@ for (String field = iter.readObject(); field != null; field = iter.readObject())
 return obj;
 ```
 
-## none strict mode binding
+## hash mode binding
 
 ```
 return iter.read(TestObject.class);
@@ -243,3 +243,78 @@ Advice on iterator: do not use string.intern, it will not be faster. If/else mig
 
 None strict mode binding is the fastest, strict mode comes second, and iterator api is slower. The difference is iterator api need to constructor a string object for the field. Strict mode binding is using a slice object reusing the underlying byte array. None strict mode binding only need to compute a hash code.
 
+# Constructor binding
+
+bind the json document 
+
+```json
+{"field1":100,"field2":101}
+```
+
+to the class
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+
+    @JsonCreator
+    public TestObject(
+            @JsonProperty("field1") int field1,
+            @JsonProperty("field2") int field2) {
+        this.field1 = field1;
+        this.field2 = field2;
+    }
+
+    @Override
+    public String toString() {
+        return "TestObject{" +
+                "field1=" + field1 +
+                ", field2=" + field2 +
+                '}';
+    }
+}
+```
+
+## hash mode binding
+
+mark the class with jsoniter annotation, then enable annotation support. Or mark the with jackson annotation, then enable jackson annotation support.
+
+```java
+JacksonAnnotationSupport.enable();
+return iter.read(TestObject.class);
+```
+
+the generated code is
+
+```java
+public static Object decode_(com.jsoniter.JsonIterator iter) {
+    if (iter.readNull()) { com.jsoniter.CodegenAccess.resetExistingObject(iter); return null; }
+    int _field1_ = 0;
+    int _field2_ = 0;
+    if (!com.jsoniter.CodegenAccess.readObjectStart(iter)) { return new com.jsoniter.demo.ConstructorBinding.TestObject(_field1_,_field2_); }
+    switch (com.jsoniter.CodegenAccess.readObjectFieldAsHash(iter)) {
+        case 1212206434:
+            _field1_ = (int)iter.readInt();
+            break;
+        case 1195428815:
+            _field2_ = (int)iter.readInt();
+            break;
+        default:
+            iter.skip();
+    }
+    while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
+        switch (com.jsoniter.CodegenAccess.readObjectFieldAsHash(iter)) {
+            case 1212206434:
+                _field1_ = (int)iter.readInt();
+                continue;
+            case 1195428815:
+                _field2_ = (int)iter.readInt();
+                continue;
+        }
+        iter.skip();
+    }
+    com.jsoniter.demo.ConstructorBinding.TestObject obj = new com.jsoniter.demo.ConstructorBinding.TestObject(_field1_,_field2_);
+    return obj;
+}
+```
