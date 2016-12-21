@@ -6,7 +6,7 @@ title: How-to
 * TOC
 {:toc}
 
-# Simple Object binding
+# Simple object binding
 
 bind the json document 
 
@@ -397,6 +397,7 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
 same annotation is also supported by reflection decoder.
 
 ```java
+JacksonAnnotationSupport.enable();
 ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
 return iter.read(TestObject.class);
 ```
@@ -411,3 +412,38 @@ return iter.read(TestObject.class);
 | jackson + afterburner | 2834318.635 ± 5851771.796  ops/s |
 
 The reflection implementation is not using Map to hold temp variables, which is the major performance win.
+
+# Private field binding
+
+bind the json document 
+
+```json
+{"field1":100,"field2":101}
+```
+
+to the class
+
+```java
+public class TestObject {
+    @JsonProperty
+    private int field1;
+    @JsonProperty
+    private int field2;
+}
+```
+
+## reflection
+
+only reflection mode support private field binding, you have to register type decoder explicitly
+
+```java
+ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
+return iter.read(TestObject.class);
+```
+
+## performance
+
+| style | ops/s |
+| --- | --- | 
+| reflection | 9112485.981 ± 127051.327  ops/s |
+| jackson + afterburner | 4547285.044 ± 157520.005  ops/s |
