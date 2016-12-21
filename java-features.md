@@ -232,7 +232,7 @@ Allowing to reuse existing object is convenient for stream processing. Same obje
 | iterator + if/else |  10566399.972 ± 219004.245  ops/s |
 | iterator + if/else + string.intern | 4091671.061 ±  59660.899  ops/s |
 | binding + strict mode | 19654075.094 ± 734231.072  ops/s |
-| binding + none strict mode | 25177037.170 ± 379426.831  ops/s |
+| binding + hash mode | 25177037.170 ± 379426.831  ops/s |
 | reflection | 7017747.269 ± 653401.038  ops/s |
 | dsljson | 10536139.221 ± 204085.931  ops/s |
 | jackson + afterburner | 4912109.137 ±  81390.018  ops/s | 
@@ -396,4 +396,18 @@ public static Object decode_(com.jsoniter.JsonIterator iter) {
 
 same annotation is also supported by reflection decoder.
 
+```java
+ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
+return iter.read(TestObject.class);
+```
 
+## performance 
+
+| style | ops/s |
+| --- | --- | 
+| binding + hash mode | 24176429.215 ±  466360.572  ops/s |
+| binding + strict mode | 18469307.112 ±  350924.724  ops/s |
+| reflection | 6804994.539 ±  178451.154  ops/s |
+| jackson + afterburner | 2834318.635 ± 5851771.796  ops/s |
+
+The reflection implementation is not using Map to hold temp variables, which is the major performance win.
