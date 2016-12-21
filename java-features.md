@@ -6,7 +6,11 @@ title: How-to
 * TOC
 {:toc}
 
-# Simple object binding
+# Object binding styles
+
+binding to object can be done using a couple of ways. Jsoniter will not force you to make fields public
+
+## Simple object binding
 
 bind the json document 
 
@@ -55,7 +59,7 @@ TestObject testObject = new TestObject();
 return iter.read(testObject);
 ```
 
-# Constructor binding
+## Constructor binding
 
 bind the json document 
 
@@ -89,7 +93,7 @@ JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are n
 return iter.read(TestObject.class);
 ```
 
-# Setter Binding
+## Setter Binding
 
 bind the json document 
 
@@ -136,7 +140,7 @@ JsoniterAnnotationSupport.enable();
 return iter.read(TestObject.class);
 ```
 
-# Private field binding
+## Private field binding
 
 bind the json document 
 
@@ -162,14 +166,20 @@ ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(Tes
 return iter.read(TestObject.class);
 ```
 
-# Missing field
+# Fields matching
+
+The json can have more fields or less fields than the object. it will be very hard for the user to catch field not set condidtion, as the information is lost after the binding. 
+
+## Missing field
 
 ```java
 public static class TestObject {
     @JsonProperty(required = true)
     public int field1;
-    @JsonProperty
+    @JsonProperty(required = true)
     public int field2;
+    @JsonProperty(required = true)
+    public int field3;
 }
 ```
 
@@ -177,13 +187,14 @@ if `field1` is not present in the input json, exception will be thrown.
 
 ```java
 JsoniterAnnotationSupport.enable();
+JsonIterator iter = JsonIterator.parse("{'field2':101}".replace('\'', '"'));
 return iter.read(TestObject.class);
 ```
 
 the output is 
 
 ```
-com.jsoniter.JsonException: missing mandatory fields:[field1]
+com.jsoniter.JsonException: missing mandatory fields: [field1, field3]
 
 	at decoder.com.jsoniter.demo.MissingField.TestObject.decode_(TestObject.java)
 	at decoder.com.jsoniter.demo.MissingField.TestObject.decode(TestObject.java)
@@ -191,3 +202,27 @@ com.jsoniter.JsonException: missing mandatory fields:[field1]
 	at com.jsoniter.demo.MissingField.withJsoniter(MissingField.java:85)
 	at com.jsoniter.demo.MissingField.test(MissingField.java:60)
 ```
+
+# Fail on unknown properties
+
+```java
+@JsonUnknownProperties(failOnUnkown = true)
+public static class TestObject2 {
+public int field1;
+public int field2;
+}
+```
+
+using `failOnUnknown` we can detect if the input has extra fields. Enable the annotation support:
+
+```java
+JsoniterAnnotationSupport.enable();
+JsonItertor iter = JsonIterator.parse("{'field1':101,'field2':101,'field3':101}".replace('\'', '"').getBytes());
+return iter.read(TestObject2.class);
+```
+the error message looks like 
+
+```
+com.jsoniter.JsonException: unknown property: field3
+```
+
