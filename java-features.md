@@ -265,14 +265,6 @@ public class TestObject {
         this.field1 = field1;
         this.field2 = field2;
     }
-
-    @Override
-    public String toString() {
-        return "TestObject{" +
-                "field1=" + field1 +
-                ", field2=" + field2 +
-                '}';
-    }
 }
 ```
 
@@ -425,16 +417,14 @@ to the class
 
 ```java
 public class TestObject {
-    @JsonProperty
     private int field1;
-    @JsonProperty
     private int field2;
 }
 ```
 
 ## reflection
 
-only reflection mode support private field binding, you have to register type decoder explicitly
+only reflection mode support private field binding, you have to register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior.
 
 ```java
 ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
