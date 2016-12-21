@@ -211,7 +211,7 @@ public static class TestObject2 {
     public int field1;
     public int field2;
 }
-```To
+```
 
 using `failOnUnknown` we can detect if the input has extra fields. Enable the annotation support:
 
@@ -220,6 +220,7 @@ JsoniterAnnotationSupport.enable();
 JsonItertor iter = JsonIterator.parse("{'field1':101,'field2':101,'field3':101}".replace('\'', '"').getBytes());
 return iter.read(TestObject2.class);
 ```
+
 the error message looks like 
 
 ```
