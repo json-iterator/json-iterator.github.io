@@ -153,11 +153,41 @@ public class TestObject {
 }
 ```
 
-## reflection
+**reflection**
 
 only reflection mode support private field binding, you have to register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior.
 
 ```java
 ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
 return iter.read(TestObject.class);
+```
+
+# Missing field
+
+```java
+public static class TestObject {
+    @JsonProperty(required = true)
+    public int field1;
+    @JsonProperty
+    public int field2;
+}
+```
+
+if `field1` is not present in the input json, exception will be thrown.
+
+```java
+JsoniterAnnotationSupport.enable();
+return iter.read(TestObject.class);
+```
+
+the output is 
+
+```
+com.jsoniter.JsonException: missing mandatory fields:[field1]
+
+	at decoder.com.jsoniter.demo.MissingField.TestObject.decode_(TestObject.java)
+	at decoder.com.jsoniter.demo.MissingField.TestObject.decode(TestObject.java)
+	at com.jsoniter.JsonIterator.read(JsonIterator.java:339)
+	at com.jsoniter.demo.MissingField.withJsoniter(MissingField.java:85)
+	at com.jsoniter.demo.MissingField.test(MissingField.java:60)
 ```
