@@ -10,7 +10,7 @@ title: How-to
 
 binding to object can be done using a couple of ways. Jsoniter will not force you to make fields public
 
-## Simple object binding
+## Public field binding
 
 bind the json document 
 
@@ -203,15 +203,15 @@ com.jsoniter.JsonException: missing mandatory fields: [field1, field3]
 	at com.jsoniter.demo.MissingField.test(MissingField.java:60)
 ```
 
-# Fail on unknown properties
+## Fail on unknown properties
 
 ```java
 @JsonUnknownProperties(failOnUnkown = true)
 public static class TestObject2 {
-public int field1;
-public int field2;
+    public int field1;
+    public int field2;
 }
-```
+```To
 
 using `failOnUnknown` we can detect if the input has extra fields. Enable the annotation support:
 
@@ -226,3 +226,42 @@ the error message looks like
 com.jsoniter.JsonException: unknown property: field3
 ```
 
+## Exclude whitelist properties
+
+```java
+@JsonUnknownProperties(failOnUnkown = true, whitelist = {"field2"})
+public static class TestObject3 {
+    public int field1;
+}
+```
+
+if the input is `{"field1":100,"field2":101}`, it shall pass. if the input is 
+
+```json
+{"field1":100,"field2":101,"field3":102}
+```
+
+exception will still be thrown. `com.jsoniter.JsonException: unknown property: field3`
+
+## Only fail on blacklist properties
+
+To ensure certain fields should never appear from the input. we can set the blacklist
+
+```java
+@JsonUnknownProperties(blacklist = {"field3"})
+public static class TestObject4 {
+    public int field1;
+}
+```
+
+given the input
+
+```json
+{"field1":100,"field2":101,"field3":102}
+```
+
+will throw exception
+
+```
+com.jsoniter.JsonException: found should not present field: field3
+```
