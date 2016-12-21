@@ -89,6 +89,53 @@ JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are n
 return iter.read(TestObject.class);
 ```
 
+# Setter Binding
+
+bind the json document 
+
+```json
+{"field1":100,"field2":101}
+```
+
+to the class, using setter
+
+```java
+public static class TestObject {
+    private int field1;
+    private int field2;
+
+    public void setField1(int field1) {
+        this.field1 = field1;
+    }
+
+    public void setField2(int field2) {
+        this.field2 = field2;
+    }
+}
+```
+
+this is automatically supported. Multi parameter setter is also supported, but need to use annotation support.
+
+```java
+public static class TestObject {
+    private int field1;
+    private int field2;
+
+    @JsonSetter
+    public void initialize(
+            @JsonProperty("field1") int field1,
+            @JsonProperty("field2") int field2) {
+        this.field1 = field1;
+        this.field2 = field2;
+    }
+}
+```
+
+```java
+JsoniterAnnotationSupport.enable();
+return iter.read(TestObject.class);
+```
+
 # Private field binding
 
 bind the json document 
@@ -114,10 +161,3 @@ only reflection mode support private field binding, you have to register type de
 ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
 return iter.read(TestObject.class);
 ```
-
-## performance
-
-| style | ops/s |
-| --- | --- | 
-| reflection | 9112485.981 ± 127051.327  ops/s |
-| jackson + afterburner | 4547285.044 ± 157520.005  ops/s |
