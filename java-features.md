@@ -233,7 +233,7 @@ Allowing to reuse existing object is convenient for stream processing. Same obje
 | iterator + if/else + string.intern | 4091671.061 ±  59660.899  ops/s |
 | binding + strict mode | 19654075.094 ± 734231.072  ops/s |
 | binding + hash mode | 25177037.170 ± 379426.831  ops/s |
-| reflection | 7017747.269 ± 653401.038  ops/s |
+| reflection | 9196927.306 ± 143317.439  ops/s |
 | dsljson | 10536139.221 ± 204085.931  ops/s |
 | jackson + afterburner | 4912109.137 ±  81390.018  ops/s | 
 | jackson | 4346835.527 ± 163832.141  ops/s | 
