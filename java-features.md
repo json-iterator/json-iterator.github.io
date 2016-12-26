@@ -266,3 +266,14 @@ will throw exception
 ```
 com.jsoniter.JsonException: found should not present field: field3
 ```
+
+# Collection support
+
+| feature | sample |
+| --- | --- |
+| array | `new JsonIterator().read("[1,2,3,4]", int[].class)` |
+| list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<List<Integer>>(){})` |
+| set | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<Set<Integer>>(){})` |
+| linked list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<LinkedList<Integer>>(){})` |
+| list of object | `new JsonIterator().read("[1,2,3,4]", List.class)` |
+| map | `new JsonIterator().read("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
