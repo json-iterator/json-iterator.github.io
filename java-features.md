@@ -407,3 +407,81 @@ All features is supported using the reflection mode, just slower, but still fast
 | jackson + afterburner | 6632322.908 ±  248913.699  ops/s |
 | jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
 | jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
+
+## Static Codegen
+
+When you want to have maximum performance, and the platform you use can not support dynamic code generation, then you can try static codegen. To enable static codegen, 3 things need to be done:
+
+* define what class need to be decoded or encoded
+* add code generation to maven build process
+* switch mode to static codegen when decoding or encoding
+
+
+```java
+public class DemoCodegenConfig implements CodegenConfig {
+
+    @Override
+    public void setup() {
+        // register custom decoder or extensions before codegen
+        // so that we doing codegen, we know in which case, we need to callback
+        ExtensionManager.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
+            @Override
+            public int decodeInt(JsonIterator iter) throws IOException {
+                return Integer.valueOf(iter.readString());
+            }
+        });
+    }
+
+    @Override
+    public TypeLiteral[] whatToCodegen() {
+        return new TypeLiteral[]{
+                // generic types, need to use this syntax
+                new TypeLiteral<List<Integer>>() {
+                },
+                new TypeLiteral<Map<String, Object>>() {
+                },
+                // array
+                TypeLiteral.create(int[].class),
+                // object
+                TypeLiteral.create(User.class)
+        };
+    }
+}
+```
+
+then add code generation to maven build:
+
+```
+<plugin>
+<groupId>org.codehaus.mojo</groupId>
+<artifactId>exec-maven-plugin</artifactId>
+<version>1.5.0</version>
+<executions>
+    <execution>
+	<id>static-codegen</id>
+	<phase>compile</phase>
+	<goals>
+	    <goal>exec</goal>
+	</goals>
+	<configuration>
+	    <executable>java</executable>
+	    <workingDirectory>${project.build.sourceDirectory}</workingDirectory>
+	    <arguments>
+		<argument>-classpath</argument>
+		<classpath/>
+		<argument>com.jsoniter.StaticCodeGenerator</argument>
+		<argument>com.jsoniter.demo.DemoCodegenConfig</argument>
+	    </arguments>
+	</configuration>
+    </execution>
+</executions>
+</plugin>
+```
+
+the generated code will be written out to `src/main/java` folder of your project. The final step is to switch mode
+
+```java
+JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
+new JsonIterator().read(... 
+```
+
