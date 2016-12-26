@@ -162,7 +162,7 @@ public class TestObject {
 only reflection mode support private field binding, you have to register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior.
 
 ```java
-ExtensionManager.registerTypeDecoder(TestObject.class, new ReflectionDecoder(TestObject.class));
+ExtensionManager.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
 return iter.read(TestObject.class);
 ```
 
@@ -267,7 +267,11 @@ will throw exception
 com.jsoniter.JsonException: found should not present field: field3
 ```
 
-# Collection support
+# Collection and generics
+
+## Collection
+
+generic collection need to be specified using `TypeLiteral`
 
 | feature | sample |
 | --- | --- |
@@ -277,3 +281,76 @@ com.jsoniter.JsonException: found should not present field: field3
 | linked list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<LinkedList<Integer>>(){})` |
 | list of object | `new JsonIterator().read("[1,2,3,4]", List.class)` |
 | map | `new JsonIterator().read("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
+
+## Generic field
+
+If the generic type is specified when defining the field, its component type can be recognized
+
+```java
+public class TestObject {
+    public List<Integer> values;
+}
+
+new JsonIterator().read("{\"values\":[1,2,3]}", TestObject.class);
+```
+
+Generic field type variable can also be filled by the sub-class
+
+```java
+public class SuperClass<E> {
+    public List<E> values;
+}
+
+public class SubClass extends SuperClass<Integer> {
+}
+
+new JsonIterator().read("{\"values\":[1,2,3]}", SubClass.class);
+```
+
+The generic type is instantiated with proper type arguments by one of the three ways:
+
+* TypeLiteral
+* Sub-class
+* Direct field definition
+
+If the type is not specified, `Object.class` will be used instead.
+
+# Decoding mode
+
+by default, the decoding is done by dynamically generated decoder class. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms. So we provide more variety of options:
+
+* dynamic codegen
+* static codegen
+* reflection
+
+## Reflection
+
+reflection can be enabled per-class, or globally. For example, for the class
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+}
+```
+
+to bind to private field, we have to enable reflection for this type
+
+```java
+ExtensionManager.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+return iter.read(TestObject.class); // will use reflection
+```
+
+Or, we can set the default decoding mode to reflection
+
+```java
+JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
+```
+
+All features is supported using the reflection mode, just slower, but still faster than existing solutions. Here is a quick benchmark of simple object field binding:
+
+| parser | ops/s |
+| --- | --- |
+| jackson + afterburner | 6632322.908 ±  248913.699  ops/s |
+| jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
+| jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
