@@ -315,6 +315,24 @@ The generic type is instantiated with proper type arguments by one of the three 
 
 If the type is not specified, `Object.class` will be used instead.
 
+## Interface type
+
+If the type binding to is a interface, we have to choose a proper implementation to instantiate the object. The defaults are:
+
+| interface | impl |
+| --- | --- |
+| List | ArrayList |
+| Set | HashSet |
+| Map | HashMap |
+
+Other interface types will be specified by the user. 
+
+```java
+ExtensionManager.registerTypeImplementation(MyInterface.class, MyObject.class);
+```
+
+This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
+
 # Decoding mode
 
 by default, the decoding is done by dynamically generated decoder class. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms. So we provide more variety of options:
