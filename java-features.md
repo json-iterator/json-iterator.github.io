@@ -408,7 +408,7 @@ All features is supported using the reflection mode, just slower, but still fast
 | jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
 | jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
 
-## Static Codegen
+## Static code generation
 
 When you want to have maximum performance, and the platform you use can not support dynamic code generation, then you can try static codegen. To enable static codegen, 3 things need to be done:
 
