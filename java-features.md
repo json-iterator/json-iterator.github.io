@@ -282,6 +282,41 @@ generic collection need to be specified using `TypeLiteral`
 | list of object | `new JsonIterator().read("[1,2,3,4]", List.class)` |
 | map | `new JsonIterator().read("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
 
+collection can also be decoded using the iterator-api, for example, given the input
+
+```json
+[1,2,3,4]
+```
+
+if we use binding to sum, the code looks like
+
+```java
+int[] arr = iter.read(int[].class);
+int total = 0;
+for (int i = 0; i < arr.length; i++) {
+    total += arr[i];
+}
+return total;
+```
+
+using iterator, we can get rid of the itermediate array
+
+```java
+int total = 0;
+while (iter.readArray()) {
+    total += iter.readInt();
+}
+return total;
+```
+
+the performance difference is huge
+
+| parser | ops/s |
+| --- | --- |
+| jackson | 4419446.858 ±  88015.833  ops/s |
+| jsoniter + binding | 15061063.604 ± 453904.401  ops/s |
+| jsoniter + iterator | 26425709.524 ± 333111.069  ops/s |
+
 ## Generic field
 
 If the generic type is specified when defining the field, its component type can be recognized
