@@ -19,7 +19,7 @@ System.out.println(array[2]);
 
 just one static method, can not be more simple
 
-## Encode
+## serialize
 
 ```java
 System.out.println(JsonStream.serialize(new int[]{1,2,3}));
