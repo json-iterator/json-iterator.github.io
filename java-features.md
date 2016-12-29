@@ -488,15 +488,13 @@ JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 
 This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
 
-# Dynamic code generation is optional
+# Performance is optional
 
-by default, the decoding/encoding is done by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms. So we provide more variety of options:
+The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
 
-* dynamic code generation
-* static code generation
-* reflection
-
-the default decoding/encoding mode is reflection
+* reflection: the default
+* dynamic code generation: require javassist library dependency
+* static code generation: also an option
 
 ## Dynamic code generation
 
@@ -516,6 +514,8 @@ then set the mode to dynamic code generation
 JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
 JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
 ```
+
+everything should still works, just much much faster
 
 ## Reflection
 
