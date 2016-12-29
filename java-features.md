@@ -125,7 +125,7 @@ public static class TestObject {
     private int field1;
     private int field2;
 
-    @JsonSetter
+    @JsonWrapper
     public void initialize(
             @JsonProperty("field1") int field1,
             @JsonProperty("field2") int field2) {
@@ -162,13 +162,106 @@ public class TestObject {
 only reflection mode support private field binding, you have to register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior.
 
 ```java
-ExtensionManager.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
 return iter.read(TestObject.class);
+```
+
+# Wrapper & Unwrapper
+
+## Wrapper
+
+say you have this kind of object graph
+
+```java
+public class Name {
+    private final String firstName;
+    private final String lastName;
+
+    public Name(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+}
+
+public class User {
+    private Name name;
+    public int score;
+
+    public Name getName() {
+        return name;
+    }
+
+    @JsonWrapper
+    public void setName(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
+        name = new Name(firstName, lastName);
+    }
+}
+```
+
+the `Name` is a wrapper class. and the input is flat:
+
+```json
+{"firstName": "tao", "lastName": "wen", "score": 100}
+```
+
+we can see there is no direct mapping between the json and object. this is when `@JsonWrapper` is helpful. essentially, it is binding to function parameters.
+
+## Unwrapper
+
+For the same object graph, if we want to serialize it back, by default the output looks like:
+
+```java
+JsonStream.serialize(user)
+// {"score":100,"name":{"firstName":"tao","lastName":"wen"}}
+```
+
+Using `@JsonUnwrapper` we can control how to write out its member:
+
+```java
+public class User {
+    private Name name;
+    public int score;
+
+    @JsonIgnore
+    public Name getName() {
+        return name;
+    }
+
+    @JsonUnwrapper
+    public void writeName(JsonStream stream) throws IOException {
+        stream.writeObjectField("firstName");
+        stream.writeVal(name.getFirstName());
+        stream.writeMore();
+        stream.writeObjectField("lastName");
+        stream.writeVal(name.getLastName());
+    }
+
+    @JsonWrapper
+    public void setName(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
+        System.out.println(firstName);
+        name = new Name(firstName, lastName);
+    }
+}
+```
+
+then the output will be
+
+```java
+JsonStream.serialize(user)
+// {"score":100,"firstName":"tao","lastName":"wen"}
 ```
 
 # Validation
 
-It is very common to json decode to a object, then business logic validation is applied. The json can have more fields or less fields than the object. it will be very hard for the user to catch field not set condidtion, as the information is lost after the binding. Jsoniter is one of few json parser implemneted required property tracking. You can tell if a int field is 0, because there is no input, or input is 0.
+It is very common to json decode to a object, then business logic validation is applied. The json can have more fields or less fields than the object. it will be very hard for the user to catch field not set condidtion, as the information is lost after the binding. Jsoniter is one of the few json parsers has implemneted required property tracking. You can tell if a int field is 0, because there is no input, or input is 0.
 
 ## Missing field
 
@@ -390,17 +483,17 @@ If the type binding to is a interface, we have to choose a proper implementation
 Other interface types will be specified by the user. 
 
 ```java
-ExtensionManager.registerTypeImplementation(MyInterface.class, MyObject.class);
+JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 ```
 
 This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
 
-# Decoding mode
+# No code generation
 
-by default, the decoding is done by dynamically generated decoder class. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms. So we provide more variety of options:
+by default, the decoding/encoding is done by dynamically generated decoder/encoder class. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms. So we provide more variety of options:
 
-* dynamic codegen
-* static codegen
+* dynamic code generation
+* static code generation
 * reflection
 
 ## Reflection
@@ -417,7 +510,7 @@ public class TestObject {
 to bind to private field, we have to enable reflection for this type
 
 ```java
-ExtensionManager.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
 return iter.read(TestObject.class); // will use reflection
 ```
 
@@ -451,7 +544,7 @@ public class DemoCodegenConfig implements CodegenConfig {
     public void setup() {
         // register custom decoder or extensions before codegen
         // so that we doing codegen, we know in which case, we need to callback
-        ExtensionManager.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
+        JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
             @Override
             public int decodeInt(JsonIterator iter) throws IOException {
                 return Integer.valueOf(iter.readString());
