@@ -27,6 +27,147 @@ System.out.println(JsonStream.serialize(new int[]{1,2,3}));
 
 just one static method, can not be more simple
 
+
+# Performance is optional
+
+The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
+
+* reflection: the default
+* dynamic code generation: require javassist library dependency
+* static code generation: also an option
+
+## Dynamic code generation
+
+add this dependency to your project
+
+```xml
+<dependency>
+    <groupId>org.javassist</groupId>
+    <artifactId>javassist</artifactId>
+    <version>3.21.0-GA</version>
+</dependency>
+```
+
+then set the mode to dynamic code generation
+
+```java
+JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
+JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
+```
+
+everything should still works, just much much faster
+
+## Reflection
+
+reflection can be enabled per-class, or globally. For example, for the class
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+}
+```
+
+to bind to private field, we have to enable reflection for this type
+
+```java
+JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+return iter.read(TestObject.class); // will use reflection
+```
+
+Or, we can set the default decoding mode to reflection
+
+```java
+JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
+```
+
+All features is supported using the reflection mode, just slower, but still faster than existing solutions. Here is a quick benchmark of simple object field binding:
+
+| parser | ops/s |
+| --- | --- |
+| jackson + afterburner | 6632322.908 ±  248913.699  ops/s |
+| jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
+| jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
+
+## Static code generation
+
+When you want to have maximum performance, and the platform you use can not support dynamic code generation, then you can try static codegen. To enable static codegen, 3 things need to be done:
+
+* define what class need to be decoded or encoded
+* add code generation to maven build process
+* switch mode to static codegen when decoding or encoding
+
+
+```java
+public class DemoCodegenConfig implements CodegenConfig {
+
+    @Override
+    public void setup() {
+        // register custom decoder or extensions before codegen
+        // so that we doing codegen, we know in which case, we need to callback
+        JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
+            @Override
+            public int decodeInt(JsonIterator iter) throws IOException {
+                return Integer.valueOf(iter.readString());
+            }
+        });
+    }
+
+    @Override
+    public TypeLiteral[] whatToCodegen() {
+        return new TypeLiteral[]{
+                // generic types, need to use this syntax
+                new TypeLiteral<List<Integer>>() {
+                },
+                new TypeLiteral<Map<String, Object>>() {
+                },
+                // array
+                TypeLiteral.create(int[].class),
+                // object
+                TypeLiteral.create(User.class)
+        };
+    }
+}
+```
+
+then add code generation to maven build:
+
+```
+<plugin>
+<groupId>org.codehaus.mojo</groupId>
+<artifactId>exec-maven-plugin</artifactId>
+<version>1.5.0</version>
+<executions>
+    <execution>
+	<id>static-codegen</id>
+	<phase>compile</phase>
+	<goals>
+	    <goal>exec</goal>
+	</goals>
+	<configuration>
+	    <executable>java</executable>
+	    <workingDirectory>${project.build.sourceDirectory}</workingDirectory>
+	    <arguments>
+		<argument>-classpath</argument>
+		<classpath/>
+		<argument>com.jsoniter.StaticCodeGenerator</argument>
+		<argument>com.jsoniter.demo.DemoCodegenConfig</argument>
+	    </arguments>
+	</configuration>
+    </execution>
+</executions>
+</plugin>
+```
+
+the generated code will be written out to `src/main/java` folder of your project. The final step is to switch mode
+
+```java
+JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
+new JsonIterator().read(...
+```
+
+by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
+
 # Object binding styles
 
 binding to object can be done using a couple of ways. Jsoniter will not force you to make fields public
@@ -512,144 +653,3 @@ JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 ```
 
 This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
-
-# Performance is optional
-
-The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
-
-* reflection: the default
-* dynamic code generation: require javassist library dependency
-* static code generation: also an option
-
-## Dynamic code generation
-
-add this dependency to your project
-
-```xml
-<dependency>
-    <groupId>org.javassist</groupId>
-    <artifactId>javassist</artifactId>
-    <version>3.21.0-GA</version>
-</dependency>
-```
-
-then set the mode to dynamic code generation
-
-```java
-JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
-JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
-```
-
-everything should still works, just much much faster
-
-## Reflection
-
-reflection can be enabled per-class, or globally. For example, for the class
-
-```java
-public class TestObject {
-    private int field1;
-    private int field2;
-}
-```
-
-to bind to private field, we have to enable reflection for this type
-
-```java
-JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
-return iter.read(TestObject.class); // will use reflection
-```
-
-Or, we can set the default decoding mode to reflection
-
-```java
-JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
-```
-
-All features is supported using the reflection mode, just slower, but still faster than existing solutions. Here is a quick benchmark of simple object field binding:
-
-| parser | ops/s |
-| --- | --- |
-| jackson + afterburner | 6632322.908 ±  248913.699  ops/s |
-| jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
-| jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
-
-## Static code generation
-
-When you want to have maximum performance, and the platform you use can not support dynamic code generation, then you can try static codegen. To enable static codegen, 3 things need to be done:
-
-* define what class need to be decoded or encoded
-* add code generation to maven build process
-* switch mode to static codegen when decoding or encoding
-
-
-```java
-public class DemoCodegenConfig implements CodegenConfig {
-
-    @Override
-    public void setup() {
-        // register custom decoder or extensions before codegen
-        // so that we doing codegen, we know in which case, we need to callback
-        JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
-            @Override
-            public int decodeInt(JsonIterator iter) throws IOException {
-                return Integer.valueOf(iter.readString());
-            }
-        });
-    }
-
-    @Override
-    public TypeLiteral[] whatToCodegen() {
-        return new TypeLiteral[]{
-                // generic types, need to use this syntax
-                new TypeLiteral<List<Integer>>() {
-                },
-                new TypeLiteral<Map<String, Object>>() {
-                },
-                // array
-                TypeLiteral.create(int[].class),
-                // object
-                TypeLiteral.create(User.class)
-        };
-    }
-}
-```
-
-then add code generation to maven build:
-
-```
-<plugin>
-<groupId>org.codehaus.mojo</groupId>
-<artifactId>exec-maven-plugin</artifactId>
-<version>1.5.0</version>
-<executions>
-    <execution>
-	<id>static-codegen</id>
-	<phase>compile</phase>
-	<goals>
-	    <goal>exec</goal>
-	</goals>
-	<configuration>
-	    <executable>java</executable>
-	    <workingDirectory>${project.build.sourceDirectory}</workingDirectory>
-	    <arguments>
-		<argument>-classpath</argument>
-		<classpath/>
-		<argument>com.jsoniter.StaticCodeGenerator</argument>
-		<argument>com.jsoniter.demo.DemoCodegenConfig</argument>
-	    </arguments>
-	</configuration>
-    </execution>
-</executions>
-</plugin>
-```
-
-the generated code will be written out to `src/main/java` folder of your project. The final step is to switch mode
-
-```java
-JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
-new JsonIterator().read(... 
-```
-
-by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
-
