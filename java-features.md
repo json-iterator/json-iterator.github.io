@@ -166,9 +166,9 @@ ExtensionManager.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.
 return iter.read(TestObject.class);
 ```
 
-# Fields matching
+# Validation
 
-The json can have more fields or less fields than the object. it will be very hard for the user to catch field not set condidtion, as the information is lost after the binding. 
+It is very common to json decode to a object, then business logic validation is applied. The json can have more fields or less fields than the object. it will be very hard for the user to catch field not set condidtion, as the information is lost after the binding. Jsoniter is one of few json parser implemneted required property tracking. You can tell if a int field is 0, because there is no input, or input is 0.
 
 ## Missing field
 
@@ -203,6 +203,21 @@ com.jsoniter.JsonException: missing mandatory fields: [field1, field3]
 	at com.jsoniter.demo.MissingField.test(MissingField.java:60)
 ```
 
+If you do not want to throw exception, you can add `@JsonMissingProperties` to catch those fields.
+
+```java
+public static class TestObject {
+    @JsonProperty(required = true)
+    public int field1;
+    @JsonProperty(required = true)
+    public int field2;
+    @JsonProperty(required = true)
+    public int field3;
+    @JsonMissingProperties
+    public List<String> missingFields; // will be [field1, field3]
+}
+```
+
 ## Fail on unknown properties
 
 ```java
@@ -224,7 +239,19 @@ return iter.read(TestObject2.class);
 the error message looks like 
 
 ```
-com.jsoniter.JsonException: unknown property: field3
+com.jsoniter.JsonException: extra property: field3
+```
+
+If you do not want to throw exception, you can add `@JsonExtraProperties` to catch them:
+
+```java
+@JsonUnknownProperties(failOnUnkown = true)
+public static class TestObject2 {
+    public int field1;
+    public int field2;
+    @JsonExtraProperties
+    public Map<String, Any> extra; // will contain field3
+}
 ```
 
 ## Exclude whitelist properties
@@ -264,7 +291,7 @@ given the input
 will throw exception
 
 ```
-com.jsoniter.JsonException: found should not present field: field3
+com.jsoniter.JsonException: extra property: field3
 ```
 
 # Collection and generics
@@ -484,4 +511,6 @@ the generated code will be written out to `src/main/java` folder of your project
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
 new JsonIterator().read(... 
 ```
+
+by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
 
