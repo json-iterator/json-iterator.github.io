@@ -48,6 +48,8 @@ public class TestObject {
 }
 ```
 
+bind-api is not your only option. You can also use iterator-api to do the binding manually. 
+
 **iterator + switch case**
 
 ```java
@@ -79,6 +81,8 @@ return iter.read(TestObject.class);
 TestObject testObject = new TestObject();
 return iter.read(testObject);
 ```
+
+Jsoniter allow reusing existing object. When you need to bind one object repeatedly, this can save the memory allocation cost.
 
 ## Constructor binding
 
