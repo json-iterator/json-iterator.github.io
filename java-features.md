@@ -6,6 +6,27 @@ title: How-to
 * TOC
 {:toc}
 
+# Very simple api
+
+## deserialize
+
+```java
+Any obj = JsonIterator.deserialize("[1,2,3]");
+System.out.println(obj.get(2));
+int[] array = JsonIterator.deserialize("[1,2,3]", int[].class);
+System.out.println(array[2]);
+```
+
+just one static method, can not be more simple
+
+## Encode
+
+```java
+System.out.println(JsonStream.serialize(new int[]{1,2,3}));
+```
+
+just one static method, can not be more simple
+
 # Object binding styles
 
 binding to object can be done using a couple of ways. Jsoniter will not force you to make fields public
