@@ -53,6 +53,7 @@ then set the mode to dynamic code generation
 ```java
 JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
 JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
+JsoniterAnnotationSupport.enable();
 ```
 
 everything should still works, just much much faster
@@ -79,6 +80,7 @@ Or, we can set the default decoding mode to reflection
 
 ```java
 JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
+JsoniterAnnotationSupport.enable();
 ```
 
 All features is supported using the reflection mode, just slower, but still faster than existing solutions. Here is a quick benchmark of simple object field binding:
@@ -163,6 +165,7 @@ the generated code will be written out to `src/main/java` folder of your project
 
 ```java
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
+JsoniterAnnotationSupport.enable();
 new JsonIterator().read(...
 ```
 
