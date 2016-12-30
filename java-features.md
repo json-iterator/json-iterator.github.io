@@ -555,7 +555,7 @@ public static class TestObject2 {
 }
 ```
 
-using `failOnUnknown` we can detect if the input has extra fields. Enable the annotation support:
+using `asExtraForUnknownProperties` we can detect if the input has extra fields. Enable the annotation support:
 
 ```java
 JsoniterAnnotationSupport.enable();
