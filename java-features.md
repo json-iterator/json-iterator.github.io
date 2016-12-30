@@ -546,7 +546,7 @@ public static class TestObject {
 ## Fail on unknown properties
 
 ```java
-@JsonUnknownProperties(failOnUnkown = true)
+@JsonObject(asExtraForUnknownProperties = true)
 public static class TestObject2 {
     public int field1;
     public int field2;
@@ -570,7 +570,7 @@ com.jsoniter.JsonException: extra property: field3
 If you do not want to throw exception, you can add `@JsonExtraProperties` to catch them:
 
 ```java
-@JsonUnknownProperties(failOnUnkown = true)
+@JsonObject(asExtraForUnknownProperties = true)
 public static class TestObject2 {
     public int field1;
     public int field2;
@@ -582,7 +582,7 @@ public static class TestObject2 {
 ## Exclude whitelist properties
 
 ```java
-@JsonUnknownProperties(failOnUnkown = true, whitelist = {"field2"})
+@JsonObject(asExtraForUnknownProperties = true, unknownPropertiesWhitelist = {"field2"})
 public static class TestObject3 {
     public int field1;
 }
@@ -601,7 +601,7 @@ exception will still be thrown. `com.jsoniter.JsonException: unknown property: f
 To ensure certain fields should never appear from the input. we can set the blacklist
 
 ```java
-@JsonUnknownProperties(blacklist = {"field3"})
+@JsonObject(unknownPropertiesBlacklist = {"field3"})
 public static class TestObject4 {
     public int field1;
 }
