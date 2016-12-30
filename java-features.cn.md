@@ -232,3 +232,62 @@ new JsonIterator().read(...
 ```
 
 把模式设置为 static 之后，动态代码生成就不会被自动触发了。如果对应的类没有预先生成的编解码代码，异常会被抛出。
+
+# 对象绑定的多种姿势
+
+Java程序员是矫情的。相比 golang 的纯真朴素，java 里给一个对象赋值的方式不要太多了。Jsoniter 入乡随俗，不会强制只支持 field 绑定的方式的。以下是所有的对象绑定可能：
+
+## 公有 field 绑定
+
+给定这样的文档
+
+```json
+{"field1":100,"field2":101}
+```
+
+绑定到这个 class 上
+
+```java
+public class TestObject {
+    public int field1;
+    public int field2;
+}
+```
+
+bind-api 好用，但是不是唯一的选择。你也可以使用 iterator-api 来手工完成绑定
+
+**iterator + switch case**
+
+```java
+TestObject obj = new TestObject();
+for (String field = iter.readObject(); field != null; field = iter.readObject()) {
+    switch (field) {
+        case "field1":
+            obj.field1 = iter.readInt();
+            continue;
+        case "field2":
+            obj.field2 = iter.readInt();
+            continue;
+        default:
+            iter.skip();
+    }
+}
+return obj;
+```
+
+**binding**
+
+如果用 bind-api，就可以简化为一行代码：
+
+```java
+return iter.read(TestObject.class);
+```
+
+**read into existing object**
+
+```java
+TestObject testObject = new TestObject();
+return iter.read(testObject);
+```
+
+Jsoniter 深圳允许你复用已有的对象，把值直接绑定上去。当你需要反复地绑定对象的时候，这可以节省内存分配的时间。
