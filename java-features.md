@@ -902,3 +902,53 @@ the error message is comprehensible:
 ```
 com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
 ```
+
+# Right api for the right job
+
+Jsoniter come with three api for different parsing job:
+
+* iterator-api: when input is large
+* bind-api: bind value to object
+* any-api: lazy parsing large object
+
+And you can mix and match
+
+## bind-api + any-api
+
+```java
+public class ABC {
+    public Any a; // lazy parsed
+}
+
+JsonIterator iter = JsonIterator.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
+ABC abc = iter.read(ABC.class);
+System.out.println(abc.a.get("b", "c"));
+```
+
+## iterator-api + bind-api
+
+```java
+public class User {
+    public int userId;
+    public String name;
+    public String[] tags;
+}
+
+JsonIterator iter = JsonIterator.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
+iter.readArray();
+int userId = iter.readInt();
+iter.readArray();
+User user = iter.read(User.class);
+user.userId = userId;
+iter.readArray(); // end of array
+System.out.println(user);
+```
+
+## 6 combinations
+
+* iterator-api => bind-api: JsonIterator.read
+* iterator-api => any-api: JsonIterator.readAny
+* bind-api => iterator-api: register type decoder or property decoder
+* bind-api => any-api: use `Any` as data type
+* any-api => bind-api: get bytes from any, then bind
+* any-api => iterator-api: get bytes from any, then iterate
