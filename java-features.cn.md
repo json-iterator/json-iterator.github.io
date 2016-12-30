@@ -581,3 +581,43 @@ public static class TestObject2 {
 ```
 
 map 的值是 Any 类型的，其内容是 lazy 解析的。意味着这里其实只是一个 byte 数组而已。
+
+## 未知属性的白名单
+
+```java
+@JsonObject(asExtraForUnknownProperties = true, unknownPropertiesWhitelist = {"field2"})
+public static class TestObject3 {
+    public int field1;
+}
+```
+
+如果输入是 `{"field1":100,"field2":101}`，它可以通过。如果输入是 
+
+```json
+{"field1":100,"field2":101,"field3":102}
+```
+
+这样的输入就会抛异常 `com.jsoniter.JsonException: unknown property: field3`
+
+## 未知属性的黑名单
+
+如果要保证输入里一定没有指定的字段，我们可以设置黑名单
+
+```java
+@JsonObject(unknownPropertiesBlacklist = {"field3"})
+public static class TestObject4 {
+    public int field1;
+}
+```
+
+给定这样的输入
+
+```json
+{"field1":100,"field2":101,"field3":102}
+```
+
+则会抛异常
+
+```
+com.jsoniter.JsonException: extra property: field3
+```
