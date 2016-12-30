@@ -720,7 +720,7 @@ Other interface types will be specified by the user.
 JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 ```
 
-This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
+This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed. This implementation relationship can also be specified using `@JsonProperty`.
 
 # Lazy is an option
 
