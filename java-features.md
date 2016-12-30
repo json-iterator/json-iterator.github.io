@@ -325,6 +325,8 @@ JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are n
 return iter.read(TestObject.class);
 ```
 
+Not only constructor binding is supported, static method working as factory method is also supported. Just mark it with `@JsonCreator`.
+
 ## Setter Binding
 
 bind the json document 
@@ -391,7 +393,7 @@ public class TestObject {
 
 **reflection**
 
-only reflection mode support private field binding, you have to register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior.
+only reflection mode support private field binding, you can register type decoder explicitly. Notice that, private field is bindable by default when using reflection decoder, you do not need to mark them as `@JsonProperty` to force the behavior. If you do not want the private field to be bind, you have to use `@JsonIgnore` to ignore them.
 
 ```java
 JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
