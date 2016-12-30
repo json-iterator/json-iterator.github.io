@@ -8,7 +8,7 @@ jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提�
 # jsoniter 有何独特之处？
 
 * Jsoniter 是最快的 JSON 解析器。它最多能比普通的解析器快10倍之多，即使在数据绑定的用法下也有同样的性能优势。无耻地献上自己的 [跑分](/benchmark.html)
-* 非常易于使用的 api，允许你使用任何风格或者混搭的方式来解析 JSON。给你前所未有的灵活性。来看看这些 [API们](/java-features.html) 是不是真的有那么好用吧
+* 非常易于使用的 api，允许你使用任何风格或者混搭的方式来解析 JSON。给你前所未有的灵活性。来看看这些 [API们](/java-features.cn.html) 是不是真的有那么好用吧
 
 # 自卖自夸
 
