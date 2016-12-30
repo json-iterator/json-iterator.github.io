@@ -656,3 +656,94 @@ JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 ```
 
 This will use `MyObject.class` to create object wheree `MyInterface.class` instance is needed.
+
+# Lazy is an option
+
+It is tedious to design a class to describe the schema of data. Jsoniter allow you to decode the json as an `Any` object, and start using it right away. The experience is very similar to PHP json_decode.
+
+## Lazy is not slow
+
+given a larget json document
+
+```json
+[
+// many many more
+  {
+    "_id": "58659f976f045f9c69c53efb",
+    "index": 4,
+    "guid": "3cbaef3d-25ab-48d0-8807-1974f6aad336",
+    "isActive": true,
+    "balance": "$1,854.63",
+    "picture": "http://placehold.it/32x32",
+    "age": 26,
+    "eyeColor": "brown",
+    "name": "Briggs Larson",
+    "gender": "male",
+    "company": "ZOXY",
+    "email": "briggslarson@zoxy.com",
+    "phone": "+1 (807) 588-3350",
+    "address": "994 Nichols Avenue, Allamuchy, Guam, 3824",
+    "about": "Sunt velit ullamco consequat velit ad nisi in sint qui qui ut eiusmod eu. Et ut aliqua mollit cupidatat et proident tempor do est enim exercitation amet aliquip. Non exercitation proident do duis non ullamco do esse dolore in occaecat. Magna ea labore aliqua laborum ad amet est incididunt et quis cillum nulla. Adipisicing veniam nisi esse officia dolor labore. Proident fugiat consequat ullamco fugiat. Est et adipisicing eiusmod excepteur deserunt pariatur aute commodo dolore occaecat veniam dolore.\r\n",
+    "registered": "2014-07-21T03:28:39 -08:00",
+    "latitude": -59.741245,
+    "longitude": -9.657004,
+    "friends": [
+      {
+        "id": 0,
+        "name": "Herminia Mcknight"
+      },
+      {
+        "id": 1,
+        "name": "Leann Harding"
+      },
+      {
+        "id": 2,
+        "name": "Marisol Sykes"
+      }
+    ],
+    "tags": [
+      "ea",
+      "velit",
+      "sunt",
+      "fugiat",
+      "do",
+      "Lorem",
+      "nostrud"
+    ],
+    "greeting": "Hello, Briggs Larson! You have 3 unread messages.",
+    "favoriteFruit": "apple"
+  }
+// many many more
+]
+```
+
+if we use traditional way to parse it, it will be list of hash map
+
+```java
+List users = (List) iter.read();
+int total = 0;
+for (Object userObj : users) {
+    Map user = (Map) userObj;
+    List friends = (List) user.get("friends");
+    total += friends.size();
+}
+return total;
+```
+
+using `Any`, we can lazy parse it:
+
+```java
+Any users = iter.readAny();
+int total = 0;
+for (Any user : users) { // array parsing triggered
+    total += user.getValue("friends").size(); // object parsing triggered
+}
+return total;
+```
+
+the laziness can be verified by benchmark:
+
+| parsing style | ops/s |
+| --- | --- |
+| eager | 48510.942 ± 3891.295  ops/s |
+| lazy | 65088.956 ± 5026.304  ops/s |
