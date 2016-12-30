@@ -120,6 +120,7 @@ JsoniterAnnotationSupport.enable();
 所有的功能应该都能正常工作的，而且要快很多
 
 ## 反射
+
 反射可以给具体的某个 class 启用，也可以全局开启。比如，对于这个 class
 
 ```java
@@ -829,4 +830,140 @@ int value = JsonIterator.deserialize(input).toInt("numbers", 2, 0); // value is 
 String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
 Any any = JsonIterator.deserialize(input);
 Any found = any.get("num", 100); // found is null, so we know it is missing from json
+```
+
+# 流式解析
+
+当输入是很大的json时，我们可能需要使用流式解析的方式来处理。我认为现有的解决方案都很笨拙，这也是我为什么要发明 jsoniter(json iterator) 的初衷。
+给定这样的文档，我们想要数一下tag的数量
+
+```json
+{
+    "users": [
+        {
+            "_id": "58451574858913704731",
+            "about": "a4KzKZRVvqfBLdnpUWaD",
+            "address": "U2YC2AEVn8ab4InRwDmu",
+            "age": 27,
+            "balance": "I5cZ5vRPmVXW0lhhRzF4",
+            "company": "jwLot8sFN1hMdE4EVW7e",
+            "email": "30KqJ0oeYXLqhKMLDUg6",
+            "eyeColor": "RWXrMsO6xi9cpxPqzJA1",
+            "favoriteFruit": "iyOuAekbybTUeDJqkHNI",
+            "gender": "ytgB3Kzoejv1FGU6biXu",
+            "greeting": "7GXmN2vMLcS2uimxGQgC",
+            "guid": "bIqNIywgrzva4d5LfNlm",
+            "index": 169390966,
+            "isActive": true,
+            "latitude": 70.7333712683406,
+            "longitude": 16.25873969455544,
+            "name": "bvtukpT6dXtqfbObGyBU",
+            "phone": "UsxtI7sWGIEGvM2N1Mh0",
+            "picture": "8fiyZ2oKapWtH5kXyNDZJjvRS5PGzJGGxDCAk1he1wuhUjxfjtGIh6agQMbjovF10YlqOyzhQPCagBZpW41r6CdrghVfgtpDy7YH",
+            "registered": "gJDieuwVu9H7eYmYnZkz",
+            "tags": [
+                "M2b9n0QrqC",
+                "zl6iJcT68v",
+                "VRuP4BRWjs",
+                "ZY9jXIjTMR"
+            ]
+        }
+    ]
+}
+```
+
+## Tokenizer 的 api 很难用
+
+java 官方的 https://jsonp.java.net/ 就别提了，简直糟糕头顶。它甚至没有方法可以直接skip掉一个值。Jackson是我唯一可以找到尚可一用的实现：
+
+```java
+public int calc(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        if ("users".equals(fieldname)) {
+            while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                totalTagsCount += jacksonUser(jParser);
+            }
+        }
+    }
+    return totalTagsCount;
+}
+
+private int jacksonUser(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        switch (fieldname) {
+            case "tags":
+                jParser.nextToken();
+                while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                    totalTagsCount++;
+                }
+                break;
+            default:
+                jParser.nextToken();
+                jParser.skipChildren();
+        }
+    }
+    return totalTagsCount;
+}
+```
+咋一看，还不错。问题是 tokenizer 给你了 token，你需要负责写出完备地处理逻辑。如果处理的形况没有写全，出错了则很难调试。这样就被迫需要没拿到一个token都判断所有可能的情况。
+
+## Iterator 简单明了
+
+同样的逻辑使用 jsoniter 的 iterator-api 来实现：
+
+```java
+public int calc(JsonIterator iter) throws IOException {
+    int totalTagsCount = 0;
+    for (String field = iter.readObject(); field != null; field = iter.readObject()) {
+        switch (field) {
+            case "users":
+                while (iter.readArray()) {
+                    for (String field2 = iter.readObject(); field2 != null; field2 = iter.readObject()) {
+                        switch (field2) {
+                            case "tags":
+                                while (iter.readArray()) {
+                                    iter.skip();
+                                    totalTagsCount++;
+                                }
+                                break;
+                            default:
+                                iter.skip();
+                        }
+                    }
+                }
+                break;
+            default:
+                iter.skip();
+        }
+    }
+    return totalTagsCount;
+}
+```
+
+如果我们把输入从数组变成对象
+
+```json
+{
+    "users": [
+        {
+            // ...
+            "tags": {
+                "tag1": "M2b9n0QrqC",
+                "tag2": "zl6iJcT68v",
+                "tag3": "VRuP4BRWjs",
+                "tag4": "ZY9jXIjTMR"
+            }
+        }
+    ]
+}
+```
+
+出错的消息立马可以知道是什么原因：
+
+```
+com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
 ```
