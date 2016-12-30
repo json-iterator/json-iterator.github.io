@@ -291,3 +291,112 @@ return iter.read(testObject);
 ```
 
 Jsoniter 深圳允许你复用已有的对象，把值直接绑定上去。当你需要反复地绑定对象的时候，这可以节省内存分配的时间。
+
+## 构造函数绑定
+
+绑定这个文档
+
+```json
+{"field1":100,"field2":101}
+```
+
+到 class 上
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+
+    @JsonCreator
+    public TestObject(
+            @JsonProperty("field1") int field1,
+            @JsonProperty("field2") int field2) {
+        this.field1 = field1;
+        this.field2 = field2;
+    }
+}
+```
+
+**binding**
+
+需要把类添加上 jsoniter 的 annotation，然后开始 annotation 的支持。如果你已经在使用 jackson 的 annotation，也可以开启 JacksonAnnotationSupport 的兼容模式。必须把参数用 `@JsonProperty` 标记，因为旧的 java 版本无法通过反射获得参数名。
+
+```java
+JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are not using Jackson
+return iter.read(TestObject.class);
+```
+
+`@JsonCreator` 不仅仅支持构造函数，静态函数充当工厂方法也是可以的。
+
+## Setter 绑定
+
+绑定这个文档
+
+```json
+{"field1":100,"field2":101}
+```
+
+绑定到使用 setter 的这个 class 上
+
+```java
+public static class TestObject {
+    private int field1;
+    private int field2;
+
+    public void setField1(int field1) {
+        this.field1 = field1;
+    }
+
+    public void setField2(int field2) {
+        this.field2 = field2;
+    }
+}
+```
+
+这个写法是自动支持的。甚至如果 setter 有多个参数也是可以的（严格意义上来说，这就不是setter了），但是需要 annotation 的支持。
+
+```java
+public static class TestObject {
+    private int field1;
+    private int field2;
+
+    @JsonWrapper
+    public void initialize(
+            @JsonProperty("field1") int field1,
+            @JsonProperty("field2") int field2) {
+        this.field1 = field1;
+        this.field2 = field2;
+    }
+}
+```
+
+```java
+JsoniterAnnotationSupport.enable();
+return iter.read(TestObject.class);
+```
+
+## 私有成员绑定
+
+绑定这个文档
+
+```json
+{"field1":100,"field2":101}
+```
+
+到这个类上
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+}
+```
+
+**reflection**
+
+只有反射模式才支持私有成员的绑定。注意当使用反射的时候，无需标记 `@JsonProperty`，所有字段默认都会被序列化和反序列化，除非使用 `@JsonIgnore` 排除掉。
+
+```java
+JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+return iter.read(TestObject.class);
+```
