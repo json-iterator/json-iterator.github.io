@@ -925,6 +925,8 @@ ABC abc = iter.read(ABC.class);
 System.out.println(abc.a.get("b", "c"));
 ```
 
+when certain field do not want to bind eagerly, we can parse them later.
+
 ## iterator-api + bind-api
 
 ```java
@@ -943,6 +945,17 @@ user.userId = userId;
 iter.readArray(); // end of array
 System.out.println(user);
 ```
+
+when using itrator, but do not want to bind field by field
+
+## any-api + bind-api
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].class);
+```
+
+after you extracted value from `Any`, then you can bind it to object using bind-api
 
 ## 6 combinations
 
