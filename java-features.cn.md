@@ -151,3 +151,84 @@ JsoniterAnnotationSupport.enable();
 | jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
 | jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
 
+## 静态代码生成
+
+如果你想要最好的性能，但是你使用的平台又无法支持动态代码生成的时候，你可以选择静态代码生成。要启用静态代码生成，需要完成三件事情：
+
+* 提前定义哪些 class 是需要编解码的
+* 把代码生成加入到 build 的过程中，比如 maven
+* 把模式切换为 static
+
+首先我们来定义哪些class是需要编解码的
+
+```java
+public class DemoCodegenConfig implements CodegenConfig {
+
+    @Override
+    public void setup() {
+        // register custom decoder or extensions before codegen
+        // so that we doing codegen, we know in which case, we need to callback
+        JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
+            @Override
+            public int decodeInt(JsonIterator iter) throws IOException {
+                return Integer.valueOf(iter.readString());
+            }
+        });
+    }
+
+    @Override
+    public TypeLiteral[] whatToCodegen() {
+        return new TypeLiteral[]{
+                // generic types, need to use this syntax
+                new TypeLiteral<List<Integer>>() {
+                },
+                new TypeLiteral<Map<String, Object>>() {
+                },
+                // array
+                TypeLiteral.create(int[].class),
+                // object
+                TypeLiteral.create(User.class)
+        };
+    }
+}
+```
+
+然后我们在 maven 中添加代码生成的调用：
+
+```
+<plugin>
+<groupId>org.codehaus.mojo</groupId>
+<artifactId>exec-maven-plugin</artifactId>
+<version>1.5.0</version>
+<executions>
+    <execution>
+	<id>static-codegen</id>
+	<phase>compile</phase>
+	<goals>
+	    <goal>exec</goal>
+	</goals>
+	<configuration>
+	    <executable>java</executable>
+	    <workingDirectory>${project.build.sourceDirectory}</workingDirectory>
+	    <arguments>
+		<argument>-classpath</argument>
+		<classpath/>
+		<argument>com.jsoniter.StaticCodeGenerator</argument>
+		<argument>com.jsoniter.demo.DemoCodegenConfig</argument>
+	    </arguments>
+	</configuration>
+    </execution>
+</executions>
+</plugin>
+```
+
+产生的代码会被写到你项目的 `src/main/java` 目录，作为你的代码的一部分。最后把模式切换一下
+
+```java
+JsonStream.setMode(EncodingMode.STATIC_MODE); 
+JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
+JsoniterAnnotationSupport.enable();
+new JsonIterator().read(...
+```
+
+把模式设置为 static 之后，动态代码生成就不会被自动触发了。如果对应的类没有预先生成的编解码代码，异常会被抛出。
