@@ -400,3 +400,184 @@ public class TestObject {
 JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
 return iter.read(TestObject.class);
 ```
+
+# Wrapper & Unwrapper
+
+## Wrapper
+
+假定你有这样的一些对象
+
+```java
+public class Name {
+    private final String firstName;
+    private final String lastName;
+
+    public Name(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+}
+
+public class User {
+    private Name name;
+    public int score;
+
+    public Name getName() {
+        return name;
+    }
+
+    @JsonWrapper
+    public void setName(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
+        name = new Name(firstName, lastName);
+    }
+}
+```
+ `Name` 是一个封装类，你不希望这个封装类被json绑定给影响。但是输入字段是平铺的
+ 
+```json
+{"firstName": "tao", "lastName": "wen", "score": 100}
+```
+
+我们可以看到json和对象在结构上是不匹配的，这时就要`@JsonWrapper`来救场了。本质上来说，它就是把值绑定到函数参数上，而不是绑定到对象上。
+
+## Unwrapper
+
+对于同样的对象图，如果我们想要把对象重新序列化为json。默认这个输出就变成了：
+
+```java
+JsonStream.serialize(user)
+// {"score":100,"name":{"firstName":"tao","lastName":"wen"}}
+```
+使用 `@JsonUnwrapper` 我们可以控制对象的成员是如何被写出到json的:
+
+```java
+public class User {
+    private Name name;
+    public int score;
+
+    @JsonIgnore
+    public Name getName() {
+        return name;
+    }
+
+    @JsonUnwrapper
+    public void writeName(JsonStream stream) throws IOException {
+        stream.writeObjectField("firstName");
+        stream.writeVal(name.getFirstName());
+        stream.writeMore();
+        stream.writeObjectField("lastName");
+        stream.writeVal(name.getLastName());
+    }
+
+    @JsonWrapper
+    public void setName(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
+        System.out.println(firstName);
+        name = new Name(firstName, lastName);
+    }
+}
+```
+
+这样搞之后，输出的json又重新变成了平铺的了：
+
+```java
+JsonStream.serialize(user)
+// {"score":100,"firstName":"tao","lastName":"wen"}
+```
+
+# 数据验证
+
+非常常见的做法是先把 json 绑定到对象，然后对对象进行业务上的合法性验证。json 可能比对象的字段要多或者要少。在做合法性验证的时候，要去推测当时 json 的实际情况是如何的比较难做。因为信息在绑定的过程中就丢失了。Jsoniter 是为数不多把必填字段跟踪实现了的 json 解析器。你拿到一个int字段的时候，如果值为0，可以知道是因为 json 里没有制定，默认值的0，还是 json 输入里填的就是0。
+
+## 必填字段
+
+```java
+public static class TestObject {
+    @JsonProperty(required = true)
+    public int field1;
+    @JsonProperty(required = true)
+    public int field2;
+    @JsonProperty(required = true)
+    public int field3;
+}
+```
+
+如果 `field1` 没有出现在 json 文档里，异常会被抛出。
+
+```java
+JsoniterAnnotationSupport.enable();
+JsonIterator iter = JsonIterator.parse("{'field2':101}".replace('\'', '"'));
+return iter.read(TestObject.class);
+```
+
+异常的消息是
+
+```
+com.jsoniter.JsonException: missing mandatory fields: [field1, field3]
+
+	at decoder.com.jsoniter.demo.MissingField.TestObject.decode_(TestObject.java)
+	at decoder.com.jsoniter.demo.MissingField.TestObject.decode(TestObject.java)
+	at com.jsoniter.JsonIterator.read(JsonIterator.java:339)
+	at com.jsoniter.demo.MissingField.withJsoniter(MissingField.java:85)
+	at com.jsoniter.demo.MissingField.test(MissingField.java:60)
+```
+
+如果你不希望抛异常，可以提供一个标记了 `@JsonMissingProperties` 的字段来装这些缺失的必填字段的名字
+
+```java
+public static class TestObject {
+    @JsonProperty(required = true)
+    public int field1;
+    @JsonProperty(required = true)
+    public int field2;
+    @JsonProperty(required = true)
+    public int field3;
+    @JsonMissingProperties
+    public List<String> missingFields; // will be [field1, field3]
+}
+```
+
+## 处理未知属性
+
+```java
+@JsonObject(asExtraForUnknownProperties = true)
+public static class TestObject2 {
+    public int field1;
+    public int field2;
+}
+```
+
+把 `asExtraForUnknownProperties` 设置为 true 之后，多余的字段出现的话就会报错。当然还是要开启 annotation 的支持
+
+```java
+JsoniterAnnotationSupport.enable();
+JsonItertor iter = JsonIterator.parse("{'field1':101,'field2':101,'field3':101}".replace('\'', '"').getBytes());
+return iter.read(TestObject2.class);
+```
+
+错误消息看起来是这样的
+
+```
+com.jsoniter.JsonException: extra property: field3
+```
+
+如果你不想要抛出异常，可以提供一个标记了 `@JsonExtraProperties` 的字段来保存这些未知的属性：
+
+```java
+@JsonObject(asExtraForUnknownProperties = true)
+public static class TestObject2 {
+    public int field1;
+    public int field2;
+    @JsonExtraProperties
+    public Map<String, Any> extra; // will contain field3
+}
+```
+
+map 的值是 Any 类型的，其内容是 lazy 解析的。意味着这里其实只是一个 byte 数组而已。
