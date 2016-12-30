@@ -723,13 +723,13 @@ JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
 
 所有的地方 `MyObject.class` 都会被用于实例化 `MyInterface.class` 类型的变量。这个实现关系也可以在 `@JsonProperty` 上指定。
 
-# Lazy is an option
+# 懒惰是一种美德
 
-It is tedious to design a class to describe the schema of data. Jsoniter allow you to decode the json as an `Any` object, and start using it right away. The experience is very similar to PHP json_decode.
+需要定义schema来描述数据是一件很麻烦的事情。Jsoniter 允许你把 json 解析为 `Any` 对象，然后就可以直接使用了。使用体验和 PHP 的 json_decode 差不多。
 
-## Lazy is not slow
+## Lazy 可一点都不慢
 
-given a larget json document
+给定一个很大的 json 文档
 
 ```json
 [
@@ -783,7 +783,7 @@ given a larget json document
 ]
 ```
 
-if we use traditional way to parse it, it will be list of hash map
+如果我们用传统的方式来解析，它会被立即解析为 list 和 map 嵌套的结构
 
 ```java
 List users = (List) iter.read();
@@ -796,21 +796,37 @@ for (Object userObj : users) {
 return total;
 ```
 
-using `Any`, we can lazy parse it:
+如果使用 `Any`，则可以延迟被解析
 
 ```java
 Any users = iter.readAny();
 int total = 0;
-for (Any user : users) { // array parsing triggered
-    total += user.getValue("friends").size(); // object parsing triggered
+for (Any user : users) { // 此处触发了数组的解析
+    total += user.getValue("friends").size(); // 此处触发了对象的解析
 }
 return total;
 ```
 
-the laziness can be verified by benchmark:
+是不是延迟解析的，可以用性能评测来验证：
 
 | parsing style | ops/s |
 | --- | --- |
 | eager | 48510.942 ± 3891.295  ops/s |
 | lazy | 65088.956 ± 5026.304  ops/s |
 
+## Any 很容易使用
+
+Any 可以从嵌套的复杂结构里取出深层的值来。而且可以直接读取为你希望的值类型，而不用管实际输入的类型是什么。对的，这个就是给 PHP 抛过来的 json 准备的。
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+int value = JsonIterator.deserialize(input).toInt("numbers", 2, 0); // value is 3, converted from string
+```
+
+你可以一行获知你需要的值是传了还没有传，不需要反复 check null
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+Any any = JsonIterator.deserialize(input);
+Any found = any.get("num", 100); // found is null, so we know it is missing from json
+```
