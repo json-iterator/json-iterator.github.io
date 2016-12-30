@@ -764,3 +764,141 @@ String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
 Any any = JsonIterator.deserialize(input);
 Any found = any.get("num", 100); // found is null, so we know it is missing from json
 ```
+
+# Stream parsing
+
+when dealing with large json input, we might want to process them in a streaming way. I found existing solution to be cumbersome to use, so jsoniter (json iterator) is invented.
+
+given we want to parse this document, and count tags
+
+```json
+{
+    "users": [
+        {
+            "_id": "58451574858913704731",
+            "about": "a4KzKZRVvqfBLdnpUWaD",
+            "address": "U2YC2AEVn8ab4InRwDmu",
+            "age": 27,
+            "balance": "I5cZ5vRPmVXW0lhhRzF4",
+            "company": "jwLot8sFN1hMdE4EVW7e",
+            "email": "30KqJ0oeYXLqhKMLDUg6",
+            "eyeColor": "RWXrMsO6xi9cpxPqzJA1",
+            "favoriteFruit": "iyOuAekbybTUeDJqkHNI",
+            "gender": "ytgB3Kzoejv1FGU6biXu",
+            "greeting": "7GXmN2vMLcS2uimxGQgC",
+            "guid": "bIqNIywgrzva4d5LfNlm",
+            "index": 169390966,
+            "isActive": true,
+            "latitude": 70.7333712683406,
+            "longitude": 16.25873969455544,
+            "name": "bvtukpT6dXtqfbObGyBU",
+            "phone": "UsxtI7sWGIEGvM2N1Mh0",
+            "picture": "8fiyZ2oKapWtH5kXyNDZJjvRS5PGzJGGxDCAk1he1wuhUjxfjtGIh6agQMbjovF10YlqOyzhQPCagBZpW41r6CdrghVfgtpDy7YH",
+            "registered": "gJDieuwVu9H7eYmYnZkz",
+            "tags": [
+                "M2b9n0QrqC",
+                "zl6iJcT68v",
+                "VRuP4BRWjs",
+                "ZY9jXIjTMR"
+            ]
+        }
+    ]
+}
+```
+
+## Tokenizer is cumbersome
+
+https://jsonp.java.net/ is awful, it does not even have a api to skip a whole value, so I will skip that. Jackson is the only streaming parser I can find. Here is the implementation:
+
+```java
+public int calc(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        if ("users".equals(fieldname)) {
+            while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                totalTagsCount += jacksonUser(jParser);
+            }
+        }
+    }
+    return totalTagsCount;
+}
+
+private int jacksonUser(JsonParser jParser) throws IOException {
+    int totalTagsCount = 0;
+    while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+        String fieldname = jParser.getCurrentName();
+        switch (fieldname) {
+            case "tags":
+                jParser.nextToken();
+                while (jParser.nextToken() != com.fasterxml.jackson.core.JsonToken.END_ARRAY) {
+                    totalTagsCount++;
+                }
+                break;
+            default:
+                jParser.nextToken();
+                jParser.skipChildren();
+        }
+    }
+    return totalTagsCount;
+}
+```
+
+looks not bad actually. the problem is the api is a tokenizer. You will get a token and decide what to do with it. If you did not handle the all cases for the token, then when the input is not what you want, it is very hard to debug.
+
+## Iterator to rescue
+
+Same logic implemented using jsoniter iterator-api:
+
+```java
+public int calc(JsonIterator iter) throws IOException {
+    int totalTagsCount = 0;
+    for (String field = iter.readObject(); field != null; field = iter.readObject()) {
+        switch (field) {
+            case "users":
+                while (iter.readArray()) {
+                    for (String field2 = iter.readObject(); field2 != null; field2 = iter.readObject()) {
+                        switch (field2) {
+                            case "tags":
+                                while (iter.readArray()) {
+                                    iter.skip();
+                                    totalTagsCount++;
+                                }
+                                break;
+                            default:
+                                iter.skip();
+                        }
+                    }
+                }
+                break;
+            default:
+                iter.skip();
+        }
+    }
+    return totalTagsCount;
+}
+```
+
+if we change the input a little bit
+
+```json
+{
+    "users": [
+        {
+            // ...
+            "tags": {
+                "tag1": "M2b9n0QrqC",
+                "tag2": "zl6iJcT68v",
+                "tag3": "VRuP4BRWjs",
+                "tag4": "ZY9jXIjTMR"
+            }
+        }
+    ]
+}
+```
+
+the error message is comprehensible:
+
+```
+com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
+```
