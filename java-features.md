@@ -28,6 +28,69 @@ System.out.println(JsonStream.serialize(new int[]{1,2,3}));
 just one static method, can not be more simple
 
 
+# Right api for the right job
+
+Jsoniter come with three api for different parsing job:
+
+* iterator-api: when input is large
+* bind-api: bind value to object
+* any-api: lazy parsing large object
+
+And you can mix and match
+
+## bind-api + any-api
+
+```java
+public class ABC {
+    public Any a; // lazy parsed
+}
+
+JsonIterator iter = JsonIterator.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
+ABC abc = iter.read(ABC.class);
+System.out.println(abc.a.get("b", "c"));
+```
+
+when certain field do not want to bind eagerly, we can parse them later.
+
+## iterator-api + bind-api
+
+```java
+public class User {
+    public int userId;
+    public String name;
+    public String[] tags;
+}
+
+JsonIterator iter = JsonIterator.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
+iter.readArray();
+int userId = iter.readInt();
+iter.readArray();
+User user = iter.read(User.class);
+user.userId = userId;
+iter.readArray(); // end of array
+System.out.println(user);
+```
+
+when using itrator, but do not want to bind field by field
+
+## any-api + bind-api
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].class);
+```
+
+after you extracted value from `Any`, then you can bind it to object using bind-api
+
+## total 6 combinations!
+
+* iterator-api => bind-api: JsonIterator.read
+* iterator-api => any-api: JsonIterator.readAny
+* bind-api => iterator-api: register type decoder or property decoder
+* bind-api => any-api: use `Any` as data type
+* any-api => bind-api: Any.to(class)
+* any-api => iterator-api: JsonIterator.parse(any)
+
 # Performance is optional
 
 The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
@@ -903,65 +966,3 @@ the error message is comprehensible:
 com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
 ```
 
-# Right api for the right job
-
-Jsoniter come with three api for different parsing job:
-
-* iterator-api: when input is large
-* bind-api: bind value to object
-* any-api: lazy parsing large object
-
-And you can mix and match
-
-## bind-api + any-api
-
-```java
-public class ABC {
-    public Any a; // lazy parsed
-}
-
-JsonIterator iter = JsonIterator.parse("{'a': {'b': {'c': 'd'}}}".replace('\'', '"'));
-ABC abc = iter.read(ABC.class);
-System.out.println(abc.a.get("b", "c"));
-```
-
-when certain field do not want to bind eagerly, we can parse them later.
-
-## iterator-api + bind-api
-
-```java
-public class User {
-    public int userId;
-    public String name;
-    public String[] tags;
-}
-
-JsonIterator iter = JsonIterator.parse("[123, {'name': 'taowen', 'tags': ['crazy', 'hacker']}]".replace('\'', '"'));
-iter.readArray();
-int userId = iter.readInt();
-iter.readArray();
-User user = iter.read(User.class);
-user.userId = userId;
-iter.readArray(); // end of array
-System.out.println(user);
-```
-
-when using itrator, but do not want to bind field by field
-
-## any-api + bind-api
-
-```java
-String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
-String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].class);
-```
-
-after you extracted value from `Any`, then you can bind it to object using bind-api
-
-## 6 combinations
-
-* iterator-api => bind-api: JsonIterator.read
-* iterator-api => any-api: JsonIterator.readAny
-* bind-api => iterator-api: register type decoder or property decoder
-* bind-api => any-api: use `Any` as data type
-* any-api => bind-api: get bytes from any, then bind
-* any-api => iterator-api: get bytes from any, then iterate
