@@ -747,3 +747,20 @@ the laziness can be verified by benchmark:
 | --- | --- |
 | eager | 48510.942 ± 3891.295  ops/s |
 | lazy | 65088.956 ± 5026.304  ops/s |
+
+## Any is easy
+
+Any can get value directly from nested structure. Any can read value in the type you want, regardless the actual type in the json.
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+int value = JsonIterator.deserialize(input).toInt("numbers", 2, 0); // value is 3, converted from string
+```
+
+you can detect if the value is present or not, by a single get
+
+```java
+String input = "{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"');
+Any any = JsonIterator.deserialize(input);
+Any found = any.get("num", 100); // found is null, so we know it is missing from json
+```
