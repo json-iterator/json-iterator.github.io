@@ -621,3 +621,196 @@ public static class TestObject4 {
 ```
 com.jsoniter.JsonException: extra property: field3
 ```
+
+# 集合和泛型
+
+## 集合
+
+泛型的集合对象需要使用 `TypeLiteral` 的方式来指定其值的类型
+
+| feature | sample |
+| --- | --- |
+| array | `new JsonIterator().read("[1,2,3,4]", int[].class)` |
+| list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<List<Integer>>(){})` |
+| set | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<Set<Integer>>(){})` |
+| linked list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<LinkedList<Integer>>(){})` |
+| list of object | `new JsonIterator().read("[1,2,3,4]", List.class)` |
+| map | `new JsonIterator().read("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
+
+集合也可以使用 iterator-api 来手工解析，比如对于这样的输入
+
+```json
+[1,2,3,4]
+```
+
+如果我们想要求和，可以写这样的代码来实现：
+
+```java
+int[] arr = iter.read(int[].class);
+int total = 0;
+for (int i = 0; i < arr.length; i++) {
+    total += arr[i];
+}
+return total;
+```
+
+通过iterator可以避免中间对象的存在：
+
+```java
+int total = 0;
+while (iter.readArray()) {
+    total += iter.readInt();
+}
+return total;
+```
+
+性能差别也是很大的
+
+| parser | ops/s |
+| --- | --- |
+| jackson | 4419446.858 ±  88015.833  ops/s |
+| jsoniter + binding | 15061063.604 ± 453904.401  ops/s |
+| jsoniter + iterator | 26425709.524 ± 333111.069  ops/s |
+
+## 字段类型是泛型的
+
+如果定义的字段是泛型的，它的值类型可以自动被识别
+
+```java
+public class TestObject {
+    public List<Integer> values;
+}
+
+new JsonIterator().read("{\"values\":[1,2,3]}", TestObject.class);
+```
+
+如果定义字段的时候类型还是变量，通过子类具体化之后，值类型也是可以知道的
+
+```java
+public class SuperClass<E> {
+    public List<E> values;
+}
+
+public class SubClass extends SuperClass<Integer> {
+}
+
+new JsonIterator().read("{\"values\":[1,2,3]}", SubClass.class);
+```
+
+一个泛型类被具体化有三种办法：
+
+* TypeLiteral
+* 通过子类化把变量类型绑定为具体类型
+* 直接定义字段类型的时候就指定具体类型参数
+
+如果泛型类对应的参数没法知道，则会用`Object.class`替代。
+
+## 接口类型
+
+如果被绑定的类型是一个接口，我们必须选择一个具体的实现类才可以创建出对象来。默认的规则是：
+
+| interface | impl |
+| --- | --- |
+| List | ArrayList |
+| Set | HashSet |
+| Map | HashMap |
+
+其他的接口类型则需要用户来指定了。
+
+```java
+JsoniterSpi.registerTypeImplementation(MyInterface.class, MyObject.class);
+```
+
+所有的地方 `MyObject.class` 都会被用于实例化 `MyInterface.class` 类型的变量。这个实现关系也可以在 `@JsonProperty` 上指定。
+
+# Lazy is an option
+
+It is tedious to design a class to describe the schema of data. Jsoniter allow you to decode the json as an `Any` object, and start using it right away. The experience is very similar to PHP json_decode.
+
+## Lazy is not slow
+
+given a larget json document
+
+```json
+[
+// many many more
+  {
+    "_id": "58659f976f045f9c69c53efb",
+    "index": 4,
+    "guid": "3cbaef3d-25ab-48d0-8807-1974f6aad336",
+    "isActive": true,
+    "balance": "$1,854.63",
+    "picture": "http://placehold.it/32x32",
+    "age": 26,
+    "eyeColor": "brown",
+    "name": "Briggs Larson",
+    "gender": "male",
+    "company": "ZOXY",
+    "email": "briggslarson@zoxy.com",
+    "phone": "+1 (807) 588-3350",
+    "address": "994 Nichols Avenue, Allamuchy, Guam, 3824",
+    "about": "Sunt velit ullamco consequat velit ad nisi in sint qui qui ut eiusmod eu. Et ut aliqua mollit cupidatat et proident tempor do est enim exercitation amet aliquip. Non exercitation proident do duis non ullamco do esse dolore in occaecat. Magna ea labore aliqua laborum ad amet est incididunt et quis cillum nulla. Adipisicing veniam nisi esse officia dolor labore. Proident fugiat consequat ullamco fugiat. Est et adipisicing eiusmod excepteur deserunt pariatur aute commodo dolore occaecat veniam dolore.\r\n",
+    "registered": "2014-07-21T03:28:39 -08:00",
+    "latitude": -59.741245,
+    "longitude": -9.657004,
+    "friends": [
+      {
+        "id": 0,
+        "name": "Herminia Mcknight"
+      },
+      {
+        "id": 1,
+        "name": "Leann Harding"
+      },
+      {
+        "id": 2,
+        "name": "Marisol Sykes"
+      }
+    ],
+    "tags": [
+      "ea",
+      "velit",
+      "sunt",
+      "fugiat",
+      "do",
+      "Lorem",
+      "nostrud"
+    ],
+    "greeting": "Hello, Briggs Larson! You have 3 unread messages.",
+    "favoriteFruit": "apple"
+  }
+// many many more
+]
+```
+
+if we use traditional way to parse it, it will be list of hash map
+
+```java
+List users = (List) iter.read();
+int total = 0;
+for (Object userObj : users) {
+    Map user = (Map) userObj;
+    List friends = (List) user.get("friends");
+    total += friends.size();
+}
+return total;
+```
+
+using `Any`, we can lazy parse it:
+
+```java
+Any users = iter.readAny();
+int total = 0;
+for (Any user : users) { // array parsing triggered
+    total += user.getValue("friends").size(); // object parsing triggered
+}
+return total;
+```
+
+the laziness can be verified by benchmark:
+
+| parsing style | ops/s |
+| --- | --- |
+| eager | 48510.942 ± 3891.295  ops/s |
+| lazy | 65088.956 ± 5026.304  ops/s |
+
