@@ -79,3 +79,75 @@ String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].c
 ```
 
 从 `Any` 里面抽取出来了值，然后还能用 bind-api 绑定到对象上
+
+## 总共 6 种组合！
+
+* iterator-api => bind-api: JsonIterator.read
+* iterator-api => any-api: JsonIterator.readAny
+* bind-api => iterator-api: register type decoder or property decoder
+* bind-api => any-api: use `Any` as data type
+* any-api => bind-api: Any.to(class)
+* any-api => iterator-api: JsonIterator.parse(any)
+
+# 极致性能需要代码生成
+
+缺省的编解码的方式是反射。如果用 javassist 实现动态代码生成的话性能可以成倍提升。它可以给对应的输入的 class 生成定制化的高效代码。然而动态代码生成在某些平台上不可用，所以静态代码生成的用法也是支持的。
+
+* 反射：默认选项，零依赖
+* 动态代码生成：需要 javassist 库
+* 静态代码生成：麻烦一点，但是也可以这么用
+
+## 动态代码生成
+
+把这个依赖添加到你的项目里
+
+```xml
+<dependency>
+    <groupId>org.javassist</groupId>
+    <artifactId>javassist</artifactId>
+    <version>3.21.0-GA</version>
+</dependency>
+```
+
+然后把模式设置为动态代码生成
+
+```java
+JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
+JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
+JsoniterAnnotationSupport.enable();
+```
+
+所有的功能应该都能正常工作的，而且要快很多
+
+## 反射
+反射可以给具体的某个 class 启用，也可以全局开启。比如，对于这个 class
+
+```java
+public class TestObject {
+    private int field1;
+    private int field2;
+}
+```
+
+为了把值绑定到私有成员上，我们必须对这个类启用反射
+
+```java
+JsoniterSpi.registerTypeDecoder(TestObject.class, ReflectionDecoderFactory.create(TestObject.class));
+return iter.read(TestObject.class); // will use reflection
+```
+
+或者我们也可以把默认的模式设置为反射
+
+```java
+JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
+JsoniterAnnotationSupport.enable();
+```
+
+所有的特性在反射模式下都是支持的，只是比代码生成的要慢一点。但是还是比其他的解决方案快很多，这里是一个简单的对象多字段绑定的性能评测：
+
+| parser | ops/s |
+| --- | --- |
+| jackson + afterburner | 6632322.908 ±  248913.699  ops/s |
+| jsoniter + reflection | 11484306.001 ±  139780.870  ops/s |
+| jsoniter + codegen | 31486700.029 ±  373069.642  ops/s |
+
