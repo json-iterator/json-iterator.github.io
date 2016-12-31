@@ -22,97 +22,43 @@ This is go version, doing data binding
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# Bind-API is the best
+# Super flexible API
 
-Bind-api should always be the first choice. Given this JSON document `[0,1,2,3]`
+* any-api: use Java like PHP, high performance by lazy parsing
+* iterator-api: read through the JSON just like iterating over a collection
+* bind-api: binding any kind of data structure. It can even bind to existing object
+ 
+Here is a simple demo. Each line is a object, first element being the order id, second element being the order details
 
-Parse with Java bind-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[0,1,2,3]");
-int[] val = iter.read(int[].class);
-System.out.println(val[3]);
+```json
+[1024, {"product_id": 100, "start": "beijing"}]
+["1025", {"product_id": 101, "start": "shanghai"}]
+// many many more lines
 ```
 
-You can also read into a existing object
+There are three things to notice
+
+* There are many lines, read them all in once will have memory issure
+* Some order id is int, some order id is string. This is very common when working with PHP.
+* The order details has many fields, need object binding
+
+Amazingly, in 6 lines, we have all problems solved:
 
 ```java
-public static class TestObj1 {
-    public String field1;
-    public String field2;
+JsonIterator iter = JsonIterator.parse(input);
+OrderDetails orderDetails = new OrderDetails();
+while(iter.whatIsNext() != ValueType.INVALID) {
+    Any order = iter.readAny();
+    int orderId = order.toInt(0);
+    String start = order.get(1).bindTo(orderDetails).start;
 }
-
-TestObj1 testObj = new TestObj1();
-testObj.field2 = "world";
-JsonIterator iter = JsonIterator.parse("{ 'field1' : 'hello' }".replace('\'', '"'));
-iter.read(testObj);
-
-System.out.println(testObj.field1); // "hello"
-System.out.println(testObj.field2); // "world"
 ```
 
-Parse with Go bind-api
+* JsonIterator.parse take InputStream as input, parse everything in a streaming way
+* readAny returns an instance of Any. The parsing is lazily done when actually getting the field, simple and performant.
+* bindTo(orderDetails), data binding can reuse existing object
 
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[0,1,2,3]`)
-val := []int{}
-iter.Read(&val)
-fmt.Println(val[3])
-```
-
-# Iterator-API for quick extraction
-
-When you do not need to get all the data back, just extract some.
-
-Parse with Java iterator-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[0, [1, 2], [3, 4], 5]");
-int count = 0;
-while(iter.readArray()) {
-    iter.skip();
-    count++;
-}
-System.out.println(count); // 4
-```
-
-Parse with Go iterator-api
-
-```go
-import "github.com/json-iterator/go"
-iter := ParseString(`[0, [1, 2], [3, 4], 5]`)
-count := 0
-for iter.ReadArray() {
-    iter.skip()
-    count++
-}
-fmt.Println(count) // 4
-```
-
-# Any-API for maximum flexibility
-
-Parse with Java any-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
-Any val = iter.readAny();
-System.out.println(val.toInt(1, "field2")); // 22
-```
-
-Notice you can extract from nested data structure, and convert any type to the type to you want. 
-
-Parse with Go any-api
-
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[{"field1":"11","field2":"12"},{"field1":"21","field2":"22"}]`)
-val := iter.ReadAny()
-fmt.Println(val.ToInt(1, "field2")) // 22
-```
+[More on awsome apis](/java-features.cn.html)
 
 # How to get
 
