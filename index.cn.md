@@ -59,6 +59,17 @@ while(iter.whatIsNext() != ValueType.INVALID) {
 * readAny 解析为 Any 对象。实际的解析在 get 具体的字段的时候延迟触发。既方便，又高性能。
 * bindTo(orderDetails) 数据绑定支持绑定到已有的对象上
 
+当然最常用的还是这两个静态方法，序列化
+
+```java
+JsonStream.serialize(new int[]{1,2,3})
+```
+
+反序列化
+```java
+JsonIterator.deserialize("[1,2,3]", int[].class)
+```
+
 [更多 API 的用法参见手册](/java-features.cn.html)
 
 # 怎样获取
