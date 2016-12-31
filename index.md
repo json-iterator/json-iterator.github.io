@@ -58,6 +58,18 @@ while(iter.whatIsNext() != ValueType.INVALID) {
 * readAny returns an instance of Any. The parsing is lazily done when actually getting the field, simple and performant.
 * bindTo(orderDetails), data binding can reuse existing object
 
+Good old one line api is also available. To serialize
+
+```java
+JsonStream.serialize(new int[]{1,2,3})
+```
+
+To deserialize
+
+```java
+JsonIterator.deserialize("[1,2,3]", int[].class)
+```
+
 [More on awsome apis](/java-features.cn.html)
 
 # How to get
