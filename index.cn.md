@@ -22,97 +22,43 @@ Go 版本数据绑定用法下的性能
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
-# Bind-API 最熟悉的老味道
+# 超级灵活的 API
 
-没有特殊需求的时候，应该作为默认的最佳选择。对于这个 JSON 文档 `[0,1,2,3]`
+* any-api：让你把 Java 用出 PHP 的感觉来，通过只解析用到字段实现高性能
+* iterator-api：读 JSON 就像在遍历一个集合一般简单
+ bind-api：各种对象都可以绑定
+ 
+这三个 api 可以用一个很简单的例子来展示
 
-使用 Java bind-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[0,1,2,3]");
-int[] val = iter.read(int[].class);
-System.out.println(val[3]);
+```json
+[1024, {"product_id": 100, "start": "beijing"}]
+["1025", {"product_id": 101, "start": "shanghai"}]
+// 此处省略几千行
 ```
 
-可以把数据直接绑定到已有的对象上
+这个文档有三处难点
+
+* 行数非常多，如果一次性读到内存里可能会爆
+* 其次同一个字段既可能是整数，也可能是字符串。很多 PHP 产生的 JSON 都有这个问题
+* 详情部分可能字段比较多，需要绑定到对象上来处理
+
+解析这个文档只需要6行
 
 ```java
-public static class TestObj1 {
-    public String field1;
-    public String field2;
+JsonIterator iter = JsonIterator.parse(input);
+OrderDetails orderDetails = new OrderDetails();
+while(iter.whatIsNext() != ValueType.INVALID) {
+    Any order = iter.readAny();
+    int orderId = order.toInt(0);
+    String start = order.get(1).bindTo(orderDetails).start;
 }
-
-TestObj1 testObj = new TestObj1();
-testObj.field2 = "world";
-JsonIterator iter = JsonIterator.parse("{ 'field1' : 'hello' }".replace('\'', '"'));
-iter.read(testObj);
-
-System.out.println(testObj.field1); // "hello"
-System.out.println(testObj.field2); // "world"
 ```
 
-使用 Go bind-api
+* JsonIterator.parse 支持 InputStream 作为输入，完全流式解析
+* readAny 解析为 Any 对象。实际的解析在 get 具体的字段的时候延迟触发。既方便，又高性能。
+* bindTo(orderDetails) 数据绑定支持绑定到已有的对象上
 
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[0,1,2,3]`)
-val := []int{}
-iter.Read(&val)
-fmt.Println(val[3])
-```
-
-# Iterator-API 用于快速抽取数据
-
-不用把数据全部读出来，只是选择性抽取
-
-使用 Java iterator-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[0, [1, 2], [3, 4], 5]");
-int count = 0;
-while(iter.readArray()) {
-    iter.skip();
-    count++;
-}
-System.out.println(count); // 4
-```
-
-使用 Go iterator-api
-
-```go
-import "github.com/json-iterator/go"
-iter := ParseString(`[0, [1, 2], [3, 4], 5]`)
-count := 0
-for iter.ReadArray() {
-    iter.skip()
-    count++
-}
-fmt.Println(count) // 4
-```
-
-# Any-API 具有最好的灵活性
-
-使用 Java any-api
-
-```java
-import com.jsoniter.JsonIterator;
-Jsoniter iter = JsonIterator.parse("[{'field1':'11','field2':'12'},{'field1':'21','field2':'22'}]".replace('\'', '"'));
-Any val = iter.readAny();
-System.out.println(val.toInt(1, "field2")); // 22
-```
-
-注意你可以从嵌套的结构中直接取数据出来，并且转换成任意你想要的类型。
-
-使用 Go any-api
-
-```go
-import "github.com/json-iterator/go"
-iter := jsoniter.ParseString(`[{"field1":"11","field2":"12"},{"field1":"21","field2":"22"}]`)
-val := iter.ReadAny()
-fmt.Println(val.ToInt(1, "field2")) // 22
-```
+[更多 API 的用法参见手册](/java-features.cn.html)
 
 # 怎样获取
 
