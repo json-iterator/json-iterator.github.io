@@ -38,7 +38,7 @@ Here is a simple demo. Each line is a object, first element being the order id, 
 
 There are three things to notice
 
-* There are many lines, read them all in once will have memory issure
+* There are many lines, read them all in once will have memory issue
 * Some order id is int, some order id is string. This is very common when working with PHP.
 * The order details has many fields, need object binding
 
