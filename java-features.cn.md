@@ -832,6 +832,34 @@ Any any = JsonIterator.deserialize(input);
 Any found = any.get("num", 100); // found is null, so we know it is missing from json
 ```
 
+## Any 可以作为中间转换层
+
+过去编解码就是在"原始的字节"和"对象"这两个中间做转换。现在我们有了 `Any`，它可以用作两者之间的中间层次。来看一下这个例子：
+
+```java
+List<Any> users = iter.readAny().asList();
+Map<String, Any> firstUser = users.get(0).asMap();
+HashMap<String, Any> secondUser = new HashMap<>(firstUser);
+secondUser.put("name", Any.wrap("fake"));
+users.add(1, Any.wrapAnyMap(secondUser));
+System.out.println(JsonStream.serialize(users));
+```
+
+首先把输入解码为成员类型为 Any 的 list。然后我们可以对列表进行一些操作，然后我们就可以直接序列化他们。所有在转换过程中没有被碰过的成员的字节会被原样保留，所以这笔把一切都转换为对象然后再处理要快很多。就好像我们直接在对输入字节进行操作一样，从一个 byte array 拷贝到另外一个 byte array。
+
+这里是另外一个例子：
+
+```java
+User tom = new User();
+tom.index = 1;
+tom.name = "tom";
+Map<String, Any> tomAsMap = Any.wrap(tom).asMap();
+tomAsMap.put("age", Any.wrap(17));
+System.out.println(JsonStream.serialize(tomAsMap));
+```
+
+序列化实际上发生了两次。第一次从对象转换成map，然后我们对map进行一些处理，然后map才会转换为字节。所以在你需要的时候，可以把 Any 当成一个处理的中间层次来使用。
+
 # 流式解析
 
 当输入是很大的json时，我们可能需要使用流式解析的方式来处理。我认为现有的解决方案都很笨拙，这也是我为什么要发明 jsoniter(json iterator) 的初衷。
