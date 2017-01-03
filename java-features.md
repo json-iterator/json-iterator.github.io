@@ -830,6 +830,34 @@ Any any = JsonIterator.deserialize(input);
 Any found = any.get("num", 100); // found is null, so we know it is missing from json
 ```
 
+## Any can be another layer
+
+It used to be the business between "raw bytes" and "objects". Now, we have `Any` which is a middle ground between them. Take a look at this example:
+
+```java
+List<Any> users = iter.readAny().asList();
+Map<String, Any> firstUser = users.get(0).asMap();
+HashMap<String, Any> secondUser = new HashMap<>(firstUser);
+secondUser.put("name", Any.wrap("fake"));
+users.add(1, Any.wrapAnyMap(secondUser));
+System.out.println(JsonStream.serialize(users));
+```
+
+decoding from input to list of Any, then we do some modification, then we serialize them. Every raw bytes not touched during this transformation is kept as it is, so it should be much much faster than reading everything into object form. It is as if we are manipulating the input directly, copy from one byte array to another byte array.
+
+Here is another example:
+
+```java
+User tom = new User();
+tom.index = 1;
+tom.name = "tom";
+Map<String, Any> tomAsMap = Any.wrap(tom).asMap();
+tomAsMap.put("age", Any.wrap(17));
+System.out.println(JsonStream.serialize(tomAsMap));
+```
+
+the serialization is done twice. First the object is transformed into a map, then we do some processing, then the map is transformed into raw bytes. Any can be another layer, when you need it.
+
 # Stream parsing
 
 when dealing with large json input, we might want to process them in a streaming way. I found existing solution to be cumbersome to use, so jsoniter (json iterator) is invented.
