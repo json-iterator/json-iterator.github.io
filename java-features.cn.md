@@ -631,12 +631,12 @@ com.jsoniter.JsonException: extra property: field3
 
 | feature | sample |
 | --- | --- |
-| array | `new JsonIterator().read("[1,2,3,4]", int[].class)` |
-| list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<List<Integer>>(){})` |
-| set | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<Set<Integer>>(){})` |
-| linked list | `new JsonIterator().read("[1,2,3,4]", new TypeLiteral<LinkedList<Integer>>(){})` |
-| list of object | `new JsonIterator().read("[1,2,3,4]", List.class)` |
-| map | `new JsonIterator().read("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
+| array | `JsonIterator.deserialize("[1,2,3,4]", int[].class)` |
+| list | `JsonIterator.deserialize("[1,2,3,4]", new TypeLiteral<List<Integer>>(){})` |
+| set | `JsonIterator.deserialize("[1,2,3,4]", new TypeLiteral<Set<Integer>>(){})` |
+| linked list | `JsonIterator.deserialize("[1,2,3,4]", new TypeLiteral<LinkedList<Integer>>(){})` |
+| list of object | `JsonIterator.deserialize("[1,2,3,4]", List.class)` |
+| map | `JsonIterator.deserialize("{\"a\":1,\"b\":2}", new TypeLiteral<Map<String, Integer>>(){})` |
 
 集合也可以使用 iterator-api 来手工解析，比如对于这样的输入
 
