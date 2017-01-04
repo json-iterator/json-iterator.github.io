@@ -229,7 +229,7 @@ the generated code will be written out to `src/main/java` folder of your project
 ```java
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
 JsoniterAnnotationSupport.enable();
-new JsonIterator().read(...
+JsonIterator.deserialize(...
 ```
 
 by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
@@ -680,7 +680,7 @@ public class TestObject {
     public List<Integer> values;
 }
 
-new JsonIterator().read("{\"values\":[1,2,3]}", TestObject.class);
+JsonIterator.deserialize("{\"values\":[1,2,3]}", TestObject.class);
 ```
 
 Generic field type variable can also be filled by the sub-class
@@ -693,7 +693,7 @@ public class SuperClass<E> {
 public class SubClass extends SuperClass<Integer> {
 }
 
-new JsonIterator().read("{\"values\":[1,2,3]}", SubClass.class);
+JsonIterator.deserialize("{\"values\":[1,2,3]}", SubClass.class);
 ```
 
 The generic type is instantiated with proper type arguments by one of the three ways:
