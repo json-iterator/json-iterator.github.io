@@ -229,7 +229,7 @@ public class DemoCodegenConfig implements CodegenConfig {
 JsonStream.setMode(EncodingMode.STATIC_MODE); 
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
 JsoniterAnnotationSupport.enable();
-new JsonIterator().read(...
+JsonIterator.deserialize(...
 ```
 
 把模式设置为 static 之后，动态代码生成就不会被自动触发了。如果对应的类没有预先生成的编解码代码，异常会被抛出。
@@ -682,7 +682,7 @@ public class TestObject {
     public List<Integer> values;
 }
 
-new JsonIterator().read("{\"values\":[1,2,3]}", TestObject.class);
+JsonIterator.deserialize("{\"values\":[1,2,3]}", TestObject.class);
 ```
 
 如果定义字段的时候类型还是变量，通过子类具体化之后，值类型也是可以知道的
@@ -695,7 +695,7 @@ public class SuperClass<E> {
 public class SubClass extends SuperClass<Integer> {
 }
 
-new JsonIterator().read("{\"values\":[1,2,3]}", SubClass.class);
+JsonIterator.deserialize("{\"values\":[1,2,3]}", SubClass.class);
 ```
 
 一个泛型类被具体化有三种办法：
