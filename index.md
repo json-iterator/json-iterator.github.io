@@ -71,7 +71,7 @@ To deserialize
 JsonIterator.deserialize("[1,2,3]", int[].class)
 ```
 
-[More on awsome apis](/java-features.cn.html)
+[More on awsome apis](/java-features.html)
 
 # How to get
 
