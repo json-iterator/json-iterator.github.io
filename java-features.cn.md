@@ -86,7 +86,7 @@ String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].c
 * iterator-api => any-api: JsonIterator.readAny
 * bind-api => iterator-api: register type decoder or property decoder
 * bind-api => any-api: use `Any` as data type
-* any-api => bind-api: Any.to(class)
+* any-api => bind-api: Any.as(class)
 * any-api => iterator-api: JsonIterator.parse(any)
 
 # 极致性能需要代码生成
