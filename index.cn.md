@@ -81,7 +81,7 @@ Java 版本
 <dependency>
     <groupId>com.jsoniter</groupId>
     <artifactId>jsoniter</artifactId>
-    <version>0.9.5</version>
+    <version>0.9.6</version>
 </dependency>
 ```
 
