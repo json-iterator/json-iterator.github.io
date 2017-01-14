@@ -1061,4 +1061,95 @@ The architecture of Jsoniter is 3 layered.
 
 The goal here is to quickly demonstrate what is possible with the SPI. For detailed usage guide, please read the source code.
 
+## Extend without Extension
+
+Everything can be done with `Extension`. However, there are shortcuts
+
+* registerTypeDecoder: specify how to decode a type
+* registerPropertyDecoder: control how field of a specific class to be decoded
+* registerTypeEncoder: specify how to encode a type
+* registerPropertyEncoder: control how field of a specific class to be encoded
+* registerTypeImplementation: choose the concrete class for abstract class or interface
+
+## Extension
+
+```java
+public interface Extension {
+    /**
+     * Choose the implementation class for interface types
+     *
+     * @param type the type to decode to, could be class or parameterized type
+     * @return the implementation type to use
+     */
+    Type chooseImplementation(Type type);
+
+    /**
+     * Can this extension create object instance for given interface type
+     *
+     * @param clazz the interface
+     * @return true if can create, false if can not
+     */
+    boolean canCreate(Class clazz);
+
+    /**
+     * Create object instance for given interface type
+     *
+     * @param clazz the interface
+     * @return the object instance, throw exception if can not create
+     */
+    Object create(Class clazz);
+
+    /**
+     * Customize type decoding
+     *
+     * @param cacheKey name of the decoder
+     * @param type     change how to decode the type
+     * @return null, if no special customization needed
+     */
+    Decoder createDecoder(String cacheKey, Type type);
+
+    /**
+     * Customize type encoding
+     *
+     * @param cacheKey name of the encoder
+     * @param type     change how to encode the type
+     * @return null, if not special customization needed
+     */
+    Encoder createEncoder(String cacheKey, Type type);
+
+    /**
+     * Update how binding is done for the class
+     *
+     * @param desc binding information
+     */
+    void updateClassDescriptor(ClassDescriptor desc);
+}
+```
+
+You can customize
+
+* type encoding/decoding, just like registerTypeEncoder, registerTypeDecoder
+* control how instance being created, integrate your favorite dependency injection tool
+* choose implementation, just like registerTypeImplementation
+* updateClassDescriptor, which will be explained below
+
+```java
+public class ClassDescriptor {
+
+    public Class clazz;
+    public Map<String, Type> lookup;
+    public ConstructorDescriptor ctor;
+    public List<Binding> fields;
+    public List<Binding> setters;
+    public List<Binding> getters;
+    public List<WrapperDescriptor> wrappers;
+    public List<Method> unWrappers;
+    public boolean asExtraForUnknownProperties;
+    public Binding onMissingProperties;
+    public Binding onExtraProperties;
+}
+```
+
+Class descriptor is a middle tier between object encoding/decoding code (both codegen and reflection mode) and real object layout. For example, rename field is done through change the fields `List<Binding>`. 
+
 
