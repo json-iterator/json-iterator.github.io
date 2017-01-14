@@ -858,6 +858,55 @@ System.out.println(JsonStream.serialize(tomAsMap));
 
 the serialization is done twice. First the object is transformed into a map, then we do some processing, then the map is transformed into raw bytes. Any can be another layer, when you need it.
 
+## Fun with Any
+
+Modify Any 
+
+```java
+Any any = JsonIterator.deserialize("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
+any.get("numbers").asList().add(Any.wrap("hello"));
+assertEquals("{'numbers':['1', '2', ['3', '4'],'hello']}".replace('\'', '"'), JsonStream.serialize(any))
+```
+
+Extract the value you want, even it is not there
+
+```java
+any = JsonIterator.deserialize("{'error': 'failed'}".replace('\'', '"')); // not there
+assertFalse(any.toBoolean("success"));
+any = JsonIterator.deserialize("{'success': true}".replace('\'', '"')); // boolean type
+assertTrue(any.toBoolean("success"));
+any = JsonIterator.deserialize("{'success': 'false'}".replace('\'', '"')); // string type
+assertFalse(any.toBoolean("success"));
+```
+
+Get all array elements
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals("[100,102]", JsonStream.serialize(any.get('*', "score")));
+```
+
+Get all object elements
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':[102]}]".replace('\'', '"'));
+assertEquals("[{},{'score':102}]".replace('\'', '"'), JsonStream.serialize(any.get('*', '*', 0)));
+```
+
+Get object wrapped by any
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals(Long.class, any.get(0, "score").object().getClass());
+```
+
+Check path exists or not
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals(ValueType.INVALID, any.get(0, "score", "number").valueType());
+```
+
 # Stream parsing
 
 when dealing with large json input, we might want to process them in a streaming way. I found existing solution to be cumbersome to use, so jsoniter (json iterator) is invented.
