@@ -1044,3 +1044,111 @@ public int calc(JsonIterator iter) throws IOException {
 ```
 com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
 ```
+
+# Service Provider Interface (SPI)
+
+扩展性是从第一天就考虑进来的事情。我很讨厌一堆特性开关的模式。如果可能话，优先提供的以回调接口的方式来扩展。核心功能尽可能地最小化。如果用户侧可以自己控制的事情，则不会考虑在库里面提供类似的功能。如果新增一个功能会导致所有人的性能下降，则不会增加。
+
+## 整体架构
+
+![architecture](/images/architecture.png)
+
+Jsoniter的架构分为3层：
+
+* 最底层的抽象是 service provider interface。它定义了 Encoder/Decoder 和 ClassDescriptor 这样的东西。
+* 核心部分是实现代码。Stream 实现了编码部分，它不应该引用任何 Iterator/Any 相关的东西。Iterator/Any 实现了解码，iterator 是只能前向的，而 Any 则在 iterator 外面包了一层，提供随机访问的特性。
+* 最上面的是一些附加功能。特别值得一提的是 annotation 的支持是这层来提供的。所有 annotation 支持的功能，你都可以用 SPI 来自己实现。甚至有一个 Jackson annotation 的兼容实现，可以在不改现有 Model 的前提复用 Jackson 的 annotation。
+
+这里只是快速演示一下 SPI 都可以完成哪些事情。具体的，请直接阅读源代码。
+
+## 不用 Extension 就可以扩展
+
+什么都可以用 `Extension` 实现。但是，也有一些捷径可走
+
+* registerTypeDecoder: 指定一个类型的解码方式
+* registerPropertyDecoder: 指定某个类的某个字段的解码方式
+* registerTypeEncoder: 指定一个类型的编码方式
+* registerPropertyEncoder: 指定某个类的某个字段的编码方式
+* registerTypeImplementation: 选择抽象类或者接口的具体实现类
+
+## 什么都能用 Extension 自定义
+
+```java
+public interface Extension {
+    Type chooseImplementation(Type type);
+    boolean canCreate(Class clazz);
+    Object create(Class clazz);
+    Decoder createDecoder(String cacheKey, Type type);
+    Encoder createEncoder(String cacheKey, Type type);
+    void updateClassDescriptor(ClassDescriptor desc);
+}
+```
+
+你可以定制
+
+* 类型的编解码方式，类似于 registerTypeEncoder, registerTypeDecoder
+* 控制对象实例的创建方式，比如和你最喜欢的依赖注入工具相结合
+* 选择实现类，类似于 registerTypeImplementation
+* updateClassDescriptor，这个下面详细讲
+
+```java
+public class ClassDescriptor {
+
+    public Class clazz;
+    public Map<String, Type> lookup;
+    public ConstructorDescriptor ctor;
+    public List<Binding> fields;
+    public List<Binding> setters;
+    public List<Binding> getters;
+    public List<WrapperDescriptor> wrappers;
+    public List<Method> unWrappers;
+    public boolean asExtraForUnknownProperties;
+    public Binding onMissingProperties;
+    public Binding onExtraProperties;
+}
+```
+
+Class descriptor 是一个中间描述。它夹在编解码的实现（无论是codegen还是反射模式均支持）与实际的对象结构之间。例如，重命名一个字段可以通过修改 fields `List<Binding>` 来实现。
+
+```java
+public class Binding {
+    // input
+    public final Class clazz;
+    public final TypeLiteral clazzTypeLiteral;
+    public Annotation[] annotations;
+    public Field field; // obj.XXX
+    public Method method; // obj.setXXX() or obj.getXXX()
+    public boolean valueCanReuse;
+    // input/output
+    public String name;
+    public Type valueType;
+    public TypeLiteral valueTypeLiteral;
+    // output
+    public String[] fromNames; // for decoder
+    public String[] toNames; // for encoder
+    public Decoder decoder;
+    public Encoder encoder;
+    public boolean asMissingWhenNotPresent;
+    public boolean asExtraWhenPresent;
+    public boolean isNullable = true;
+    public boolean isCollectionValueNullable = true;
+    public boolean shouldOmitNull = true;
+    // then this property will not be unknown
+    // but we do not want to bind it anywhere
+    public boolean shouldSkip;
+    // attachment, used when generating code or reflection
+    public int idx;
+    public long mask;
+}
+```
+
+通过设置 fromNames 或者 toNames，我们可以改变字段与 JSON 的对应关系。所有 annotation 支持的特性，都可以用 extension 来实现。也就是说，不用修改类定义，你也可以修改各种对象绑定的行为。
+
+在 "extra" 包中有一些预定义好的 extension：
+
+* Base64Support
+* JdkDatetimeSupport
+* NamingStrategySupport
+* PreciseFloatSupport
+
+虽然在核心实现里没有预埋很多的特性开关，通过 extension 我们仍然可以提供相同的功能，而且性能方面也没有妥协。
