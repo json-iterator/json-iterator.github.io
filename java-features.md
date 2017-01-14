@@ -1047,7 +1047,7 @@ com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, he
 
 # Service Provider Interface (SPI)
 
-Extensibility is built-in from day 1. I do not sea of feature flags. Callback interface is always preferred if applicable. Feature set is kept as minimal. If one thing can be done from user code, I will not add that feature. If adding one feature will have performance penalty for everybody, it will not be introduced.
+Extensibility is built-in from day one. I hate sea of feature flags. Callback interface is always preferred if applicable. Feature set is kept as minimal. If one thing can be done from user code, I will not add that feature. If adding one feature will have performance penalty for everybody, it will not be introduced.
 
 ## Architecture
 
