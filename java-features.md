@@ -1045,3 +1045,20 @@ the error message is comprehensible:
 com.jsoniter.JsonException: readArray: expect [ or , or n or ], but found: {, head: 1010, peek:  "tags": {, buf: {
 ```
 
+# Service Provider Interface (SPI)
+
+Extensibility is built-in from day 1. I do not sea of feature flags. Callback interface is always preferred if applicable. Feature set is kept as minimal. If one thing can be done from user code, I will not add that feature. If adding one feature will have performance penalty for everybody, it will not be introduced.
+
+## Architecture
+
+![architecture](/images/architecture.png)
+
+The architecture of Jsoniter is 3 layered.
+
+* Bottom of the abstraction is service provider interface. It defines things like Encoder/Decoder or ClassDescriptor.
+* Core is the implementation. Stream is the encoding part, should never reference Iterator/Any. Iterator/Any is the decoding part, iterator is forward only, Any is a wrapper of iterator to provide random access.
+* Top are addons. Especially the annotation support is addon. Anything annotation support can be implemented by you using SPI. There is even support to adapt Jackson annotation so that you can keep model class unchanged.
+
+The goal here is to quickly demonstrate what is possible with the SPI. For detailed usage guide, please read the source code.
+
+
