@@ -1152,4 +1152,38 @@ public class ClassDescriptor {
 
 Class descriptor is a middle tier between object encoding/decoding code (both codegen and reflection mode) and real object layout. For example, rename field is done through change the fields `List<Binding>`. 
 
+```java
+public class Binding {
+    // input
+    public final Class clazz;
+    public final TypeLiteral clazzTypeLiteral;
+    public Annotation[] annotations;
+    public Field field; // obj.XXX
+    public Method method; // obj.setXXX() or obj.getXXX()
+    public boolean valueCanReuse;
+    // input/output
+    public String name;
+    public Type valueType;
+    public TypeLiteral valueTypeLiteral;
+    // output
+    public String[] fromNames; // for decoder
+    public String[] toNames; // for encoder
+    public Decoder decoder;
+    public Encoder encoder;
+    public boolean asMissingWhenNotPresent;
+    public boolean asExtraWhenPresent;
+    public boolean isNullable = true;
+    public boolean isCollectionValueNullable = true;
+    public boolean shouldOmitNull = true;
+    // then this property will not be unknown
+    // but we do not want to bind it anywhere
+    public boolean shouldSkip;
+    // attachment, used when generating code or reflection
+    public int idx;
+    public long mask;
+}
+```
+
+by setting the fromNames or toNames we can change how to map the field to/from JSON. Everything annotation supported is via extension, which means you can always customize the object binding without chaning the class definition itself.
+
 
