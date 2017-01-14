@@ -88,7 +88,7 @@ after you extracted value from `Any`, then you can bind it to object using bind-
 * iterator-api => any-api: JsonIterator.readAny
 * bind-api => iterator-api: register type decoder or property decoder
 * bind-api => any-api: use `Any` as data type
-* any-api => bind-api: Any.to(class)
+* any-api => bind-api: Any.as(class)
 * any-api => iterator-api: JsonIterator.parse(any)
 
 # Performance is optional
