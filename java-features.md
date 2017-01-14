@@ -1071,7 +1071,7 @@ Everything can be done with `Extension`. However, there are shortcuts
 * registerPropertyEncoder: control how field of a specific class to be encoded
 * registerTypeImplementation: choose the concrete class for abstract class or interface
 
-## Extension
+## Extension can customize everything
 
 ```java
 public interface Extension {
@@ -1185,5 +1185,14 @@ public class Binding {
 ```
 
 by setting the fromNames or toNames we can change how to map the field to/from JSON. Everything annotation supported is via extension, which means you can always customize the object binding without chaning the class definition itself.
+
+There are several predefined extension in "extra" package
+
+* Base64Support
+* JdkDatetimeSupport
+* NamingStrategySupport
+* PreciseFloatSupport
+
+Instead of feature flags in the core implementation, using extension we can still provide some functionality without performance comprise.
 
 
