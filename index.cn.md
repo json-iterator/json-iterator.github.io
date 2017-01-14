@@ -3,7 +3,7 @@ layout: default
 title: Fastest JSON parser ever
 ---
 
-jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提供 [Java](https://github.com/json-iterator/java) 和 [Go](https://github.com/json-iterator/go) 两个版本
+jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提供 [Java](https://github.com/json-iterator/java) 和 [Go](https://github.com/json-iterator/go) 两个版本。从 [dsljson](https://github.com/ngs-doo/dsl-json) 和 [jsonparser](https://github.com/buger/jsonparser) 借鉴了大量代码。
 
 # jsoniter 有何独特之处？
 
