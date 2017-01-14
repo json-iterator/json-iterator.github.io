@@ -860,6 +860,55 @@ System.out.println(JsonStream.serialize(tomAsMap));
 
 序列化实际上发生了两次。第一次从对象转换成map，然后我们对map进行一些处理，然后map才会转换为字节。所以在你需要的时候，可以把 Any 当成一个处理的中间层次来使用。
 
+## Any 的乐趣
+
+修改 Any 
+
+```java
+Any any = JsonIterator.deserialize("{'numbers': ['1', '2', ['3', '4']]}".replace('\'', '"'));
+any.get("numbers").asList().add(Any.wrap("hello"));
+assertEquals("{'numbers':['1', '2', ['3', '4'],'hello']}".replace('\'', '"'), JsonStream.serialize(any))
+```
+
+即便路径是不存在的，值也可以被正常提取
+
+```java
+any = JsonIterator.deserialize("{'error': 'failed'}".replace('\'', '"')); // not there
+assertFalse(any.toBoolean("success"));
+any = JsonIterator.deserialize("{'success': true}".replace('\'', '"')); // boolean type
+assertTrue(any.toBoolean("success"));
+any = JsonIterator.deserialize("{'success': 'false'}".replace('\'', '"')); // string type
+assertFalse(any.toBoolean("success"));
+```
+
+一次获得所有数组成员
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals("[100,102]", JsonStream.serialize(any.get('*', "score")));
+```
+
+一次获得所有对象成员
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':[102]}]".replace('\'', '"'));
+assertEquals("[{},{'score':102}]".replace('\'', '"'), JsonStream.serialize(any.get('*', '*', 0)));
+```
+
+获得原始的值
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals(Long.class, any.get(0, "score").object().getClass());
+```
+
+检查路径是否存在
+
+```java
+any = JsonIterator.deserialize("[{'score':100}, {'score':102}]".replace('\'', '"'));
+assertEquals(ValueType.INVALID, any.get(0, "score", "number").valueType());
+```
+
 # 流式解析
 
 当输入是很大的json时，我们可能需要使用流式解析的方式来处理。我认为现有的解决方案都很笨拙，这也是我为什么要发明 jsoniter(json iterator) 的初衷。
