@@ -7,63 +7,62 @@ title: Jsoniter Features (Java Version)
 
 | feature | java | go |
 | --- | --- | --- |
-| stream | Yes | No |
-| read float32 | Yes | Yes |
-| read float32 (streaming) | Yes | Yes |
-| read float64 | Yes | Yes |
-| read float64 (streaming) | Yes | Yes |
-| read int32 | Yes | Yes |
-| read int32 (streaming) | Yes | Yes |
-| read int64 | Yes | Yes |
-| read int64 (streaming) | Yes | Yes |
-| read string | Yes | Yes |
-| read string (streaming) | Yes | Yes |
+| read float32 | Yes |  |
+| read float32 (streaming) | Yes |  |
+| read float64 | Yes |  |
+| read float64 (streaming) | Yes |  |
+| read int32 | Yes |  |
+| read int32 (streaming) | Yes |  |
+| read int64 | Yes |  |
+| read int64 (streaming) | Yes |  |
+| read string | Yes |  |
+| read string (streaming) | Yes |  |
 | read string as slice | Yes | Yes |
-| read string as slice (streaming) | Yes | Yes |
-| read true/false/null | Yes | Yes |
-| read true/false/null (streaming) | Yes | Yes |
-| read array/object | Yes | Yes |
-| skip whitespace | Yes | Yes |
-| skip string | Yes | Yes |
-| skip string (streaming) | Yes | Yes |
-| skip number | Yes | Yes |
-| skip number (streaming) | Yes | Yes |
-| skip array/object | Yes | Yes |
-| skip array/object (streaming) | Yes | Yes |
-| skip true/false/null | Yes | Yes |
-| skip true/false/null (streaming) | Yes | Yes |
-| whatIsNext | Yes | Yes |
-| read object/interface{} | Yes | Yes |
-| any lazy array | Yes | Yes |
-| any lazy object | Yes | Yes |
-| any others | Yes | Yes |
-| small allocation optimization (streaming) | No | No |
-| write float32 | Yes | Yes |
-| write float64 | Yes | Yes |
-| write int32 | Yes | Yes |
-| write int64 | Yes | Yes |
-| write ascii string | Yes | Yes |
-| write string | Yes | Yes |
-| write true/false/null | Yes | Yes |
-| write array/object | Yes | Yes |
-| write whitespace | Yes | Yes |
+| read string as slice (streaming) | Yes |  |
+| read true/false/null | Yes |  |
+| read true/false/null (streaming) | Yes |  |
+| read array/object | Yes |  |
+| skip whitespace | Yes |  |
+| skip string | Yes |  |
+| skip string (streaming) | Yes |  |
+| skip number | Yes |  |
+| skip number (streaming) | Yes |  |
+| skip array/object | Yes |  |
+| skip array/object (streaming) | Yes |  |
+| skip true/false/null | Yes |  |
+| skip true/false/null (streaming) | Yes |  |
+| whatIsNext | Yes |  |
+| read object/interface{} | Yes |  |
+| any lazy array | Yes |  |
+| any lazy object | Yes |  |
+| any others | Yes |  |
+| small allocation optimization (streaming) | No |  |
+| write float32 | Yes |  |
+| write float64 | Yes |  |
+| write int32 | Yes |  |
+| write int64 | Yes |  |
+| write ascii string | Yes |  |
+| write string | Yes |  |
+| write true/false/null | Yes |  |
+| write array/object | Yes |  |
+| write whitespace | Yes |  |
 
 # Object Decoding
 
 | feature | java reflection | java codegen | go reflection |
 | --- | --- | --- | --- |
-| field binding | Yes | Yes | Yes |
-| setter binding | Yes | Yes | N/A |
+| field binding | Yes | Yes |  |
+| setter binding | Yes | Yes |  |
 | ctor/factory/di support | Yes | Yes | N/A |
 | wrapper | Yes | Yes | N/A |
-| validation | Yes | Yes | No |
-| array/collection support | Yes | Yes | No |
-| map support | Yes | Yes | No |
-| enum support | Yes | Yes | No |
-| int support | Yes | Yes | No |
-| float support | Yes | Yes | No |
-| string support | Yes | Yes | No |
-| boolean support | Yes | Yes | No |
+| validation | Yes | Yes |  |
+| array/collection support | Yes | Yes |  |
+| map support | Yes | Yes |  |
+| enum support | Yes | Yes |  |
+| int support | Yes | Yes |  |
+| float support | Yes | Yes | |
+| string support | Yes | Yes |  |
+| boolean support | Yes | Yes |  |
 
 Go type embeding support?
 
@@ -71,14 +70,14 @@ Go type embeding support?
 
 | feature | java reflection | java codegen | go reflection |
 | --- | --- | --- | --- |
-| field binding | Yes | Yes | No |
+| field binding | Yes | Yes |  |
 | getter binding | Yes | Yes | N/A |
 | unwrapper | Yes | Yes | N/A |
-| array/collection/list support | Yes | Yes | No |
-| map support | Yes | Yes | No |
-| enum support | Yes | Yes | No |
-| int support | Yes | Yes | No |
-| float support | Yes | Yes | No |
-| string support | Yes | Yes | No |
-| boolean support | Yes | Yes | No |
-| indention support | Yes | No | Yes |
+| array/collection/list support | Yes | Yes |  |
+| map support | Yes | Yes |  |
+| enum support | Yes | Yes |  |
+| int support | Yes | Yes |  |
+| float support | Yes | Yes |  |
+| string support | Yes | Yes |  |
+| boolean support | Yes | Yes |  |
+| indention support | Yes | No |  |
