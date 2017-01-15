@@ -7,10 +7,10 @@ title: Jsoniter Features (Java Version)
 
 | feature | java | go | note | 
 | --- | --- | --- | --- |
-| read float32 | Yes |  | fast path: if the number is 0~9 only, read it into long, then divide by "power of 10", otherwise fallback to Float.valueOf. table lookup: given c, tell if it is 0~9, or dot, or end of number by a pre-defined table. |
-| read float32 (streaming) | Yes |  | assume the number fit in current buffer, if it turns out the number end not found, fallback to slow path, read byte by byte then Float.valueOf. read from iterator head to tail, then load more, which skipped checking tail for each byte. |
-| read float64 | Yes |  |
-| read float64 (streaming) | Yes |  |
+| read float32 | Yes |  Yes | fast path: if the number is 0~9 only, read it into long, then divide by "power of 10", otherwise fallback to Float.valueOf. table lookup: given c, tell if it is 0~9, or dot, or end of number by a pre-defined table. |
+| read float32 (streaming) | Yes | Yes | assume the number fit in current buffer, if it turns out the number end not found, fallback to slow path, read byte by byte then Float.valueOf. read from iterator head to tail, then load more, which skipped checking tail for each byte. |
+| read float64 | Yes |  | same as above |
+| read float64 (streaming) | Yes |  | same as above |
 | read int32 | Yes |  |
 | read int32 (streaming) | Yes |  |
 | read int64 | Yes |  |
