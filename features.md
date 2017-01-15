@@ -7,9 +7,46 @@ title: Jsoniter Features (Java Version)
 
 | feature | java | go |
 | --- | --- | --- |
-| iterator | Yes | Yes |
-| any (random access iterator) | Yes | No |
 | stream | Yes | No |
+| read float32 | Yes | Yes |
+| read float32 (streaming) | Yes | Yes |
+| read float64 | Yes | Yes |
+| read float64 (streaming) | Yes | Yes |
+| read int32 | Yes | Yes |
+| read int32 (streaming) | Yes | Yes |
+| read int64 | Yes | Yes |
+| read int64 (streaming) | Yes | Yes |
+| read string | Yes | Yes |
+| read string (streaming) | Yes | Yes |
+| read string as slice | Yes | Yes |
+| read string as slice (streaming) | Yes | Yes |
+| read true/false/null | Yes | Yes |
+| read true/false/null (streaming) | Yes | Yes |
+| read array/object | Yes | Yes |
+| skip whitespace | Yes | Yes |
+| skip string | Yes | Yes |
+| skip string (streaming) | Yes | Yes |
+| skip number | Yes | Yes |
+| skip number (streaming) | Yes | Yes |
+| skip array/object | Yes | Yes |
+| skip array/object (streaming) | Yes | Yes |
+| skip true/false/null | Yes | Yes |
+| skip true/false/null (streaming) | Yes | Yes |
+| whatIsNext | Yes | Yes |
+| read object/interface{} | Yes | Yes |
+| any lazy array | Yes | Yes |
+| any lazy object | Yes | Yes |
+| any others | Yes | Yes |
+| small allocation optimization (streaming) | No | No |
+| write float32 | Yes | Yes |
+| write float64 | Yes | Yes |
+| write int32 | Yes | Yes |
+| write int64 | Yes | Yes |
+| write ascii string | Yes | Yes |
+| write string | Yes | Yes |
+| write true/false/null | Yes | Yes |
+| write array/object | Yes | Yes |
+| write whitespace | Yes | Yes |
 
 # Object Decoding
 
