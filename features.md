@@ -17,7 +17,7 @@ title: Jsoniter Features (Java Version)
 | read int64 (streaming) | Yes |  |
 | read string | Yes |  |
 | read string (streaming) | Yes |  |
-| read string as slice | Yes | Yes |
+| read string as slice | Yes |  |
 | read string as slice (streaming) | Yes |  |
 | read true/false/null | Yes |  |
 | read true/false/null (streaming) | Yes |  |
