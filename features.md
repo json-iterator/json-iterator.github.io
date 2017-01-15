@@ -7,9 +7,9 @@ title: Jsoniter Features (Java Version)
 
 | feature | java | go |
 | --- | --- | --- |
-| iterator | Yes | Yes | Yes |
-| any (random access iterator) | Yes | Yes | No |
-| stream | Yes | Yes | No |
+| iterator | Yes | Yes |
+| any (random access iterator) | Yes | No |
+| stream | Yes | No |
 
 # Object Decoding
 
