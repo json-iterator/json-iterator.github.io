@@ -81,3 +81,4 @@ Go type embeding support?
 | float support | Yes | Yes | No |
 | string support | Yes | Yes | No |
 | boolean support | Yes | Yes | No |
+| indention support | Yes | No | Yes |
