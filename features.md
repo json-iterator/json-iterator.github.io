@@ -5,8 +5,8 @@ title: Jsoniter Features (Java Version)
 
 # Core
 
-| feature | java | go |
-| --- | --- | --- |
+| feature | java | go | note | 
+| --- | --- | --- | --- |
 | read float32 | Yes |  |
 | read float32 (streaming) | Yes |  |
 | read float64 | Yes |  |
