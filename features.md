@@ -3,27 +3,44 @@ layout: default
 title: Jsoniter Features (Java Version)
 ---
 
-# Decoding
+# Core
 
 | feature | java | go |
 | --- | --- | --- |
-| iterator | Yes | Yes |
-| any       | Yes | No |
-| any lazy iterator | No | No |
-| dynamic codegen | Yes | No |
-| static codegen | Yes | No |
-| reflection binding | Yes | Yes |
-| hash mode | Yes | No |
-| validation | Yes | No |
-| annotation | Yes | Partial |
-| wrapper | Yes | N/A |
-| non-field binding | Yes | N/A |
+| iterator | Yes | Yes | Yes |
+| any (random access iterator) | Yes | Yes | No |
+| stream | Yes | Yes | No |
+
+# Object Decoding
+
+| feature | java reflection | java codegen | go reflection |
+| --- | --- | --- | --- |
+| field binding | Yes | Yes | Yes |
+| setter binding | Yes | Yes | N/A |
+| ctor/factory/di support | Yes | Yes | N/A |
+| wrapper | Yes | Yes | N/A |
+| validation | Yes | Yes | No |
+| array/collection support | Yes | Yes | No |
+| map support | Yes | Yes | No |
+| enum support | Yes | Yes | No |
+| int support | Yes | Yes | No |
+| float support | Yes | Yes | No |
+| string support | Yes | Yes | No |
+| boolean support | Yes | Yes | No |
 
 Go type embeding support?
 
-# Encoding 
+# Object Encoding 
 
-
-| feature | java | go |
-| --- | --- | --- |
-| encoding | Yes | No |
+| feature | java reflection | java codegen | go |
+| --- | --- | --- | --- |
+| field binding | Yes | Yes | No |
+| getter binding | Yes | Yes | N/A |
+| unwrapper | Yes | Yes | N/A |
+| array/collection/list support | Yes | Yes | No |
+| map support | Yes | Yes | No |
+| enum support | Yes | Yes | No |
+| int support | Yes | Yes | No |
+| float support | Yes | Yes | No |
+| string support | Yes | Yes | No |
+| boolean support | Yes | Yes | No |
