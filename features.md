@@ -32,7 +32,7 @@ Go type embeding support?
 
 # Object Encoding 
 
-| feature | java reflection | java codegen | go |
+| feature | java reflection | java codegen | go reflection |
 | --- | --- | --- | --- |
 | field binding | Yes | Yes | No |
 | getter binding | Yes | Yes | N/A |
