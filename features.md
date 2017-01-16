@@ -15,8 +15,8 @@ title: Jsoniter Features (Java Version)
 | read int32 (streaming) | Yes | Yes | use index to access buf, do not use readByte |
 | read int64 | Yes | Yes | same as above |
 | read int64 (streaming) | Yes | Yes | same as above |
-| read string | Yes |  | fast path for ascii and no escape string, fallback to slow path resuming from the break point. java version will copy bytes into a char array; golang version will try to create the string inplace reusing buffer. |
-| read string (streaming) | Yes |  |
+| read string | Yes | Yes | fast path for ascii and no escape string, fallback to slow path resuming from the break point. java string is utf16 based, so \u is quicker. golang string is utf8 based, so \u convert utf16 to utf8, but other utf8 bytes are quicker. java use IndexOutOfBound exception to handle looking ahead problem, avoid read byte by byte |
+| read string (streaming) | Yes | Yes | read byte by byte |
 | read string as slice | Yes |  |
 | read string as slice (streaming) | Yes |  |
 | read true/false/null | Yes |  |
