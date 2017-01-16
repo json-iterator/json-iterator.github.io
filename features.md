@@ -15,7 +15,7 @@ title: Jsoniter Features (Java Version)
 | read int32 (streaming) | Yes | Yes | use index to access buf, do not use readByte |
 | read int64 | Yes | Yes | same as above |
 | read int64 (streaming) | Yes | Yes | same as above |
-| read string | Yes |  | fast path for ascii and no escape string |
+| read string | Yes |  | fast path for ascii and no escape string, fallback to slow path resuming from the break point |
 | read string (streaming) | Yes |  |
 | read string as slice | Yes |  |
 | read string as slice (streaming) | Yes |  |
