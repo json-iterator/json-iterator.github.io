@@ -11,11 +11,11 @@ title: Jsoniter Features (Java Version)
 | read float32 (streaming) | Yes | Yes | assume the number fit in current buffer, if it turns out the number end not found, fallback to slow path, read byte by byte then Float.valueOf. read from iterator head to tail, then load more, which skipped checking tail for each byte. |
 | read float64 | Yes | Yes | same as above |
 | read float64 (streaming) | Yes | Yes | same as above |
-| read int32 | Yes | Yes | value = value * 10 + ind; pre-defined table to tell if it is a digit, and what is the value |
+| read int32 | Yes | Yes | value = value * 10 + ind, scan directly from bytes, no string allocation; pre-defined table to tell if it is a digit, and what is the value |
 | read int32 (streaming) | Yes | Yes | use index to access buf, do not use readByte |
 | read int64 | Yes | Yes | same as above |
 | read int64 (streaming) | Yes | Yes | same as above |
-| read string | Yes |  |
+| read string | Yes |  | fast path for ascii and no escape string |
 | read string (streaming) | Yes |  |
 | read string as slice | Yes |  |
 | read string as slice (streaming) | Yes |  |
