@@ -13,8 +13,8 @@ title: Jsoniter Features (Java Version)
 | read float64 (streaming) | Yes | Yes | same as above |
 | read int32 | Yes | Yes | value = value * 10 + ind; pre-defined table to tell if it is a digit, and what is the value |
 | read int32 (streaming) | Yes | Yes | use index to access buf, do not use readByte |
-| read int64 | Yes |  |
-| read int64 (streaming) | Yes |  |
+| read int64 | Yes | Yes | same as above |
+| read int64 (streaming) | Yes | Yes | same as above |
 | read string | Yes |  |
 | read string (streaming) | Yes |  |
 | read string as slice | Yes |  |
