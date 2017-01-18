@@ -19,8 +19,8 @@ title: Jsoniter Features (Java Version)
 | read string (streaming) | Yes | Yes | read byte by byte |
 | read string as slice | Yes | Yes | for certain string input (object field, base64), we know it will not contain any escape or utf8, so it is a direct copy from byte to char array. The original byte array is not copied but reused as slice |
 | read string as slice (streaming) | Yes | Yes | If the buffer is large enough, byte array is reused as slice. Otherwise copy will happen. TODO: avoid small memory allocation |
-| read true/false/null | Yes |  |
-| read true/false/null (streaming) | Yes |  |
+| read true/false/null | Yes | Yes | skip fixed bytes
+| read true/false/null (streaming) | Yes | Yes | load buffer once should be bigger enough to skip all the bytes |
 | read array/object | Yes |  |
 | skip whitespace | Yes |  |
 | skip string | Yes |  |
