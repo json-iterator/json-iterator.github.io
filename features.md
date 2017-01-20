@@ -23,8 +23,8 @@ title: Jsoniter Features (Java Version)
 | read true/false/null (streaming) | Yes | Yes | load buffer once should be bigger enough to skip all the bytes |
 | read object | Yes | Yes | |
 | read object callback | Yes | Yes | callback should be faster, as less branching in the code |
-| read array | Yes |  |
-| read array callback | No |  |
+| read array | Yes | Yes | |
+| read array callback | Yes | Yes | callback should be faster, as less branching in the code |
 | skip whitespace | Yes |  |
 | skip string | Yes |  |
 | skip string (streaming) | Yes |  |
