@@ -25,7 +25,8 @@ title: Jsoniter Features (Java Version)
 | read object callback | Yes | Yes | callback should be faster, as less branching in the code |
 | read array | Yes | Yes | |
 | read array callback | Yes | Yes | callback should be faster, as less branching in the code |
-| skip whitespace | Yes |  |
+| skip whitespace | Yes | Yes | |
+| skip whitespace (streaming) | Yes | Yes | |
 | skip string | Yes |  |
 | skip string (streaming) | Yes |  |
 | skip number | Yes |  |
