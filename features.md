@@ -21,8 +21,8 @@ title: Jsoniter Features (Java Version)
 | read string as slice (streaming) | Yes | Yes | If the buffer is large enough, byte array is reused as slice. Otherwise copy will happen. TODO: avoid small memory allocation |
 | read true/false/null | Yes | Yes | skip fixed bytes
 | read true/false/null (streaming) | Yes | Yes | load buffer once should be bigger enough to skip all the bytes |
-| read object | Yes |  |
-| read object callback | Yes |  |
+| read object | Yes | Yes | |
+| read object callback | Yes | Yes | callback should be faster, as less branching in the code |
 | read array | Yes |  |
 | read array callback | No |  |
 | skip whitespace | Yes |  |
