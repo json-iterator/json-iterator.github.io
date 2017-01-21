@@ -39,8 +39,8 @@ title: Jsoniter Features (Java Version)
 | read object/interface{} | Yes | Yes | |
 | write float32 | Yes | Yes | only keep 6 digits |
 | write float64 | Yes | Yes | only keep 6 digits |
-| write int32 | Yes |  |
-| write int64 | Yes |  |
+| write int32 | Yes | Yes | encode "000" three digits as ascii in one int value from 0 ~ 999, then process by /1000 each time |
+| write int64 | Yes | Yes | same as above |
 | write ascii string | Yes |  |
 | write string | Yes |  |
 | write true/false/null | Yes |  |
