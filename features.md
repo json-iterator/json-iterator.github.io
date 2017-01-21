@@ -27,8 +27,8 @@ title: Jsoniter Features (Java Version)
 | read array callback | Yes | Yes | callback should be faster, as less branching in the code |
 | skip whitespace | Yes | Yes | |
 | skip whitespace (streaming) | Yes | Yes | |
-| skip string | Yes |  |
-| skip string (streaming) | Yes |  |
+| skip string | Yes | Yes | find the end of string, and move pointer. if last byte is \, need to check if it is \\ or \\\ |
+| skip string (streaming) | Yes | Yes | the \ on the boundary is a problem |
 | skip number | Yes |  |
 | skip number (streaming) | Yes |  |
 | skip array/object | Yes |  |
