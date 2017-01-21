@@ -29,12 +29,12 @@ title: Jsoniter Features (Java Version)
 | skip whitespace (streaming) | Yes | Yes | |
 | skip string | Yes | Yes | find the end of string, and move pointer. if last byte is \, need to check if it is \\ or \\\ |
 | skip string (streaming) | Yes | Yes | the \ on the boundary is a problem |
-| skip number | Yes |  |
-| skip number (streaming) | Yes |  |
-| skip array/object | Yes |  |
-| skip array/object (streaming) | Yes |  |
-| skip true/false/null | Yes |  |
-| skip true/false/null (streaming) | Yes |  |
+| skip number | Yes | Yes | skip until break |
+| skip number (streaming) | Yes | Yes | |
+| skip array/object | Yes | Yes | |
+| skip array/object (streaming) | Yes | Yes | |
+| skip true/false/null | Yes | Yes | skip fixed bytes |
+| skip true/false/null (streaming) | Yes | Yes | might across the boundary at most once |
 | whatIsNext | Yes |  |
 | read object/interface{} | Yes |  |
 | any lazy array | Yes |  |
