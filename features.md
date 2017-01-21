@@ -42,7 +42,7 @@ title: Jsoniter Features (Java Version)
 | write int32 | Yes | Yes | encode "000" three digits as ascii in one int value from 0 ~ 999, then process by /1000 each time |
 | write int64 | Yes | Yes | same as above |
 | write ascii string | Yes | Yes | Java version use String.getBytes to copy the bytes out fast |
-| write string | Yes |  |
+| write string | Yes |  | Golang string is utf8 based, do not escape by default. Java string is utf16 based, escape to \u is actually faster |
 | write true/false/null | Yes |  |
 | write array/object | Yes |  |
 | write whitespace | Yes |  |
