@@ -38,7 +38,7 @@ title: Jsoniter Features (Java Version)
 | whatIsNext | Yes | Yes | lookup with a table |
 | read object/interface{} | Yes | Yes | |
 | write float32 | Yes | Yes | only keep 6 digits |
-| write float64 | Yes |  | only keep 6 digits |
+| write float64 | Yes | Yes | only keep 6 digits |
 | write int32 | Yes |  |
 | write int64 | Yes |  |
 | write ascii string | Yes |  |
