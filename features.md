@@ -35,12 +35,8 @@ title: Jsoniter Features (Java Version)
 | skip array/object (streaming) | Yes | Yes | |
 | skip true/false/null | Yes | Yes | skip fixed bytes |
 | skip true/false/null (streaming) | Yes | Yes | might across the boundary at most once |
-| whatIsNext | Yes |  |
-| read object/interface{} | Yes |  |
-| any lazy array | Yes |  |
-| any lazy object | Yes |  |
-| any others | Yes |  |
-| small allocation optimization (streaming) | No |  |
+| whatIsNext | Yes | Yes | lookup with a table |
+| read object/interface{} | Yes | Yes | |
 | write float32 | Yes |  |
 | write float64 | Yes |  |
 | write int32 | Yes |  |
@@ -50,6 +46,14 @@ title: Jsoniter Features (Java Version)
 | write true/false/null | Yes |  |
 | write array/object | Yes |  |
 | write whitespace | Yes |  |
+
+# Any
+
+| feature | java | go | note | 
+| --- | --- | --- | --- |
+| any lazy array | Yes |  |
+| any lazy object | Yes |  |
+| any others | Yes |  |
 
 # Object Decoding
 
