@@ -43,7 +43,7 @@ title: Jsoniter Features (Java Version)
 | write int64 | Yes | Yes | same as above |
 | write ascii string | Yes | Yes | Java version use String.getBytes to copy the bytes out fast |
 | write string | Yes | Yes | Golang string is utf8 based, do not escape by default. Java string is utf16 based, escape to \u is actually faster |
-| write true/false/null | Yes |  |
+| write true/false/null | Yes | Yes | write 4/5 bytes using one method call |
 | write array/object | Yes |  |
 | write whitespace | Yes |  |
 
