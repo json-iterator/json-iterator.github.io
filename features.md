@@ -50,9 +50,11 @@ title: Jsoniter Features (Java Version)
 
 | feature | java | go | note | 
 | --- | --- | --- | --- |
-| any lazy array | Yes |  |
-| any lazy object | Yes |  |
-| any others | Yes |  |
+| simple lazy any (string/int/float) | Yes | Yes | value is read once then cached |
+| true/false/nil | Yes | Yes | |
+| wrapped (interface{}/object) | Yes | | |
+| lazy array | Yes |  | |
+| lazy object | Yes |  | |
 
 # Object Decoding
 
@@ -95,4 +97,5 @@ Go type embeding support?
 * per byte field matching in one scan, fast path if the buffer is large enough (or if streaming support is on)
 * write to byte array without checking length, pre-allocate large enough buffer
 * true/false/null write out with other control character together
+* non-streaming version for golang
 
