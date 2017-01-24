@@ -93,6 +93,8 @@ Go type embeding support?
 
 # TO DO
 
+* bind k/v list to object, when the input itself is k/v
+* wrap object as any should be lazy
 * avoid small memory allocation, maintain new buffer internally (for streaming read bytes, and any)
 * per byte field matching in one scan, fast path if the buffer is large enough (or if streaming support is on)
 * write to byte array without checking length, pre-allocate large enough buffer
