@@ -52,8 +52,8 @@ title: Jsoniter Features (Java Version)
 | --- | --- | --- | --- |
 | simple lazy any (string/int/float) | Yes | Yes | value is read once then cached |
 | true/false/nil | Yes | Yes | |
-| wrapped int32/uint32/int64/uint64/float32/float64/string | Yes | | |
-| wrapped (interface{}/object) | Yes | | |
+| wrapped int32/uint32/int64/uint64/float32/float64/string | Yes | Yes | |
+| wrapped (object/array/map) | No | Yes | |
 | lazy array | Yes |  | |
 | lazy object | Yes |  | |
 
