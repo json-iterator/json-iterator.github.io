@@ -17,7 +17,7 @@ Jsoniter 的 Golang 版本可以比标准库（encoding/json）**快 6 倍**之�
 
 完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
 
-# 就是好使！
+# 独特体验
 
 Jsoniter 的目标就是帮你把事搞定，越快越好。最常见的用法只需要一行：
 
@@ -28,6 +28,7 @@ JsonStream.serialize(new int[]{1,2,3}); // from object to JSON
 ```java
 JsonIterator.deserialize("[1,2,3]", int[].class); // from JSON to object, with class specified
 ```
+如果这就是 Jsoniter 的一切本领，那么它不过是个平庸之辈而已。然而 Jsoniter 源于作者使用现有解析器时的不满与愤怒，它绝不会别人的老路的。想要体会到 Jsoniter 的独特体验能带来什么，我们来比较一下现有常规的 JSON API 的使用体验。
 
 根据过去的老经验，你一定知道下面这种用法是效率很低而且笨拙的，但是有些时候又不得不这么用：
 
