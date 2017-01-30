@@ -52,7 +52,18 @@ This is a good practice when you are doing very formal business logic. But what 
 Jsoniter.deserialize(input).get("items", 0); // the first item
 ```
 
-Jsoniter will not only be the fastest parser in runtime, but also be the fastest parser to help you getting your job done.
+The return typeof deserialize is "Any", very similiar to the idea of using `Map<String, Object>`, to represent Any data without defining the class. Unlike `Map<String, Object>`, it has a fluent api:
+
+```java
+any.get("items", '*', "name", 0); // extract out the first name from all items
+any.get("size").toLong(); // no matter it is "100" or 100, return it as long, making Java weakly typed
+any.bindTo(Order.class); // binding the JSON into object
+for (Any element : any) {} // iterate the collection, Any implements iterable
+```
+
+Best of all, the schema-less experience is backed by lazy parsing technology. Anything not read, will be kept in JSON form as it is. The performance of `Any` will be much faster than using `Map<String, Object>`. Parse the input, in whatever way you like, performance will not be a issue.
+
+Jsoniter will not only be the fastest parser in runtime, but also trying very hard to be the fastest parser to help you getting your job done.
 
 # Documentation
 
