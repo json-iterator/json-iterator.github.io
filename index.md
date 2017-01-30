@@ -69,7 +69,7 @@ Jsoniter will not only be the fastest parser in runtime, but also trying very ha
 
 Jsoniter has more than enough feature, with an example driven style document. You can see a lot of code snippet to demonstrate various common task:
 
-* [How to serialzie/deserialize in one line](http://jsoniter.com/java-features.html#very-simple-api)
+* [Fun with Any](http://jsoniter.com/java-features.html#lazy-is-an-option)
 * [How to use in Android platform with static code generation](http://jsoniter.com/java-features.html#performance-is-optional)
 * [How to check if property is present in JSON](http://jsoniter.com/java-features.html#validation)
 * [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
