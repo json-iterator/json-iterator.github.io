@@ -61,7 +61,7 @@ any.bindTo(Order.class); // 把 JSON 绑定到对象
 for (Any element : any) {} // 遍历集合，Any 实现了 iterable 接口
 ```
 
-更好的消息是，这种 schema-less 的体验在延迟解析技术的帮助下，做到了性能上的无损。所有没有别读取的字段，仍然会以 JSON 的原始格式保留。使用 `Any` 的性能要比使用 `Map<String, Object>` 好得多。现在，在 Java 语言中，你也体会到 Javascript 或者 PHP 解析 JSON 时那种丝滑般体验。[JSON 与 any，乐趣多多](http://jsoniter.com/java-features.html#lazy-is-an-option).
+更好的消息是，这种 schema-less 的体验在延迟解析技术的帮助下，做到了性能上的无损。所有没有别读取的字段，仍然会以 JSON 的原始格式保留。使用 `Any` 的性能要比使用 `Map<String, Object>` 好得多。现在，在 Java 语言中，你也体会到 Javascript 或者 PHP 解析 JSON 时那种丝滑般体验。[JSON 与 any，乐趣多多](http://jsoniter.com/java-features.cn.html#section-19).
 
 Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力地变成代码写起来最方便的解析器。
 
@@ -69,10 +69,10 @@ Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力�
 
 Jsoniter 功能多多，文档以例子为主。有很多代码示例来演示这些常用任务如何实现：
 
-* [如何在 Android 平台上使用](http://jsoniter.com/java-features.html#performance-is-optional)
-* [如何检查 JSON 中是否包含指定属性](http://jsoniter.com/java-features.html#validation)
-* [如何自定义序列化和反序列化的方法](http://jsoniter.com/java-features.html#service-provider-interface-spi)
-* [还有许多……](http://jsoniter.com/java-features.html)
+* [如何在 Android 平台上使用](http://jsoniter.com/java-features.cn.html#section-3)
+* [如何检查 JSON 中是否包含指定属性](http://jsoniter.com/java-features.cn.html#section-10)
+* [如何自定义序列化和反序列化的方法](http://jsoniter.com/java-features.cn.html#service-provider-interface-spi)
+* [还有许多……](http://jsoniter.com/java-features.cn.html)
 
 # 怎样获取
 
