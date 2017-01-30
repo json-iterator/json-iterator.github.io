@@ -22,11 +22,11 @@ For more complete report you can checkout the full [benchmark](/benchmark.html) 
 Jsoniter gets things done, as fast as possible. Most common use case is just one line:
 
 ```java
-JsonStream.serialize(new int[]{1,2,3});
+JsonStream.serialize(new int[]{1,2,3}); // from object to JSON
 ```
 
 ```java
-JsonIterator.deserialize("[1,2,3]", int[].class);
+JsonIterator.deserialize("[1,2,3]", int[].class); // from JSON to object, with class specified
 ```
 
 According to your past experience, you must know the following code will be very slow and cumbersome:
@@ -52,16 +52,17 @@ This is a good practice when you are doing very formal business logic. But what 
 Jsoniter.deserialize(input).get("items", 0); // the first item
 ```
 
-The return typeof deserialize is "Any", very similiar to the idea of using `Map<String, Object>`, to represent Any data without defining the class. Unlike `Map<String, Object>`, it has a fluent api:
+The return type of deserialize is "Any", very similiar to the idea of using `Map<String, Object>`, to represent Any data without defining the class. Unlike `Map<String, Object>`, it has a fluent api:
 
 ```java
+Any any = Jsoniter.deserialize(input); // deserialize returns "Any", actual parsing is done lazily
 any.get("items", '*', "name", 0); // extract out the first name from all items
 any.get("size").toLong(); // no matter it is "100" or 100, return it as long, making Java weakly typed
 any.bindTo(Order.class); // binding the JSON into object
 for (Any element : any) {} // iterate the collection, Any implements iterable
 ```
 
-Best of all, the schema-less experience is backed by lazy parsing technology. Anything not read, will be kept in JSON form as it is. The performance of `Any` will be much faster than using `Map<String, Object>`. Parse the input, in whatever way you like, performance will not be a issue.
+Best of all, the schema-less experience is backed by lazy parsing technology. Anything not read, will be kept in JSON form as it is. The performance of `Any` will be much faster than using `Map<String, Object>`. Now, in Java, you can parse the JSON like Javascript or PHP. [JSON is fun with any](http://jsoniter.com/java-features.html#lazy-is-an-option).
 
 Jsoniter will not only be the fastest parser in runtime, but also trying very hard to be the fastest parser to help you getting your job done.
 
@@ -69,7 +70,6 @@ Jsoniter will not only be the fastest parser in runtime, but also trying very ha
 
 Jsoniter has more than enough feature, with an example driven style document. You can see a lot of code snippet to demonstrate various common task:
 
-* [Fun with Any](http://jsoniter.com/java-features.html#lazy-is-an-option)
 * [How to use in Android platform with static code generation](http://jsoniter.com/java-features.html#performance-is-optional)
 * [How to check if property is present in JSON](http://jsoniter.com/java-features.html#validation)
 * [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
