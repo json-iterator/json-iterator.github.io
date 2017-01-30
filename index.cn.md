@@ -17,7 +17,7 @@ Jsoniter 的 Golang 版本可以比标准库（encoding/json）快 6 倍之多�
 
 完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
 
-# 超级灵活的 API
+# 就是好使
 
 * any-api：让你把 Java 用出 PHP 的感觉来，通过只解析用到字段来实现高性能
 * iterator-api：读 JSON 就像在遍历一个集合一般简单
