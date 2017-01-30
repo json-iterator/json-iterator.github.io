@@ -3,25 +3,19 @@ layout: default
 title: Fastest JSON parser ever
 ---
 
-jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](https://github.com/json-iterator/java) and [Go](https://github.com/json-iterator/go). Good deal of the code is ported from [dsljson](https://github.com/ngs-doo/dsl-json), and [jsonparser](https://github.com/buger/jsonparser)
+jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](https://github.com/json-iterator/java) and [Go](https://github.com/json-iterator/go). Good deal of the code is ported from [dsljson](https://github.com/ngs-doo/dsl-json), and [jsonparser](https://github.com/buger/jsonparser).
 
-# Why jsoniter?
+# Faster, Much Faster!
 
-* Jsoniter is the fastest JSON decoder & encoder. It could be up to 10x faster than normal parser, data binding included. Shameless self [benchmark](/benchmark.html)
-* Extremely flexible api. You can mix and match three different styles: bind-api, any-api or iterator-api. Checkout your [api choices](/java-features.html)
-* Innovations like lazy parsing, dynamic class shadowing, trie-tree fields matching, [see more on DZone.com](https://dzone.com/articles/dealing-with-json-in-a-new-way)
-
-# Show off
-
-Here is a quick show off, for more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
-
-This is java version, doing data binding
+Mainstream JSON parser is slow. Jsoniter Java version could be 5x times faster than jackson/gson/fastjson. If you are doing a lot of log processing or number crunching, but stuck with JSON, you definitely need to consider [dsl-json](https://github.com/ngs-doo/dsl-json) or Jsoniter to save the encoding/decoding cost.
 
 ![java1](http://jsoniter.com/benchmarks/java1.png)
 
-This is go version, doing data binding
+Jsoniter Golang version could be more than 10x times faster than standard lib (encoding/json). And the number is acheived with runtime reflection instead of `go generate`.
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
+
+For more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
 
 # Super flexible API
 
@@ -75,7 +69,7 @@ JsonIterator.deserialize("[1,2,3]", int[].class)
 
 # How to get
 
-For java version
+For Java version
 
 ```
 <dependency>
