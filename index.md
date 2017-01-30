@@ -40,7 +40,7 @@ To get the best performance and concise compact code, you'd better define a clas
 
 ```java
 public class Order {
-public List<OrderEntry> items;
+  public List<OrderEntry> items;
 }
 Order order = deserialize(input, Order.class);
 OrderEntry firstItem = obj.items.get(0);
