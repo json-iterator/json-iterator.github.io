@@ -17,7 +17,9 @@ Jsoniter Golang version could be more than 6x times faster than standard lib (en
 
 For more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
 
-# Super flexible API
+# Cut the Crap!
+
+Jsoniter gets things done, as fast as possible. 
 
 * any-api: use Java like PHP, high performance by lazy parsing
 * iterator-api: read through the JSON just like iterating over a collection
@@ -66,6 +68,16 @@ JsonIterator.deserialize("[1,2,3]", int[].class)
 ```
 
 [More on awsome apis](/java-features.html)
+
+# Documentation
+
+Jsoniter document is example driven. You can see a lot of code snippet to demonstrate various common task:
+
+* [How to serialzie/deserialize in one line](http://jsoniter.com/java-features.html#very-simple-api)
+* [How to use in Android platform with static code generation](http://jsoniter.com/java-features.html#performance-is-optional)
+* [How to check if property is present in JSON](http://jsoniter.com/java-features.html#validation)
+* [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
+* [Many more...](http://jsoniter.com/java-features.html)
 
 # How to get
 
