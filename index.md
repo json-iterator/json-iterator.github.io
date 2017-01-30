@@ -7,11 +7,11 @@ jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](ht
 
 # Faster, Much Faster!
 
-Mainstream JSON parsers are very slow. Jsoniter Java version could be 4x times faster than jackson/gson/fastjson. If you are doing a lot of log processing or number crunching, but stuck with JSON, you definitely need to consider [dsl-json](https://github.com/ngs-doo/dsl-json) or Jsoniter to save the encoding/decoding cost. According to dsl-json, the JSON encoding/decoding speed is not a problem, [even faster than thrift/avro](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)
+Mainstream JSON parsers are very slow. Jsoniter Java version could be **4x** times faster than jackson/gson/fastjson. If you are doing a lot of log processing or number crunching, but stuck with JSON, you definitely need to consider [dsl-json](https://github.com/ngs-doo/dsl-json) or Jsoniter to save the encoding/decoding cost. According to dsl-json, the JSON encoding/decoding speed is not a problem, [even faster than thrift/avro](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)
 
 ![java1](http://jsoniter.com/benchmarks/java1.png)
 
-Jsoniter Golang version could be more than 6x times faster than standard lib (encoding/json). And the number is acheived with runtime reflection instead of `go generate`.
+Jsoniter Golang version could be more than **6x** times faster than standard lib (encoding/json). And the number is acheived with runtime reflection instead of `go generate`.
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
