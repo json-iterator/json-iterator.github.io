@@ -17,7 +17,7 @@ Jsoniter Golang version could be more than **6x** times faster than standard lib
 
 For more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
 
-# Cut the Crap!
+# Unique Experience
 
 Jsoniter gets things done, as fast as possible. Most common use case is just one line:
 
@@ -28,6 +28,8 @@ JsonStream.serialize(new int[]{1,2,3}); // from object to JSON
 ```java
 JsonIterator.deserialize("[1,2,3]", int[].class); // from JSON to object, with class specified
 ```
+
+This is what a mediocre parser can do. Jsoniter is born from real-world anger to solve the impedance mismatch between JSON the Java language. To understand what kind of unique experience Jsoniter can provide, let's compare with existing parser api.
 
 According to your past experience, you must know the following code will be very slow and cumbersome:
 
