@@ -7,11 +7,11 @@ jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提�
 
 # 就是快
 
-主流的 JSON 解析器是非常慢的。Jsoniter Java 版本可以比常用的 jackson/gson/fastjson 快 4 倍。如果你需要处理大量的 JSON 格式的日志，你应该考虑一下用 [dsl-json](https://github.com/ngs-doo/dsl-json) 或者 Jsoniter 来节约可观的成本。根据 dsl-json 的性能评测，JSON 格式序列化和反序列化的速度其实一点都不慢，[甚至比 thrift/avro 还要快](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)。
+主流的 JSON 解析器是非常慢的。Jsoniter Java 版本可以比常用的 jackson/gson/fastjson **快 4 倍**。如果你需要处理大量的 JSON 格式的日志，你应该考虑一下用 [dsl-json](https://github.com/ngs-doo/dsl-json) 或者 Jsoniter 来节约可观的成本。根据 dsl-json 的性能评测，JSON 格式序列化和反序列化的速度其实一点都不慢，[甚至比 thrift/avro 还要快](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)。
 
 ![java1](http://jsoniter.com/benchmarks/java1.png)
 
-Jsoniter 的 Golang 版本可以比标准库（encoding/json）快 6 倍之多。而且这个性能是在不使用代码生成的前提下获得的。
+Jsoniter 的 Golang 版本可以比标准库（encoding/json）**快 6 倍**之多。而且这个性能是在不使用代码生成的前提下获得的。
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
 
@@ -19,54 +19,60 @@ Jsoniter 的 Golang 版本可以比标准库（encoding/json）快 6 倍之多�
 
 # 就是好使
 
-* any-api：让你把 Java 用出 PHP 的感觉来，通过只解析用到字段来实现高性能
-* iterator-api：读 JSON 就像在遍历一个集合一般简单
-* bind-api：各种对象都可以绑定，还可以绑定到已有对象上
- 
-这三个 api 可以用一个很简单的例子来展示。这是一个记录了订单流水的 JSON 文件，每一行是一个订单。第一个元素是订单id，后面的是订单的详情。
-
-
-```json
-[1024, {"product_id": 100, "start": "beijing"}]
-["1025", {"product_id": 101, "start": "shanghai"}]
-// 此处省略几千行
-```
-
-这个文档有三处难点
-
-* 行数非常多，如果一次性读到内存里可能会爆
-* 其次同一个字段既可能是整数，也可能是字符串。很多 PHP 产生的 JSON 都有这个问题
-* 详情部分可能字段比较多，需要绑定到对象上来处理
-
-解析这个文档只需要6行
+Jsoniter 的目标就是帮你把事搞定，越快越好。最常见的用法只需要一行：
 
 ```java
-JsonIterator iter = JsonIterator.parse(input);
-OrderDetails orderDetails = new OrderDetails();
-while(iter.whatIsNext() != ValueType.INVALID) {
-    Any order = iter.readAny();
-    int orderId = order.toInt(0);
-    String start = order.get(1).bindTo(orderDetails).start;
+JsonStream.serialize(new int[]{1,2,3}); // from object to JSON
+```
+
+```java
+JsonIterator.deserialize("[1,2,3]", int[].class); // from JSON to object, with class specified
+```
+
+根据过去的老经验，你一定知道下面这种用法是效率很低而且笨拙的，但是有些时候又不得不这么用：
+
+```java
+Map<String, Object> obj = deserialize(input);
+Object firstItem = ((List<Object>)obj.get("items")).get(0);
+```
+
+想要最佳的性能以及代码工整，你最好定义一个类来指定数据的格式：
+
+```java
+public class Order {
+  public List<OrderEntry> items;
 }
+Order order = deserialize(input, Order.class);
+OrderEntry firstItem = obj.items.get(0);
 ```
-
-* JsonIterator.parse 支持 InputStream 作为输入，完全流式解析
-* readAny 解析为 Any 对象。实际的解析在 get 具体的字段的时候延迟触发。既方便，又高性能。
-* bindTo(orderDetails) 数据绑定支持绑定到已有的对象上
-
-当然最常用的还是这两个静态方法，序列化
+在写正式的业务逻辑的代码时，这当然是很好的实践。但是如果你只是想从一个JSON嵌套结构里取一个内部的字符串的值的时候，必须提前定义每层数据结构未免有点太费周章了。能一行搞定的，就别费那么些话了：
 
 ```java
-JsonStream.serialize(new int[]{1,2,3})
+Jsoniter.deserialize(input).get("items", 0); // the first item
 ```
 
-反序列化
+deserialize 的返回值类型是“Any”，它有点类似于 `Map<String, Object>`。两者都是通用的数据容器，但是和  `Map<String, Object>` 不同，Any 有通过  api 使得数据获取上更方便：
 
 ```java
-JsonIterator.deserialize("[1,2,3]", int[].class)
+Any any = Jsoniter.deserialize(input); // deserialize returns "Any", actual parsing is done lazily
+any.get("items", '*', "name", 0); // extract out the first name from all items
+any.get("size").toLong(); // no matter it is "100" or 100, return it as long, making Java weakly typed
+any.bindTo(Order.class); // binding the JSON into object
+for (Any element : any) {} // iterate the collection, Any implements iterable
 ```
 
-[更多 API 的用法参见手册](/java-features.cn.html)
+更好的消息是，这种 schema-less 的体验在延迟解析技术的帮助下，做到了性能上的无损。所有没有别读取的字段，仍然会以 JSON 的原始格式保留。使用 `Any` 的性能要比使用 `Map<String, Object>` 好得多。现在，在 Java 语言中，你也体会到 Javascript 或者 PHP 解析 JSON 时那种丝滑般体验。[JSON 与 any，乐趣多多](http://jsoniter.com/java-features.html#lazy-is-an-option).
+
+Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力地变成代码写起来最方便的解析器。
+
+# 文档
+
+Jsoniter 功能多多，文档以例子为主。你剋有看到很多代码示例来演示这些常用任务如何实现：
+
+* [如何在 Android 平台上使用](http://jsoniter.com/java-features.html#performance-is-optional)
+* [如何检查 JSON 中是否包含指定属性](http://jsoniter.com/java-features.html#validation)
+* [如何自定义序列化和反序列化的方法](http://jsoniter.com/java-features.html#service-provider-interface-spi)
+* [还有许多……](http://jsoniter.com/java-features.html)
 
 # 怎样获取
 
