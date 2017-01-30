@@ -19,59 +19,44 @@ For more complete report you can checkout the full [benchmark](/benchmark.html) 
 
 # Cut the Crap!
 
-Jsoniter gets things done, as fast as possible. 
-
-* any-api: use Java like PHP, high performance by lazy parsing
-* iterator-api: read through the JSON just like iterating over a collection
-* bind-api: binding any kind of data structure. It can even bind to existing object
- 
-Here is a simple demo. Each line is a object, first element being the order id, second element being the order details
-
-```json
-[1024, {"product_id": 100, "start": "beijing"}]
-["1025", {"product_id": 101, "start": "shanghai"}]
-// many many more lines
-```
-
-There are three things to notice
-
-* There are many lines, read them all in once will have memory issue
-* Some order id is int, some order id is string. This is very common when working with PHP.
-* The order details has many fields, need object binding
-
-Amazingly, in 6 lines, we have all problems solved:
+Jsoniter gets things done, as fast as possible. Most common use case is just one line:
 
 ```java
-JsonIterator iter = JsonIterator.parse(input);
-OrderDetails orderDetails = new OrderDetails();
-while(iter.whatIsNext() != ValueType.INVALID) {
-    Any order = iter.readAny();
-    int orderId = order.toInt(0);
-    String start = order.get(1).bindTo(orderDetails).start;
+JsonStream.serialize(new int[]{1,2,3});
+```
+
+```java
+JsonIterator.deserialize("[1,2,3]", int[].class);
+```
+
+According to your past experience, you must know the following code will be very slow and cumbersome:
+
+```java
+Map<String, Object> obj = deserialize(input);
+Object firstItem = ((List<Object>)obj.get("items")).get(0);
+```
+
+To get the best performance and concise compact code, you'd better define a class as the data schema:
+
+```java
+public class Order {
+public List<OrderEntry> items;
 }
+Order order = deserialize(input, Order.class);
+OrderEntry firstItem = obj.items.get(0);
 ```
 
-* JsonIterator.parse take InputStream as input, parse everything in a streaming way
-* readAny returns an instance of Any. The parsing is lazily done when actually getting the field, simple and performant.
-* bindTo(orderDetails), data binding can reuse existing object
-
-Good old one line api is also available. To serialize
+This is a good practice when you are doing very formal business logic. But what if you just want to get a string from a deeply nested structure, will you have the patience to define the data schema of each level? Cut the crap, please! Most data extraction can be done in one line:
 
 ```java
-JsonStream.serialize(new int[]{1,2,3})
+Jsoniter.deserialize(input).get("items", 0); // the first item
 ```
 
-To deserialize
-
-```java
-JsonIterator.deserialize("[1,2,3]", int[].class)
-```
-
-[More on awsome apis](/java-features.html)
+Jsoniter will not only be the fastest parser in runtime, but also be the fastest parser to help you getting your job done.
 
 # Documentation
 
-Jsoniter document is example driven. You can see a lot of code snippet to demonstrate various common task:
+Jsoniter has more than enough feature, with an example driven style document. You can see a lot of code snippet to demonstrate various common task:
 
 * [How to serialzie/deserialize in one line](http://jsoniter.com/java-features.html#very-simple-api)
 * [How to use in Android platform with static code generation](http://jsoniter.com/java-features.html#performance-is-optional)
