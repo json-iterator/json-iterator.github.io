@@ -5,22 +5,17 @@ title: Fastest JSON parser ever
 
 jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提供 [Java](https://github.com/json-iterator/java) 和 [Go](https://github.com/json-iterator/go) 两个版本。从 [dsljson](https://github.com/ngs-doo/dsl-json) 和 [jsonparser](https://github.com/buger/jsonparser) 借鉴了大量代码。
 
-# jsoniter 有何独特之处？
+# 就是快
 
-* Jsoniter 是最快的 JSON 解析器。它最多能比普通的解析器快10倍之多，即使在数据绑定的用法下也有同样的性能优势。无耻地献上自己的 [跑分](/benchmark.html)
-* 非常易于使用的 api，允许你使用任何风格或者混搭的方式来解析 JSON。给你前所未有的灵活性。来看看这些 [API们](/java-features.cn.html) 是不是真的有那么好用吧
-
-# 自卖自夸
-
-忍不住要显摆一下。完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
-
-Java 版本数据绑定用法下的性能
+主流的 JSON 解析器是非常慢的。Jsoniter Java 版本可以比常用的 jackson/gson/fastjson 快 4 倍。如果你需要处理大量的 JSON 格式的日志，你应该考虑一下用 [dsl-json](https://github.com/ngs-doo/dsl-json) 或者 Jsoniter 来节约可观的成本。根据 dsl-json 的性能评测，JSON 格式序列化和反序列化的速度其实一点都不慢，[甚至比 thrift/avro 还要快](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)。
 
 ![java1](http://jsoniter.com/benchmarks/java1.png)
 
 Go 版本数据绑定用法下的性能
 
 ![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
+
+完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
 
 # 超级灵活的 API
 
