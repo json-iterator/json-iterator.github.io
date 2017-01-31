@@ -59,9 +59,9 @@ title: Jsoniter Features (Java Version)
 
 # Object Decoding
 
-| feature | java reflection | java codegen | go reflection |
-| --- | --- | --- | --- |
-| field binding | Yes | Yes |  |
+| feature | java reflection | java codegen | go reflection | comment |
+| --- | --- | --- | --- | --- |
+| field binding | Yes | Yes | Yes | Java version has hash mode and strict mode, golang version have 1/2/3/4/general field matching |
 | setter binding | Yes | Yes | N/A |
 | ctor/factory/di support | Yes | Yes | N/A |
 | wrapper | Yes | Yes | N/A |
