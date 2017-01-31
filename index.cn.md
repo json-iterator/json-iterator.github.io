@@ -17,7 +17,7 @@ Jsoniter 的 Golang 版本可以比标准库（encoding/json）**快 6 倍**之�
 
 完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
 
-# 独特体验
+# 啥都能一行搞定！
 
 Jsoniter 的目标就是帮你把事搞定，越快越好。最常见的用法只需要一行：
 
