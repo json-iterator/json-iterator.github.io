@@ -62,7 +62,7 @@ title: Jsoniter Features (Java Version)
 | feature | java reflection | java codegen | go reflection |
 | --- | --- | --- | --- |
 | field binding | Yes | Yes |  |
-| setter binding | Yes | Yes |  |
+| setter binding | Yes | Yes | N/A |
 | ctor/factory/di support | Yes | Yes | N/A |
 | wrapper | Yes | Yes | N/A |
 | validation | Yes | Yes |  |
