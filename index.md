@@ -9,7 +9,23 @@ jsoniter (json-iterator) is fast and flexible JSON parser available in [Java](ht
 
 Traditional JSON parsers are very slow. Jsoniter Java version could be **4x** times faster than jackson/gson/fastjson. If you are doing a lot of log processing or number crunching, but stuck with JSON, you definitely need to consider [dsl-json](https://github.com/ngs-doo/dsl-json) or Jsoniter to save the encoding/decoding cost. According to dsl-json, the JSON encoding/decoding speed is not a problem, [even faster than thrift/avro](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)
 
-![java1](http://jsoniter.com/benchmarks/java1.png)
+| scenario | Protobuf V.S. Jackson | Protobuf V.S. Jsoniter | Jsoniter V.S Jackson |
+| --- | --- | --- | --- |
+| Decode Integer | 8.51 | 2.64 | 3.22 |
+| Encode Integer | 2.9 | 1.44 | 2.02 |
+| Decode Double | 13.75 | 4.4 | 3.13 |
+| Encode Double | 12.71 | 1.96 (only 6 digits precision) | 6.5 |
+| Decode Object | 1.22  | 0.6 | 2.04 |
+| Encode Object | 1.72 | 0.67 | 2.59 |
+| Decode Integer List | 2.92 | 0.98 | 2.97 |
+| Encode Integer List | 1.35 | 0.71 | 1.9 |
+| Decode Object List | 1.26 | 0.43 | 2.91 |
+| Encode Object List | 2.22 | 0.61 | 3.63 |
+| Decode Double Array | 5.18 | 1.47 | 3.52 |
+| Encode Double Array | 15.63 | 2.32 (only 6 digits precision) | 6.74 |
+| Decode String | 1.85 | 0.77 | 2.4 |
+| Encode String | 0.96 | 0.63 | 1.5 | 
+| Skip Structure | 5.05 | 1.35 | 3.75 |
 
 Jsoniter Golang version could be more than **6x** times faster than standard lib (encoding/json). And the number is acheived with runtime reflection instead of `go generate`.
 
