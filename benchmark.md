@@ -23,73 +23,25 @@ Machine Used:
 * Threads: 16 threads, will synchronize iterations
 * Benchmark mode: Throughput, ops/time
 
-## 1 kb
+https://github.com/json-iterator/java-benchmark
 
-[bind json to object](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/databind/Deserialization.java)
-
-| parser | score |
-| ---    | ---   |
-| [jackson]  | 177084.689 ±  1799.302  ops/s |
-| [gson]     | 93788.846 ±  1818.627  ops/s |
-| [fastjson] | 104953.993 ±   538.658  ops/s |
-| [dsljson]  | 330153.573 ± 25947.852  ops/s |
-| jsoniter (bind-api) | 402531.206 ±  7187.885  ops/s |
-
-![java1](http://jsoniter.com/benchmarks/java1.png)
-
-## 10 kb
-
-[bind json to object](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/databind/Deserialization.java)
-
-| parser | score |
-| ---    | ---   |
-| [jackson]  | 28726.365 ± 229.004  ops/s |
-| [gson]     | 16188.633 ± 340.709  ops/s |
-| [fastjson] | 17389.340 ± 116.701  ops/s |
-| [dsljson]  | 58355.070 ± 421.090  ops/s |
-| jsoniter (bind-api) | 63245.508 ± 487.530  ops/s |
-
-![java10](http://jsoniter.com/benchmarks/java10.png)
-
-## 100 kb
-
-[bind json to object](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/databind/Deserialization.java)
-
-| parser | score |
-| ---    | ---   |
-| [jackson]  | 2888.322 ± 18.957  ops/s |
-| [gson]     | 1618.855 ± 33.972  ops/s |
-| [fastjson] | 1560.112 ± 14.711  ops/s |
-| [dsljson]  | 5718.177 ± 92.220  ops/s |
-| jsoniter (bind-api) | 6269.253 ± 44.716  ops/s |
-
-![java100](http://jsoniter.com/benchmarks/java100.png)
-
-# Java Iterator API
-
-## 1000 kb
-
-[count number of elements from InputStream without binding](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/stream/UsersStreamDeserializer.java#L352)
-
-| parser    | score |
-| ---       | ---   |
-| [javaxjson] | 1192.041 ± 71.521  ops/s  |
-| [jackson]   | 1919.180 ± 122.895  ops/s |
-| jsoniter (iterator-api) | 3165.283 ± 106.326  ops/s |
-
-![java1000](http://jsoniter.com/benchmarks/java1000.png)
-
-## 10000 kb
-
-[count number of elements from InputStream without binding](https://github.com/json-iterator/java-json-benchmark/blob/master/src/main/java/com/github/fabienrenaud/jjb/stream/UsersStreamDeserializer.java#L352)
-
-| parser    | score |
-| ---       | ---   |
-| [javaxjson] | 113.544 ±  6.153  ops/s |
-| [jackson]   | 199.957 ±  7.669  ops/s |
-| jsoniter (iterator-api) | 274.039 ± 17.785  ops/s |
-
-![java10000](http://jsoniter.com/benchmarks/java10000.png)
+| scenario | Protobuf V.S. Jackson | Protobuf V.S. Jsoniter | Jsoniter V.S Jackson |
+| --- | --- | --- | --- |
+| Decode Integer | 8.51 | 2.64 | 3.22 |
+| Encode Integer | 2.9 | 1.44 | 2.02 |
+| Decode Double | 13.75 | 4.4 | 3.13 |
+| Encode Double | 12.71 | 1.96 (only 6 digits precision) | 6.5 |
+| Decode Object | 1.22  | 0.6 | 2.04 |
+| Encode Object | 1.72 | 0.67 | 2.59 |
+| Decode Integer List | 2.92 | 0.98 | 2.97 |
+| Encode Integer List | 1.35 | 0.71 | 1.9 |
+| Decode Object List | 1.26 | 0.43 | 2.91 |
+| Encode Object List | 2.22 | 0.61 | 3.63 |
+| Decode Double Array | 5.18 | 1.47 | 3.52 |
+| Encode Double Array | 15.63 | 2.32 (only 6 digits precision) | 6.74 |
+| Decode String | 1.85 | 0.77 | 2.4 |
+| Encode String | 0.96 | 0.63 | 1.5 | 
+| Skip Structure | 5.05 | 1.35 | 3.75 |
 
 # Go Bind API
 
