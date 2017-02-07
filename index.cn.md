@@ -7,9 +7,9 @@ jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提�
 
 # 就是快！
 
-主流的 JSON 解析器是非常慢的。Jsoniter Java 版本可以比常用的 jackson/gson/fastjson **快 4 倍**。如果你需要处理大量的 JSON 格式的日志，你应该考虑一下用 [dsl-json](https://github.com/ngs-doo/dsl-json) 或者 Jsoniter 来节约可观的成本。根据 dsl-json 的性能评测，JSON 格式序列化和反序列化的速度其实一点都不慢，[甚至比 thrift/avro 还要快](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)。
+主流的 JSON 解析器是非常慢的。Jsoniter Java 版本可以比常用的 jackson/gson/fastjson **快 3 倍**。如果你需要处理大量的 JSON 格式的日志，你应该考虑一下用 [dsl-json](https://github.com/ngs-doo/dsl-json) 或者 Jsoniter 来节约可观的成本。根据 dsl-json 的性能评测，JSON 格式序列化和反序列化的速度其实一点都不慢，[甚至比 thrift/avro 还要快](https://www.codeproject.com/Articles/1165627/Jsoniter-JSON-is-faster-than-thrift-avro)。
 
-![java1](http://jsoniter.com/benchmarks/java1.png)
+![protobuf-vs-jsoniter](http://jsoniter.com/benchmarks/protobuf-vs-jsoniter.png)
 
 Jsoniter 的 Golang 版本可以比标准库（encoding/json）**快 6 倍**之多。而且这个性能是在不使用代码生成的前提下获得的。
 
