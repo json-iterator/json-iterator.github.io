@@ -85,7 +85,7 @@ For Java version
 <dependency>
     <groupId>com.jsoniter</groupId>
     <artifactId>jsoniter</artifactId>
-    <version>0.9.7</version>
+    <version>0.9.8</version>
 </dependency>
 ```
 
