@@ -77,6 +77,8 @@ Jsoniter has more than enough feature, with an example driven style document. Yo
 * [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
 * [Many more...](http://jsoniter.com/java-features.html)
 
+Tutorial on sitepoint: https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/
+
 # How to get
 
 For Java version
