@@ -77,7 +77,9 @@ Jsoniter has more than enough feature, with an example driven style document. Yo
 * [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
 * [Many more...](http://jsoniter.com/java-features.html)
 
-Tutorial on sitepoint: https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/
+Tutorial on sitepoint: [https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/](https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/)
+
+Introduction on dzone: [https://dzone.com/articles/is-protobuf-5x-faster-than-json](https://dzone.com/articles/is-protobuf-5x-faster-than-json)
 
 # How to get
 
@@ -87,7 +89,7 @@ For Java version
 <dependency>
     <groupId>com.jsoniter</groupId>
     <artifactId>jsoniter</artifactId>
-    <version>0.9.8</version>
+    <version>0.9.9</version>
 </dependency>
 ```
 
