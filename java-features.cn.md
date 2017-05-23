@@ -223,7 +223,9 @@ public class DemoCodegenConfig implements CodegenConfig {
 </plugin>
 ```
 
-产生的代码会被写到你项目的 `src/main/java` 目录，作为你的代码的一部分。最后把模式切换一下
+产生的java代码会被写到你项目的 `src/main/java` 目录，作为你的代码的一部分。输出目录是通过workingDirectory来指定的。如果你不想改workingDirectory，也可以传递第二个参数给StaticCodeGenerator。
+
+最后把模式切换一下
 
 ```java
 JsonStream.setMode(EncodingMode.STATIC_MODE); 
