@@ -224,7 +224,9 @@ then add code generation to maven build:
 </plugin>
 ```
 
-the generated code will be written out to `src/main/java` folder of your project. The final step is to switch mode
+the generated java source code will be written out to `src/main/java` folder of your project. The output dir is specified by setting the workingDirectory to the `project.build.sourceDirectory`. The output dir can also be specified as the second argument to StaticCodeGenerator.
+
+The final step is to switch mode
 
 ```java
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
