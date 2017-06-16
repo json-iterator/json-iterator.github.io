@@ -66,6 +66,12 @@ for (Any element : any) {} // 遍历集合，Any 实现了 iterable 接口
 
 Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力地变成代码写起来最方便的解析器。
 
+# 从别的库迁移过来很容易
+
+* Golang 版本和标准库（encoding/json）完全兼容。`json.Marshal` 或者 `json.Unmarshal` 都支持，只需要把json替换为jsoniter
+* 支持 gson 兼容模式
+* 支持 jackson 兼容模式（正在开发中）
+
 # 文档
 
 Jsoniter 功能多多，文档以例子为主。有很多代码示例来演示这些常用任务如何实现：
