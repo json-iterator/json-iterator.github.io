@@ -68,6 +68,12 @@ Best of all, the schema-less experience is backed by lazy parsing technology. An
 
 Jsoniter will not only be the fastest parser in runtime, but also trying very hard to be the fastest parser to help you getting your job done.
 
+# Easy to migrate
+
+* Golang version is drop-in replacement for standard library (encoding/json), `json.Marshal` or `json.Unmarshal` just replace json with jsoniter.
+* Support gson compatibility mode
+* Support jackson compatibility mode (coming soon)
+
 # Documentation
 
 Jsoniter has more than enough feature, with an example driven style document. You can see a lot of code snippet to demonstrate various common task:
