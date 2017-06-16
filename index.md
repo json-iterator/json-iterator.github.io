@@ -13,7 +13,7 @@ Traditional JSON parsers are slow. Jsoniter Java version could be **3x** times f
 
 Jsoniter Golang version could be more than **6x** times faster than standard lib (encoding/json). And the number is acheived with runtime reflection instead of `go generate`.
 
-![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
+![go-medium](http://jsoniter.com/benchmarks/go-benchmark.png)
 
 For more complete report you can checkout the full [benchmark](/benchmark.html) with [in-depth optimization](/benchmark.html#optimization-used) to back the numbers up
 
