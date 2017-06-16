@@ -13,7 +13,7 @@ jsoniter（json-iterator）是一款快且灵活的 JSON 解析器，同时提�
 
 Jsoniter 的 Golang 版本可以比标准库（encoding/json）**快 6 倍**之多。而且这个性能是在不使用代码生成的前提下获得的。
 
-![go-medium](http://jsoniter.com/benchmarks/go-medium.png)
+![go-medium](http://jsoniter.com/benchmarks/go-benchmark.png)
 
 完整报告请看[性能评测](/benchmark.html)，对于[性能优化是怎么做的](/benchmark.html#optimization-used)有详尽的解释。
 
