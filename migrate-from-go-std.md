@@ -3,7 +3,7 @@ layout: default
 title: Migrate from go standard libary
 ---
 
-# Drop-in replacement for go JSON standard library
+# Drop-in replacement
 
 ```
 type ColorGroup struct {
