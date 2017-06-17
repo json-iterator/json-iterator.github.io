@@ -68,7 +68,7 @@ Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力�
 
 # 从别的库迁移过来很容易
 
-* Golang 版本和标准库（encoding/json）完全兼容。`json.Marshal` 或者 `json.Unmarshal` 都支持，只需要把json替换为jsoniter
+* [Golang 版本和标准库（encoding/json）完全兼容。`json.Marshal` 或者 `json.Unmarshal` 都支持，只需要把json替换为jsoniter](/migrate-from-go-std.html)
 * [支持 gson 兼容模式](/migrate-from-gson.html)
 * 支持 jackson 兼容模式（正在开发中）
 
