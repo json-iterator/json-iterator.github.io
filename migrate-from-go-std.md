@@ -43,6 +43,6 @@ The default performance is already several times faster than the standard librar
 
 * use jsoniter.ConfigFastest, this will marshal the float with 6 digits precision (lossy), which is significantly faster
 * reuse the underlying Stream or Iterator instance. `jsoniter.ConfigFastest.BorrowIterator` or `jsoniter.ConfigFastest.BorrowStream`. Just remember to return them when done.
-* use `jsoniter.RegisterTypeEncoder` or `jsoniter.RegisterTypeDecoder` instead of `MarshalJSON`. `Marshaler` or `Unmarshaler` interface will do more copying than necessary. 
+* use `jsoniter.RegisterTypeEncoder` or `jsoniter.RegisterTypeDecoder` instead of defining `MarshalJSON` or `UnmarshalJSON`. `Marshaler` or `Unmarshaler` interface will do more copying than necessary. 
 
 
