@@ -3,7 +3,7 @@ layout: default
 title: How to extend
 ---
 
-# Migration from gson
+# Migrate from gson
 
 Jsoniter support gson annotation, migrating from gson to jsoniter should be easy.
 
