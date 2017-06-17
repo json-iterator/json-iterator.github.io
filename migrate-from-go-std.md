@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Migrate from golang standard libary
+title: Migrate from go standard libary
 ---
 
-# Everything just works
+# Drop-in replacement for go JSON standard library
 
 ```
 type ColorGroup struct {
