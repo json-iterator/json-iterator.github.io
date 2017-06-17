@@ -71,17 +71,17 @@ Jsoniter will not only be the fastest parser in runtime, but also trying very ha
 # Easy to migrate
 
 * Golang version is drop-in replacement for standard library (encoding/json), `json.Marshal` or `json.Unmarshal` just replace json with jsoniter.
-* Support gson compatibility mode
+* [Support gson compatibility mode](/migrate-from-gson.html)
 * Support jackson compatibility mode (coming soon)
 
 # Documentation
 
 Jsoniter has more than enough feature, with an example driven style document. You can see a lot of code snippet to demonstrate various common task:
 
-* [How to use in Android platform with static code generation](http://jsoniter.com/java-features.html#performance-is-optional)
-* [How to check if property is present in JSON](http://jsoniter.com/java-features.html#validation)
-* [How to customize encoding/decoding](http://jsoniter.com/java-features.html#service-provider-interface-spi)
-* [Many more...](http://jsoniter.com/java-features.html)
+* [How to use in Android platform with static code generation](/java-features.html#performance-is-optional)
+* [How to check if property is present in JSON](/java-features.html#validation)
+* [How to customize encoding/decoding](/java-features.html#service-provider-interface-spi)
+* [Many more...](/java-features.html)
 
 Tutorial on sitepoint: [https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/](https://www.sitepoint.com/php-style-json-parsing-in-java-with-jsoniter/)
 
