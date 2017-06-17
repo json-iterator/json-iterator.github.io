@@ -70,7 +70,7 @@ Jsoniter will not only be the fastest parser in runtime, but also trying very ha
 
 # Easy to migrate
 
-* Golang version is drop-in replacement for standard library (encoding/json), `json.Marshal` or `json.Unmarshal` just replace json with jsoniter.
+* [Golang version is drop-in replacement for standard library (encoding/json), `json.Marshal` or `json.Unmarshal` just replace json with jsoniter.](/migrate-from-go-std.html)
 * [Support gson compatibility mode](/migrate-from-gson.html)
 * Support jackson compatibility mode (coming soon)
 
