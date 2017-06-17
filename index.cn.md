@@ -69,17 +69,17 @@ Jsoniter 不仅仅在运行时要做最快的解析器，也同时非常努力�
 # 从别的库迁移过来很容易
 
 * Golang 版本和标准库（encoding/json）完全兼容。`json.Marshal` 或者 `json.Unmarshal` 都支持，只需要把json替换为jsoniter
-* 支持 gson 兼容模式
+* [支持 gson 兼容模式](/migrate-from-gson.html)
 * 支持 jackson 兼容模式（正在开发中）
 
 # 文档
 
 Jsoniter 功能多多，文档以例子为主。有很多代码示例来演示这些常用任务如何实现：
 
-* [如何在 Android 平台上使用](http://jsoniter.com/java-features.cn.html#section-3)
-* [如何检查 JSON 中是否包含指定属性](http://jsoniter.com/java-features.cn.html#section-10)
-* [如何自定义序列化和反序列化的方法](http://jsoniter.com/java-features.cn.html#service-provider-interface-spi)
-* [还有许多……](http://jsoniter.com/java-features.cn.html)
+* [如何在 Android 平台上使用](/java-features.cn.html#section-3)
+* [如何检查 JSON 中是否包含指定属性](/java-features.cn.html#section-10)
+* [如何自定义序列化和反序列化的方法](/java-features.cn.html#service-provider-interface-spi)
+* [还有许多……](/java-features.cn.html)
 
 # 怎样获取
 
