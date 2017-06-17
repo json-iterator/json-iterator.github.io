@@ -1,6 +1,6 @@
 ---
 layout: default
-title: How to extend
+title: Migrate from gson
 ---
 
 # Migrate from gson
