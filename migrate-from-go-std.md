@@ -5,7 +5,7 @@ title: Migrate from go standard libary
 
 # Drop-in replacement
 
-```
+```golang
 type ColorGroup struct {
 	ID     int
 	Name   string
@@ -27,7 +27,7 @@ Add `import "github.com/json-iterator/go"` and repalce `json.Marshal` with `json
 
 You can parse json in one line, without defining any struct.
 
-```
+```golang
 val := []byte(`{"ID":1,"Name":"Reds","Colors":["Crimson","Red","Ruby","Maroon"]}`)
 jsoniter.Get(val, "Colors", 0).ToString()
 ```
@@ -41,7 +41,7 @@ It will be faster than parsing into `map[string]interface{}` and much easier to 
 
 By default, jsoniter do not sort the map keys like standard libary. If you want 100% compatibility, use it like this
 
-```
+```golang
 m := map[string]interface{}{
 	"3": 3,
 	"1": 1,
