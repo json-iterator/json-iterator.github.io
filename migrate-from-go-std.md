@@ -23,6 +23,20 @@ Add `import "github.com/json-iterator/go"` and repalce `json.Marshal` with `json
 
 `Unmarshal`, `NewEncoder`, `NewDecoder` they all works. Existing types implemented `Marshaler` or `Unmarshaler` interface will also work. Map with non-string key also work. Yes, everything just works.
 
+# One line style
+
+You can parse json in one line, without defining any struct.
+
+```
+val := []byte(`{"ID":1,"Name":"Reds","Colors":["Crimson","Red","Ruby","Maroon"]}`)
+jsoniter.Get(val, "Colors", 0).ToString()
+```
+
+`func Get(data []byte, path ...interface{}) Any` takes interface{} as path. If string, it will lookup json map. 
+If int, it will lookup json array. If `'*'`, it will map to each element of array or each key of map.
+
+It will be faster than parsing into `map[string]interface{}` and much easier to read data out.
+
 # 100% Compatibility
 
 By default, jsoniter do not sort the map keys like standard libary. If you want 100% compatibility, use it like this
