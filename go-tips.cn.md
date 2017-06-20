@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Go JSON 使用小技巧
+title: Golang 的 JSON 使用小技巧
 ---
 
 * TOC
