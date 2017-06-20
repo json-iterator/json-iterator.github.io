@@ -175,6 +175,33 @@ jsoniter.UnmarshalFromString(`[]`, &val)
 ```
 
 # 使用 MarshalJSON支持time.Time
+
+golang 是默认不支持 time.Time 序列化成 JSON 的。如果要支持，可以自定义 time.Time 类型
+
+
+```golang
+type timeImplementedMarshaler time.Time
+
+func (obj timeImplementedMarshaler) MarshalJSON() ([]byte, error) {
+	seconds := time.Time(obj).Unix()
+	return []byte(strconv.FormatInt(seconds, 10)), nil
+}
+```
+
+序列化的时候会调用 MarshalJSON
+
+```golang
+type TestObject struct {
+	Field timeImplementedMarshaler
+}
+should := require.New(t)
+val := timeImplementedMarshaler(time.Unix(123, 0))
+obj := TestObject{val}
+bytes, err := jsoniter.Marshal(obj)
+should.Nil(err)
+should.Equal(`{"Field":123}`, string(bytes))
+```
+
 # 使用 RegisterTypeEncoder支持time.Time
 # 使用 MarshalText支持非字符串作为key的map
 # 使用 json.RawMessage
