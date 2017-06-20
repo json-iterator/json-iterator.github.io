@@ -131,6 +131,29 @@ type TestObject struct {
 如果json是 `{"Field1": 100}` 则会报错
 
 # 容忍字符串和数字互转
+
+如果你使用的是jsoniter，可以启动模糊模式来支持 PHP 传递过来的 JSON。
+
+```golang
+import "github.com/json-iterator/go/extra"
+
+extra.RegisterFuzzyDecoders()
+```
+
+这样就可以处理字符串和数字类型不对的问题了。比如
+
+```golang
+var val string
+jsoniter.UnmarshalFromString(`100`, &val)
+```
+
+又比如
+
+```golang
+var val float32
+jsoniter.UnmarshalFromString(`"1.23"`, &val)
+```
+
 # 容忍空数组作为对象
 # 使用 MarshalJSON支持time.Time
 # 使用 RegisterTypeEncoder支持time.Time
