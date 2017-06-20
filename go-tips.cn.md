@@ -265,4 +265,35 @@ should.Equal(json.Number("123"), obj)
 ```
 
 # 统一更改字段的命名风格
+
+经常 JSON 里的字段名 Go 里的字段名是不一样的。我们可以用 field tag 来修改。
+
+```golang
+output, err := jsoniter.Marshal(struct {
+	UserName      string `json:"user_name"`
+	FirstLanguage string `json:"first_language"`
+}{
+	UserName:      "taowen",
+	FirstLanguage: "Chinese",
+})
+should.Equal(`{"user_name":"taowen","first_language":"Chinese"}`, string(output))
+```
+
+但是一个个字段来设置，太麻烦了。如果使用 jsoniter，我们可以统一设置命名风格。
+
+```golang
+import "github.com/json-iterator/go/extra"
+
+extra.SetNamingStrategy(LowerCaseWithUnderscores)
+output, err := jsoniter.Marshal(struct {
+	UserName      string
+	FirstLanguage string
+}{
+	UserName:      "taowen",
+	FirstLanguage: "Chinese",
+})
+should.Nil(err)
+should.Equal(`{"user_name":"taowen","first_language":"Chinese"}`, string(output))
+```
+
 # 使用私有的字段
