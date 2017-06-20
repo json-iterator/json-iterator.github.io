@@ -12,6 +12,26 @@ title: Go JSON 使用小技巧
 参考文章：http://attilaolah.eu/2014/09/10/json-and-struct-composition-in-go/
 
 # 临时忽略struct字段
+
+```golang
+type User struct {
+    Email    string `json:"email"`
+    Password string `json:"password"`
+    // many more fields…
+}
+```
+
+临时忽略掉Password字段
+
+```golang
+json.Marshal(struct {
+    *User
+    Password bool `json:"password,omitempty"`
+}{
+    User: user,
+})
+```
+
 # 临时粘合两个struct
 # 一个json切分成两个struct
 # 临时改名struct的字段
