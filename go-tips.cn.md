@@ -203,6 +203,19 @@ should.Equal(`{"Field":123}`, string(bytes))
 ```
 
 # 使用 RegisterTypeEncoder支持time.Time
+
+jsoniter 能够对不是你定义的type自定义JSON编解码方式。比如对于 time.Time 可以用 epoch int64 来序列化
+
+```golang
+import "github.com/json-iterator/go/extra"
+
+extra.RegisterTimeAsInt64Codec(time.Microsecond)
+output, err := jsoniter.Marshal(time.Unix(1, 1002))
+should.Equal("1000001", string(output))
+```
+
+如果要自定义的话，参见 `RegisterTimeAsInt64Codec` 的实现代码
+
 # 使用 MarshalText支持非字符串作为key的map
 # 使用 json.RawMessage
 # 使用 json.Number
