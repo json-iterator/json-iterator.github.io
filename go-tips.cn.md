@@ -297,3 +297,17 @@ should.Equal(`{"user_name":"taowen","first_language":"Chinese"}`, string(output)
 ```
 
 # 使用私有的字段
+
+Go 的标准库只支持 public 的 field。jsoniter 额外支持了 private 的 field。需要使用 `SupportPrivateFields()` 来开启开关。
+
+```golang
+import "github.com/json-iterator/go/extra"
+
+extra.SupportPrivateFields()
+type TestObject struct {
+	field1 string
+}
+obj := TestObject{}
+jsoniter.UnmarshalFromString(`{"field1":"Hello"}`, &obj)
+should.Equal("Hello", obj.field1)
+```
