@@ -119,6 +119,17 @@ json.Marshal(struct{
 ```
 
 # 用字符串传递数字
+
+```golang
+type TestObject struct {
+	Field1 int    `json:",string"`
+}
+```
+
+这个对应的json是 `{"Field1": "100"}`
+
+如果json是 `{"Field1": 100}` 则会报错
+
 # 容忍字符串和数字互转
 # 容忍空数组作为对象
 # 使用 MarshalJSON支持time.Time
