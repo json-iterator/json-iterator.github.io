@@ -176,7 +176,7 @@ jsoniter.UnmarshalFromString(`[]`, &val)
 
 # 使用 MarshalJSON支持time.Time
 
-golang 是默认不支持 time.Time 序列化成 JSON 的。如果要支持，可以自定义 time.Time 类型
+golang 默认会把 time.Time 用字符串方式序列化。如果我们想用其他方式表示 time.Time，需要自定义类型并定义 MarshalJSON。
 
 
 ```golang
