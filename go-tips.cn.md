@@ -217,7 +217,52 @@ should.Equal("1000001", string(output))
 如果要自定义的话，参见 `RegisterTimeAsInt64Codec` 的实现代码
 
 # 使用 MarshalText支持非字符串作为key的map
+
+虽然 JSON 标准里只支持 string 作为 key 的 map。但是 golang 通过 MarshalText() 接口，使得其他类型也可以作为 map 的 key。例如
+
+```golang
+f, _, _ := big.ParseFloat("1", 10, 64, big.ToZero)
+val := map[*big.Float]string{f: "2"}
+str, err := MarshalToString(val)
+should.Equal(`{"1":"2"}`, str)
+```
+
+其中 `big.Float` 就实现了 MarshalText()
+
 # 使用 json.RawMessage
+
+如果部分json文档没有标准格式，我们可以把原始的文本信息用string保存下来。
+
+```golang
+type TestObject struct {
+	Field1 string
+	Field2 json.RawMessage
+}
+var data TestObject
+json.Unmarshal([]byte(`{"field1": "hello", "field2": [1,2,3]}`), &data)
+should.Equal(` [1,2,3]`, string(data.Field2))
+```
+
 # 使用 json.Number
+
+默认情况下，如果是 interface{} 对应数字的情况会是 float64 类型的。如果输入的数字比较大，这个表示会有损精度。所以可以 `UseNumber()` 启用 `json.Number` 来用字符串表示数字。
+
+```golang
+decoder1 := json.NewDecoder(bytes.NewBufferString(`123`))
+decoder1.UseNumber()
+var obj1 interface{}
+decoder1.Decode(&obj1)
+should.Equal(json.Number("123"), obj1)
+```
+
+jsoniter 支持标准库的这个用法。同时，扩展了行为使得 Unmarshal 也可以支持 UseNumber 了。
+
+```golang
+json := Config{UseNumber:true}.Froze()
+var obj interface{}
+json.UnmarshalFromString("123", &obj)
+should.Equal(json.Number("123"), obj)
+```
+
 # 统一更改字段的命名风格
 # 使用私有的字段
