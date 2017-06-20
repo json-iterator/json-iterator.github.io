@@ -9,6 +9,8 @@ title: Go JSON 使用小技巧
 有的时候上游传过来的字段是string类型的，但是我们却想用变成数字来使用。
 本来用一个`json:",string"` 就可以支持了，如果不知道golang的这些小技巧，就要大费周章了。
 
+参考文章：http://attilaolah.eu/2014/09/10/json-and-struct-composition-in-go/
+
 # 临时忽略struct字段
 # 临时粘合两个struct
 # 一个json切分成两个struct
