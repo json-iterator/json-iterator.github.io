@@ -155,6 +155,25 @@ jsoniter.UnmarshalFromString(`"1.23"`, &val)
 ```
 
 # 容忍空数组作为对象
+
+PHP另外一个令人崩溃的地方是，如果 PHP array是空的时候，序列化出来是`[]`。但是不为空的时候，序列化出来的是`{"key":"value"}`。
+我们需要把 `[]` 当成 `{}` 处理。
+
+如果你使用的是jsoniter，可以启动模糊模式来支持 PHP 传递过来的 JSON。
+
+```golang
+import "github.com/json-iterator/go/extra"
+
+extra.RegisterFuzzyDecoders()
+```
+
+这样就可以支持了
+
+```golang
+var val map[string]interface{}
+jsoniter.UnmarshalFromString(`[]`, &val)
+```
+
 # 使用 MarshalJSON支持time.Time
 # 使用 RegisterTypeEncoder支持time.Time
 # 使用 MarshalText支持非字符串作为key的map
