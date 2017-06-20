@@ -32,9 +32,92 @@ json.Marshal(struct {
 })
 ```
 
+# 临时添加额外的字段
+
+```golang
+type User struct {
+    Email    string `json:"email"`
+    Password string `json:"password"`
+    // many more fields…
+}
+```
+
+临时忽略掉Password字段，并且添加token字段
+
+```golang
+json.Marshal(struct {
+    *User
+    Token    string `json:"token"`
+    Password bool `json:"password,omitempty"`
+}{
+    User: user,
+    Token: token,
+})
+```
+
 # 临时粘合两个struct
+
+```golang
+type BlogPost struct {
+    URL   string `json:"url"`
+    Title string `json:"title"`
+}
+
+type Analytics struct {
+    Visitors  int `json:"visitors"`
+    PageViews int `json:"page_views"`
+}
+
+json.Marshal(struct{
+    *BlogPost
+    *Analytics
+}{post, analytics})
+```
+
 # 一个json切分成两个struct
+
+```golang
+json.Unmarshal([]byte(`{
+  "url": "attila@attilaolah.eu",
+  "title": "Attila's Blog",
+  "visitors": 6,
+  "page_views": 14
+}`), &struct {
+  *BlogPost
+  *Analytics
+}{&post, &analytics})
+```
+
 # 临时改名struct的字段
+
+```golang
+type CacheItem struct {
+    Key    string `json:"key"`
+    MaxAge int    `json:"cacheAge"`
+    Value  Value  `json:"cacheValue"`
+}
+
+json.Marshal(struct{
+    *CacheItem
+
+    // Omit bad keys
+    OmitMaxAge omit `json:"cacheAge,omitempty"`
+    OmitValue  omit `json:"cacheValue,omitempty"`
+
+    // Add nice keys
+    MaxAge int    `json:"max_age"`
+    Value  *Value `json:"value"`
+}{
+    CacheItem: item,
+
+    // Set the int by value:
+    MaxAge: item.MaxAge,
+
+    // Set the nested struct by reference, avoid making a copy:
+    Value: &item.Value,
+})
+```
+
 # 用字符串传递数字
 # 容忍字符串和数字互转
 # 容忍空数组作为对象
