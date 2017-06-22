@@ -256,7 +256,7 @@ decoder1.Decode(&obj1)
 should.Equal(json.Number("123"), obj1)
 ```
 
-jsoniter 支持标准库的这个用法。同时，扩展了行为使得 Unmarshal 也可以支持 UseNumber 了。
+jsoniter support this usage. And it extended the support to `Unmarshal` as will.
 
 ```golang
 json := Config{UseNumber:true}.Froze()
@@ -265,9 +265,9 @@ json.UnmarshalFromString("123", &obj)
 should.Equal(json.Number("123"), obj)
 ```
 
-# 统一更改字段的命名风格
+# Field naming strategy
 
-经常 JSON 里的字段名 Go 里的字段名是不一样的。我们可以用 field tag 来修改。
+Most of the time, we want to different field names in JSON. We can use field tag:
 
 ```golang
 output, err := jsoniter.Marshal(struct {
@@ -280,7 +280,7 @@ output, err := jsoniter.Marshal(struct {
 should.Equal(`{"user_name":"taowen","first_language":"Chinese"}`, string(output))
 ```
 
-但是一个个字段来设置，太麻烦了。如果使用 jsoniter，我们可以统一设置命名风格。
+However, it is tedious. If you are using jsoniter, we can change all fields in one line.
 
 ```golang
 import "github.com/json-iterator/go/extra"
@@ -297,9 +297,9 @@ should.Nil(err)
 should.Equal(`{"user_name":"taowen","first_language":"Chinese"}`, string(output))
 ```
 
-# 使用私有的字段
+# Private fields
 
-Go 的标准库只支持 public 的 field。jsoniter 额外支持了 private 的 field。需要使用 `SupportPrivateFields()` 来开启开关。
+The standard library requries all fields appear in JSON to be public. If you use jsoniter, `SupportPrivateFields()` will remove this restriction.
 
 ```golang
 import "github.com/json-iterator/go/extra"
