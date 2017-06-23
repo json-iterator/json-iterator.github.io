@@ -116,7 +116,6 @@ then set the mode to dynamic code generation
 ```java
 JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
 JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
-JsoniterAnnotationSupport.enable();
 ```
 
 everything should still works, just much much faster
@@ -143,7 +142,6 @@ Or, we can set the default decoding mode to reflection
 
 ```java
 JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
-JsoniterAnnotationSupport.enable();
 ```
 
 All features is supported using the reflection mode, just slower, but still faster than existing solutions. Here is a quick benchmark of simple object field binding:
@@ -230,7 +228,6 @@ The final step is to switch mode
 
 ```java
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
-JsoniterAnnotationSupport.enable();
 JsonIterator.deserialize(...
 ```
 
@@ -320,13 +317,7 @@ public class TestObject {
 
 **binding**
 
-mark the class with jsoniter annotation, then enable annotation support. Or if you are already using jackson, you can still use jackson annotation, just turn on JacksonAnnotationSupport. It is important to mark `@JsonProperty` with field name, as old java version can not get parameter name by reflection.
-
-```java
-JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are not using Jackson
-return iter.read(TestObject.class);
-```
-
+It is important to mark `@JsonProperty` with field name, as old java version can not get parameter name by reflection.
 Not only constructor binding is supported, static method working as factory method is also supported. Just mark it with `@JsonCreator`.
 
 ## Setter Binding
@@ -372,7 +363,6 @@ public static class TestObject {
 ```
 
 ```java
-JsoniterAnnotationSupport.enable();
 return iter.read(TestObject.class);
 ```
 
@@ -515,7 +505,6 @@ public static class TestObject {
 if `field1` is not present in the input json, exception will be thrown.
 
 ```java
-JsoniterAnnotationSupport.enable();
 JsonIterator iter = JsonIterator.parse("{'field2':101}".replace('\'', '"'));
 return iter.read(TestObject.class);
 ```
@@ -560,7 +549,6 @@ public static class TestObject2 {
 using `asExtraForUnknownProperties` we can detect if the input has extra fields. Enable the annotation support:
 
 ```java
-JsoniterAnnotationSupport.enable();
 JsonItertor iter = JsonIterator.parse("{'field1':101,'field2':101,'field3':101}".replace('\'', '"').getBytes());
 return iter.read(TestObject2.class);
 ```
