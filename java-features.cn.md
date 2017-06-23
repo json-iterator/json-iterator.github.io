@@ -114,7 +114,6 @@ String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].c
 ```java
 JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
 JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
-JsoniterAnnotationSupport.enable();
 ```
 
 所有的功能应该都能正常工作的，而且要快很多
@@ -141,7 +140,6 @@ return iter.read(TestObject.class); // will use reflection
 
 ```java
 JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
-JsoniterAnnotationSupport.enable();
 ```
 
 所有的特性在反射模式下都是支持的，只是比代码生成的要慢一点。但是还是比其他的解决方案快很多，这里是一个简单的对象多字段绑定的性能评测：
@@ -230,7 +228,6 @@ public class DemoCodegenConfig implements CodegenConfig {
 ```java
 JsonStream.setMode(EncodingMode.STATIC_MODE); 
 JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
-JsoniterAnnotationSupport.enable();
 JsonIterator.deserialize(...
 ```
 
@@ -322,13 +319,7 @@ public class TestObject {
 
 **binding**
 
-需要把类添加上 jsoniter 的 annotation，然后开始 annotation 的支持。如果你已经在使用 jackson 的 annotation，也可以开启 JacksonAnnotationSupport 的兼容模式。必须把参数用 `@JsonProperty` 标记，因为旧的 java 版本无法通过反射获得参数名。
-
-```java
-JacksonAnnotationSupport.enable(); // use JsoniterAnnotationSupport if you are not using Jackson
-return iter.read(TestObject.class);
-```
-
+必须把参数用 `@JsonProperty` 标记，因为旧的 java 版本无法通过反射获得参数名。
 `@JsonCreator` 不仅仅支持构造函数，静态函数充当工厂方法也是可以的。
 
 ## Setter 绑定
@@ -374,7 +365,6 @@ public static class TestObject {
 ```
 
 ```java
-JsoniterAnnotationSupport.enable();
 return iter.read(TestObject.class);
 ```
 
@@ -515,7 +505,6 @@ public static class TestObject {
 如果 `field1` 没有出现在 json 文档里，异常会被抛出。
 
 ```java
-JsoniterAnnotationSupport.enable();
 JsonIterator iter = JsonIterator.parse("{'field2':101}".replace('\'', '"'));
 return iter.read(TestObject.class);
 ```
@@ -560,7 +549,6 @@ public static class TestObject2 {
 把 `asExtraForUnknownProperties` 设置为 true 之后，多余的字段出现的话就会报错。当然还是要开启 annotation 的支持
 
 ```java
-JsoniterAnnotationSupport.enable();
 JsonItertor iter = JsonIterator.parse("{'field1':101,'field2':101,'field3':101}".replace('\'', '"').getBytes());
 return iter.read(TestObject2.class);
 ```
