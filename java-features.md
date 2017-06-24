@@ -95,8 +95,8 @@ after you extracted value from `Any`, then you can bind it to object using bind-
 
 The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
 
-* reflection: the default
-* dynamic code generation: require javassist library dependency
+* reflection: the default, and support private class or field
+* dynamic code generation: require javassist library dependency, public class/field only
 * static code generation: also an option
 
 ## Dynamic code generation
