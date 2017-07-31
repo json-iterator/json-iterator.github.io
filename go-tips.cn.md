@@ -11,6 +11,10 @@ title: Golang 的 JSON 使用小技巧
 
 参考文章：http://attilaolah.eu/2014/09/10/json-and-struct-composition-in-go/
 
+```
+Go开发者们请加入我们，滴滴出行平台技术部 taowen@didichuxing.com
+```
+
 # 临时忽略struct字段
 
 ```golang
