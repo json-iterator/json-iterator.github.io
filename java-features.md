@@ -213,7 +213,7 @@ then add code generation to maven build:
 	    <arguments>
 		<argument>-classpath</argument>
 		<classpath/>
-		<argument>com.jsoniter.StaticCodeGenerator</argument>
+		<argument>com.jsoniter.static_codegen.StaticCodegen</argument>
 		<argument>com.jsoniter.demo.DemoCodegenConfig</argument>
 	    </arguments>
 	</configuration>
