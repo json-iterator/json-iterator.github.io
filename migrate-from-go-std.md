@@ -19,7 +19,7 @@ group := ColorGroup{
 b, err := jsoniter.Marshal(group)
 ```
 
-Add `import "github.com/json-iterator/go"` and repalce `json.Marshal` with `jsoniter.Marshal`. Then the code should behave exactly the same, just much faster. Unlike easyjson or other json libaries, jsoniter does not rely on static code generation.
+Add `import "github.com/json-iterator/go"` and replace `json.Marshal` with `jsoniter.Marshal`. Then the code should behave exactly the same, just much faster. Unlike easyjson or other json libaries, jsoniter does not rely on static code generation.
 
 `Unmarshal`, `NewEncoder`, `NewDecoder` they all works. Existing types implemented `Marshaler` or `Unmarshaler` interface will also work. Map with non-string key also work. Yes, everything just works.
 
