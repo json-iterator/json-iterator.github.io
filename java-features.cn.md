@@ -154,9 +154,9 @@ JsonIterator.setMode(DecodingMode.REFLECTION_MODE);
 
 如果你想要最好的性能，但是你使用的平台又无法支持动态代码生成的时候，你可以选择静态代码生成。要启用静态代码生成，需要完成三件事情：
 
-* 提前定义哪些 class 是需要编解码的
-* 把代码生成加入到 build 的过程中，比如 maven
-* 把模式切换为 static
+* 通过 CodegenConfig 提前定义哪些 class 是需要编解码的
+* 把代码生成加入到 build 的过程中，比如 maven/gradle
+* 在使用前，调用 CodegenConfig 的 setup 方法
 
 首先我们来定义哪些class是需要编解码的
 
@@ -167,6 +167,7 @@ public class DemoCodegenConfig implements CodegenConfig {
     public void setup() {
         // register custom decoder or extensions before codegen
         // so that we doing codegen, we know in which case, we need to callback
+	JsonIterator.setMode(DecodingMode.STATIC_MODE); // must set to static mode
         JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
             @Override
             public int decodeInt(JsonIterator iter) throws IOException {
@@ -223,15 +224,11 @@ public class DemoCodegenConfig implements CodegenConfig {
 
 产生的java代码会被写到你项目的 `src/main/java` 目录，作为你的代码的一部分。输出目录是通过workingDirectory来指定的。如果你不想改workingDirectory，也可以传递第二个参数给StaticCodeGenerator。
 
-最后把模式切换一下
-
-```java
-JsonStream.setMode(EncodingMode.STATIC_MODE); 
-JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
-JsonIterator.deserialize(...
-```
-
 把模式设置为 static 之后，动态代码生成就不会被自动触发了。如果对应的类没有预先生成的编解码代码，异常会被抛出。
+
+普通的 Java 项目，参见: https://github.com/json-iterator/java/tree/master/demo
+
+Android 项目，参见: https://github.com/json-iterator/java/tree/master/android-demo
 
 # 对象绑定的多种姿势
 
