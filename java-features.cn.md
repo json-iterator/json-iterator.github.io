@@ -226,9 +226,9 @@ public class DemoCodegenConfig implements CodegenConfig {
 
 把模式设置为 static 之后，动态代码生成就不会被自动触发了。如果对应的类没有预先生成的编解码代码，异常会被抛出。
 
-普通的 Java 项目，参见: https://github.com/json-iterator/java/tree/master/demo
+普通的 Java 项目，参见: [https://github.com/json-iterator/java/tree/master/demo](https://github.com/json-iterator/java/tree/master/demo)
 
-Android 项目，参见: https://github.com/json-iterator/java/tree/master/android-demo
+Android 项目，参见: [https://github.com/json-iterator/java/tree/master/android-demo](https://github.com/json-iterator/java/tree/master/android-demo)
 
 # 对象绑定的多种姿势
 
