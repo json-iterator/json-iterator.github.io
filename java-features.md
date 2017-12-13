@@ -227,9 +227,9 @@ the generated java source code will be written out to `src/main/java` folder of 
 
 by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
 
-For normal java project, please refer to demo: https://github.com/json-iterator/java/tree/master/demo
+For normal java project, please refer to demo: [https://github.com/json-iterator/java/tree/master/demo](https://github.com/json-iterator/java/tree/master/demo)
 
-For android project, please refer to the android demo: https://github.com/json-iterator/java/tree/master/android-demo
+For android project, please refer to the android demo: [https://github.com/json-iterator/java/tree/master/android-demo](https://github.com/json-iterator/java/tree/master/android-demo)
 
 # Object binding styles
 
