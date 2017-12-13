@@ -156,9 +156,9 @@ All features is supported using the reflection mode, just slower, but still fast
 
 When you want to have maximum performance, and the platform you use can not support dynamic code generation, then you can try static codegen. To enable static codegen, 3 things need to be done:
 
-* define what class need to be decoded or encoded
-* add code generation to maven build process
-* switch mode to static codegen when decoding or encoding
+* define what class need to be decoded or encoded using CodegenConfig
+* add code generation to maven/gradle build process
+* call CodegenConfig setup before use encoder or decoder
 
 
 ```java
@@ -168,6 +168,7 @@ public class DemoCodegenConfig implements CodegenConfig {
     public void setup() {
         // register custom decoder or extensions before codegen
         // so that we doing codegen, we know in which case, we need to callback
+        JsonIterator.setMode(DecodingMode.STATIC_MODE); // must set to static mode
         JsoniterSpi.registerFieldDecoder(User.class, "score", new Decoder.IntDecoder() {
             @Override
             public int decodeInt(JsonIterator iter) throws IOException {
@@ -224,14 +225,11 @@ then add code generation to maven build:
 
 the generated java source code will be written out to `src/main/java` folder of your project. The output dir is specified by setting the workingDirectory to the `project.build.sourceDirectory`. The output dir can also be specified as the second argument to StaticCodeGenerator.
 
-The final step is to switch mode
-
-```java
-JsonIterator.setMode(DecodingMode.STATIC_MODE); // set mode before using
-JsonIterator.deserialize(...
-```
-
 by setting the mode to static, dynamic code generation will not happen if the class to decode/encode does not have corresponding decoder/encoder, instead exception will be thrown.
+
+For normal java project, please refer to demo: https://github.com/json-iterator/java/tree/master/demo
+
+For android project, please refer to the android demo: https://github.com/json-iterator/java/tree/master/android-demo
 
 # Object binding styles
 
