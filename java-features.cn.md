@@ -89,6 +89,12 @@ String[] array = JsonIterator.deserialize(input).get("numbers", 2).to(String[].c
 * any-api => bind-api: Any.as(class)
 * any-api => iterator-api: JsonIterator.parse(any)
 
+# 关于数字类型
+
+在 0.9.21 之前，`Object.class` 总被反序列化成 `Double.class`。从 0.9.21 开始，`Object.class` 会在范围允许的情况下选择 Integer/Long/BigInteger/Double，和 jackson 的行为一样。
+
+为了有最好的性能，尽量选择 `int`，`long` 或者 `double` 这样的具体类型。如果你希望控制数字是怎么被转换的，请使用 `Any`。因为原始的输入被捕捉到了 `Any` 对象内，所以你可以选择转换成 `BigInteger` 或者 `BigDecimal`。
+
 # 极致性能需要代码生成
 
 缺省的编解码的方式是反射。如果用 javassist 实现动态代码生成的话性能可以成倍提升。它可以给对应的输入的 class 生成定制化的高效代码。然而动态代码生成在某些平台上不可用，所以静态代码生成的用法也是支持的。
