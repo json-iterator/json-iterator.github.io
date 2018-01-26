@@ -91,6 +91,12 @@ after you extracted value from `Any`, then you can bind it to object using bind-
 * any-api => bind-api: Any.as(class)
 * any-api => iterator-api: JsonIterator.parse(any)
 
+# About Number
+
+Before 0.9.21, `Object.class` is always decoded as `Double.class`. Starting from 0.9.21, `Object.class` is decoded to Integer/Long/BigInteger/Double when the range fit, same behavior as Jackson.
+
+To have best performance, use `int`, `long` or `double` instead of `Object` if possible. You can control how numbers are converted by using `Any` instead. The raw input is captured in `Any` as it is, so it can convert to `BigInteger`, `BigDecimal` if you want.
+
 # Performance is optional
 
 The default decoding/encoding mode is reflection. We can improve the performance by dynamically generated decoder/encoder class using javassist. It will generate the most efficient code for the given class of input. However, dynamically code generation is not available in all platforms, so static code generation is also provided as an option.
